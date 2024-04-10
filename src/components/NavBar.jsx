@@ -6,7 +6,7 @@ import infoIcon from '/icons/info.svg';
 
 function NavBar({ className = 'w-full h-12 tablet:w-40 tablet:h-full' }) {
     return (
-        <nav className={`flex gap-1 border-t border-slate-900 tablet:block tablet:border-t-0 tablet:border-r ${className}`}>
+        <nav className={`bg-black z-30 flex gap-1 border-t border-slate-900 tablet:block tablet:border-t-0 tablet:border-r ${className}`}>
             <NavItem label="Home" iconSrc={homeIcon} isActive={true} />
             <NavItem label="Liked" iconSrc={heartIcon} />
             <NavItem label="Playlists" iconSrc={playlistIcon} />
