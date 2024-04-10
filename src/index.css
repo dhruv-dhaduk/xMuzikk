@@ -10,6 +10,6 @@ html, body {
 
 .main-gradient {
     @apply bg-gradient-to-r;
-    @apply from-[#1400Ff];
-    @apply to-[#00F0FF];
+    @apply from-[#00F0FF];
+    @apply to-[#1400Ff];
 }
