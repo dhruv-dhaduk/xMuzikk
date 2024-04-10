@@ -7,3 +7,9 @@ html, body {
     color: white;
     scroll-behavior: smooth;
 }
+
+.main-gradient {
+    @apply bg-gradient-to-r;
+    @apply from-[#1400Ff];
+    @apply to-[#00F0FF];
+}
