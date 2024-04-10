@@ -6,11 +6,11 @@ function App() {
         <>  
             <Header className='w-full h-12 fixed top-0 inset-x-0 tablet:h-14'/>
             
-            <main className='mt-12 mb-12 tablet:mt-14 tablet:mb-0 tablet:ml-40'>
+            <main className='mt-12 mb-12 tablet:mt-14 tablet:mb-0 tablet:ml-36'>
                 <div>xMuzikk</div>
             </main>
 
-            <NavBar className='w-full h-12 tablet:w-40 tablet:h-full fixed bottom-0 inset-x-0 tablet:left-0 tablet:top-14' />
+            <NavBar className='w-full h-12 tablet:w-36 tablet:h-full fixed bottom-0 inset-x-0 tablet:left-0 tablet:top-14' />
         </>
     );
 }
