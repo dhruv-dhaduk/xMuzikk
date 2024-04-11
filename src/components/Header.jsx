@@ -1,7 +1,7 @@
 import logo from '/logos/xMuzikk.png';
 import isMobileDevice from '../utils/isMobileDevice.js';
 
-function Header({ className = 'h-12 tablet:h-14' }) {
+function Header({ className }) {
     return (
         <header 
             className={`bg-black z-50 flex justify-start border-b border-slate-900 backdrop-blur-md bg-opacity-65 ${className}`}
