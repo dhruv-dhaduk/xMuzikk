@@ -4,13 +4,27 @@ import heartIcon from '/icons/heart_filled_white.svg';
 import playlistIcon from '/icons/playlist.svg';
 import infoIcon from '/icons/info.svg';
 
+import { PlayerContext } from '../contexts/PlayerContext.js';
+import { useContext } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 function NavBar({ className }) {
+    const playerContext = useContext(PlayerContext);
+    const navigate = useNavigate();
+
+    const location = useLocation();
+
+    const gotoPath = (path) => {
+        if (!playerContext.isPlayerShowing)
+            navigate(path);
+    }
+
     return (
         <nav className={`bg-black z-30 flex gap-1 border-t border-slate-900 tablet:block tablet:border-t-0 tablet:border-r ${className}`}>
-            <NavItem label="Home" iconSrc={homeIcon} isActive={true} />
-            <NavItem label="Liked" iconSrc={heartIcon} />
-            <NavItem label="Playlists" iconSrc={playlistIcon} />
-            <NavItem label="About" iconSrc={infoIcon} />
+            <NavItem label="Home" iconSrc={homeIcon} isActive={location.pathname === '/'} onClick={() => gotoPath("/")} />
+            <NavItem label="Liked" iconSrc={heartIcon} isActive={location.pathname === '/liked'} onClick={() => gotoPath("/liked")} />
+            <NavItem label="Playlists" iconSrc={playlistIcon} isActive={location.pathname === '/playlists'} onClick={() => gotoPath("/playlists")} />
+            <NavItem label="About" iconSrc={infoIcon} isActive={location.pathname === '/about'} onClick={() => gotoPath("/about")} />
         </nav>
     );
 }
