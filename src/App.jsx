@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Header from "./components/Header";
 import NavBar from "./components/NavBar";
@@ -12,14 +12,35 @@ function App() {
     const [isPlayerShowing, setIsPlayerShowing] = useState(false);
 
     const showPlayer = () => {
+        if (!window.history.state.player) 
+            window.history.pushState({ player: true }, '');
+
         if (!isPlayerShowing)
             setIsPlayerShowing(true);
     }
 
     const hidePlayer = () => {
+        if (window.history.state.player)
+            window.history.back();
+        
         if (isPlayerShowing)
             setIsPlayerShowing(false);
     }
+
+    const popStateHandler = () => {
+        if (!window.history.state.player)
+            hidePlayer();
+        else
+            showPlayer();
+    }
+
+    useEffect(() => {
+        window.addEventListener("popstate", popStateHandler);
+
+        return () => {
+            window.removeEventListener("popstate", popStateHandler);
+        }
+    });
 
     return (
         <>  
