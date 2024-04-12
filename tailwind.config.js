@@ -24,6 +24,11 @@ export default {
             animation: {
                 'show': 'show 500ms',
                 'hide': 'hide 500ms'
+            },
+
+            colors: {
+                'primary-light': '#00F0FF',
+                'primary-dark': '#1400FF'
             }
         },
 
