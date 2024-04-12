@@ -2,16 +2,17 @@ import logo from '/logos/xMuzikk.png';
 import isMobileDevice from '../utils/isMobileDevice.js';
 
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { PlayerContext } from '../contexts/PlayerContext.js';
 
 function Header({ className }) {
 
     const playerContext = useContext(PlayerContext);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const gotoHome = () => {
-        if (playerContext.isPlayerShowing)
+        if (playerContext.isPlayerShowing || location.pathname === '/')
             return;
 
         navigate('/');
