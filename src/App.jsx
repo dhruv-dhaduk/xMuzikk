@@ -9,7 +9,7 @@ import { Outlet } from "react-router-dom";
 import { PlayerContext } from "./contexts/PlayerContext.js";
 
 function App() {
-    const [isPlayerShowing, setIsPlayerShowing] = useState(false);
+    const [isPlayerShowing, setIsPlayerShowing] = useState(window.history.state.player ? true : false);
 
     const showPlayer = () => {
         if (!window.history.state.player) 
