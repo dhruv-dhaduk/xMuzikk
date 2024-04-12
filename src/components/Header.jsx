@@ -29,6 +29,7 @@ function Header({ className }) {
             >
                 <img 
                     src={logo}
+                    onContextMenu={e => e.preventDefault()}
                     draggable={false}
                     className='h-full'
                 />
