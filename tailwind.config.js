@@ -5,7 +5,23 @@ export default {
         "./src/**/*.{js,jsx,ts,tsx}"
     ],
     theme: {
-        extend: {},
+        extend: {
+            keyframes: {
+                show: {
+                    '0%': { top: '100%' },
+                    '100%': { top: '0' }
+                },
+                hide: {
+                    '0%': { top: '0' },
+                    '100%': { top: '100%' }
+                }
+            },
+
+            animation: {
+                'show': 'show 500ms',
+                'hide': 'hide 500ms'
+            }
+        },
 
         screens: {
             'tablet': '540px',
