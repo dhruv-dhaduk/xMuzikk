@@ -20,7 +20,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer }) {
         showHideClasses += ' top-out';
     }
     return (
-        <div className={`z-[100] bg-red-900 w-dvw h-dvh fixed p-4 inset-x-0 ${showHideClasses}`}>
+        <div className={`z-[100] bg-black w-dvw h-dvh fixed p-4 inset-x-0 ${showHideClasses}`}>
             <div className='h-full w-full border border-white'>
                 <button 
                     className='bg-white text-black font-bold rounded p-4'
