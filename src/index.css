@@ -8,6 +8,10 @@ html, body {
     scroll-behavior: smooth;
 }
 
+.disable-scroll {
+    overflow: hidden;
+}
+
 .main-gradient {
     @apply bg-gradient-to-r;
     @apply from-[#00F0FF];
