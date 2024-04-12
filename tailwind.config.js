@@ -6,14 +6,18 @@ export default {
     ],
     theme: {
         extend: {
+            spacing: {
+                'out': '120vh'
+            },
+
             keyframes: {
                 show: {
-                    '0%': { top: '100%' },
+                    '0%': { top: "120vh" },
                     '100%': { top: '0' }
                 },
                 hide: {
                     '0%': { top: '0' },
-                    '100%': { top: '100%' }
+                    '100%': { top: "120vh" }
                 }
             },
 

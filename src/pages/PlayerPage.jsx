@@ -17,7 +17,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer }) {
     else {
         if (!isFirstRender.current)
             showHideClasses += 'animate-hide';
-        showHideClasses += ' top-full';
+        showHideClasses += ' top-out';
     }
     return (
         <div className={`z-[100] bg-red-900 w-dvw h-dvh fixed p-4 inset-x-0 ${showHideClasses}`}>
