@@ -35,7 +35,7 @@ class IDBservice {
             const transaction = this.#db.transaction('music', 'readonly');
 
             const result = {
-                success: [],
+                success: new Map(),
                 fail: []
             };
 
@@ -57,7 +57,7 @@ class IDBservice {
                     event.stopPropagation();
 
                     if (addItemRequest.result)
-                        result.success.push(addItemRequest.result);
+                        result.success.set(addItemRequest.result.id, addItemRequest.result);
                     else
                         result.fail.push(id);
                 }

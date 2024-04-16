@@ -8,16 +8,16 @@ import { Outlet } from "react-router-dom";
 
 import { PlayerContext } from "./contexts/PlayerContext.js";
 
-// import { AppwriteService } from "./dataManager/AppwriteService.js";
-// const appwriteService = new AppwriteService();
 import { Recommendation } from './dataManager';
 const recmd = new Recommendation();
+recmd.init();
 
 function App() {
     const testFunction = async () => {
 
-        await recmd.init();
         window.data = recmd.data;
+        const details = await recmd.getNextMusicDetails(5);
+        window.details = details;
 
         // const response = await appwriteService.fetchRecommendation();
         // window.data = response;
