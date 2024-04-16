@@ -28,7 +28,7 @@ function App() {
 
         for (const key in window.data) {
             for (const item of window.data[key]) {
-                const details = window.dataDetails.documents.filter((i) => item.ids.includes(i.id));
+                const details = item.ids.map((id) => window.dataDetails.get(id));
                 item.details = details;
             }
         }

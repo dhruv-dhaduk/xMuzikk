@@ -42,7 +42,13 @@ class AppwriteService {
             ]
         );
 
-        return response;
+        const dataMap = new Map();
+
+        for (const item of response.documents) {
+            dataMap.set(item.id, item);
+        }
+
+        return dataMap;
     }
 };
 
