@@ -8,7 +8,7 @@ import { Outlet } from "react-router-dom";
 
 import { PlayerContext } from "./contexts/PlayerContext.js";
 
-import { AppwriteService } from "./dataManager/appwriteService.js";
+import { AppwriteService } from "./dataManager/AppwriteService.js";
 const appwriteService = new AppwriteService();
 
 function App() {
