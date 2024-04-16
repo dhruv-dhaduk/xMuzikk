@@ -15,7 +15,7 @@ class AppwriteService {
             import.meta.env.VITE_APPWRITE_RECOMMENDATION_COLLECTION_ID,
             [
                 Query.select(['$id', 'label', 'language', 'ids']),
-                Query.limit(1000)
+                Query.limit(Number.MAX_SAFE_INTEGER)
             ]
         );
 
