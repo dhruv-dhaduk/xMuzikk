@@ -10,10 +10,8 @@ class IDBservice {
 
         request.onupgradeneeded = (event) => {
             this.#db = event.target.result;
-            console.log("ON UPGRADE NEEDED : ");
 
             if (version === 1) {
-                console.log("CREATE THE musicStore")
                 const musicStore = this.#db.createObjectStore('music', { keyPath: 'id' })
                 musicStore.createIndex('id', 'id', { unique: true });
             }
@@ -21,9 +19,6 @@ class IDBservice {
 
         request.onsuccess = (event) => {
             this.#db = event.target.result;
-
-            console.log("IDB SUCCESS");
-            console.log(this.#db);
 
             this.#db.onversionchange = () => {
                 this.#db?.close();
