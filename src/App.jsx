@@ -8,30 +8,36 @@ import { Outlet } from "react-router-dom";
 
 import { PlayerContext } from "./contexts/PlayerContext.js";
 
-import { AppwriteService } from "./dataManager/AppwriteService.js";
-const appwriteService = new AppwriteService();
+// import { AppwriteService } from "./dataManager/AppwriteService.js";
+// const appwriteService = new AppwriteService();
+import { Recommendation } from './dataManager';
+const recmd = new Recommendation();
 
 function App() {
     const testFunction = async () => {
-        const response = await appwriteService.fetchRecommendation();
-        window.data = response;
+
+        await recmd.init();
+        window.data = recmd.data;
+
+        // const response = await appwriteService.fetchRecommendation();
+        // window.data = response;
         
-        let allIDs = [];
+        // let allIDs = [];
 
-        for (const key in window.data) {
-            allIDs = allIDs.concat(...window.data[key].map((item) => item.ids));
-        }
+        // for (const key in window.data) {
+        //     allIDs = allIDs.concat(...window.data[key].map((item) => item.ids));
+        // }
 
-        window.allIDs = allIDs;
+        // window.allIDs = allIDs;
         
-        window.dataDetails = await appwriteService.fetchDetails(allIDs);
+        // window.dataDetails = await appwriteService.fetchDetails(allIDs);
 
-        for (const key in window.data) {
-            for (const item of window.data[key]) {
-                const details = item.ids.map((id) => window.dataDetails.get(id));
-                item.details = details;
-            }
-        }
+        // for (const key in window.data) {
+        //     for (const item of window.data[key]) {
+        //         const details = item.ids.map((id) => window.dataDetails.get(id));
+        //         item.details = details;
+        //     }
+        // }
     }
 
     const [isPlayerShowing, setIsPlayerShowing] = useState(window.history.state.player ? true : false);
