@@ -30,6 +30,20 @@ class AppwriteService {
 
         return data;
     }
+
+    async fetchDetails(ids) {
+        const response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_ALLMUSIC_COLLECTION_ID,
+            [
+                Query.select(['id', 'title', 'thumbnail', 'duration', 'uploadTime', 'channelTitle', 'channelLink']),
+                Query.limit(ids.length),
+                Query.equal('id', ids)
+            ]
+        );
+
+        return response;
+    }
 };
 
 export { AppwriteService };

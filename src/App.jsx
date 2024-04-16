@@ -15,7 +15,23 @@ function App() {
     const testFunction = async () => {
         const response = await appwriteService.fetchRecommendation();
         window.data = response;
-        console.log(response);
+        
+        let allIDs = [];
+
+        for (const key in window.data) {
+            allIDs = allIDs.concat(...window.data[key].map((item) => item.ids));
+        }
+
+        window.allIDs = allIDs;
+        
+        window.dataDetails = await appwriteService.fetchDetails(allIDs);
+
+        for (const key in window.data) {
+            for (const item of window.data[key]) {
+                const details = window.dataDetails.documents.filter((i) => item.ids.includes(i.id));
+                item.details = details;
+            }
+        }
     }
 
     const [isPlayerShowing, setIsPlayerShowing] = useState(window.history.state.player ? true : false);
