@@ -26,6 +26,93 @@ class IDBservice {
             }
         }
     }
+
+    get(ids) {
+        return new Promise((resolve, reject) => {
+            if (!this.#db)
+                reject('IndexedDB is not connected.');
+
+            const transaction = this.#db.transaction('music', 'readonly');
+
+            const result = {
+                success: [],
+                fail: []
+            };
+
+            transaction.oncomplete = () => {
+                resolve(result);
+            }
+
+            transaction.onerror = () => {
+                reject('Transaction failed');
+            }
+
+            const musicStore = transaction.objectStore('music');
+
+            for (const id of ids) {
+                const addItemRequest = musicStore.get(id);
+
+                addItemRequest.onsuccess = (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    if (addItemRequest.result)
+                        result.success.push(addItemRequest.result);
+                    else
+                        result.fail.push(id);
+                }
+
+                addItemRequest.onerror = (error) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    result.fail.push(id);
+                }
+            }
+        });
+    }
+
+    add(list) {
+        return new Promise((resolve, reject) => {
+            if (!this.#db)
+                reject('IndexedDB is not connected.');
+
+            const transaction = this.#db.transaction('music', 'readwrite');
+
+            const result = {
+                success: [],
+                fail: []
+            };
+
+            transaction.oncomplete = () => {
+                resolve(result);
+            }
+
+            transaction.onerror = () => {
+                reject('Transaction failed');
+            }
+
+            const musicStore = transaction.objectStore('music');
+
+            for (const item of list) {
+                const addItemRequest = musicStore.add(item);
+
+                addItemRequest.onsuccess = (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    
+                    result.success.push(item);
+                }
+
+                addItemRequest.onerror = (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    result.fail.push(item);
+                }
+            }
+        });
+    }
 };
 
 const idb = new IDBservice(1);
