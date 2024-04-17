@@ -28,7 +28,9 @@ export default {
 
             colors: {
                 'primary-light': '#00F0FF',
-                'primary-dark': '#1400FF'
+                'primary-dark': '#1400FF',
+                'primary-light-35': 'rgba(0, 240, 255, 0.35)',
+                'primary-dark-35': 'rgba(20, 0, 255, 0.35)'
             },
 
             gridTemplateColumns: {

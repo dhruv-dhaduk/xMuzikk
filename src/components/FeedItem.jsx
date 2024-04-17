@@ -1,6 +1,6 @@
 function FeedItem({ music }) {
     return (
-        <div className='rounded-xl flex p-3 gap-2 tablet:p-4'>
+        <div className='bg-transparent rounded-xl flex p-3 gap-2 tablet:p-4 hover:bg-gradient-to-r from-primary-light-35 to-primary-dark-35'>
 
             <div className='aspect-square w-[6.5rem] flex-none tablet:flex-1'>
                 <img src={music.thumbnail} className='w-full h-full object-cover rounded-xl' />
