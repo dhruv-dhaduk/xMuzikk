@@ -57,14 +57,6 @@ function HomePage() {
 
     return (
         <div>
-            <p>xMuzikk Home Page</p>
-
-            <button 
-                className='bg-white text-black font-bold rounded p-4'
-                onClick={() => console.log(recmnd.data)}
-            >
-                Print All IDs
-            </button>
 
             <Feed musicList={musicList} />
 
