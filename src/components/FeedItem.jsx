@@ -11,46 +11,55 @@ function FeedItem({ music }) {
                 <img src={music.thumbnail} className='w-full h-full object-cover rounded-xl' />
             </div>
 
-            <div className='tablet:flex-1 flex-1'>
+            <div className='flex-1 relative flex flex-col items-start justify-between py-1.5 pr-10 tablet:p-0 tablet:justify-evenly'>
                 <p className='line-clamp-2 text-[16px]/[20px] tablet:line-clamp-3 tablet:text-[18px]'>
                     { music.title }
                 </p>
 
-                <SmallP>
-                    { music.channelTitle }
-                </SmallP>
 
-                <SmallP>
+                <div className='flex items-center justify-start tablet:flex-col tablet:justify-evenly tablet:items-start tablet:gap-2'>
+                    <SmallP>
+                        { music.channelTitle }
+                    </SmallP>
 
-                    { convertUploadTimeFormat(music.uploadTime) }
-                </SmallP>
+                    <SmallP className='tablet:hidden mx-1'>·</SmallP>
+
+                    <SmallP>
+
+                        { convertUploadTimeFormat(music.uploadTime) }
+                    </SmallP>
+                </div>
 
                 <SmallP>
                     { convertDurationFormat(music.duration) }
                 </SmallP>
 
-                <div>
-                    <img 
-                        src={playIcon}
-                        alt="" 
-                    />
+                <div className='absolute inset-y-0 right-0 h-full w-8 flex flex-col-reverse justify-between items-center tablet:w-fit tablet:h-8 tablet:right-0 tablet:bottom-0 tablet:top-auto tablet:flex-row tablet:justify-center'>
+                    <Icon iconSrc={playIcon} />
+                    <Icon iconSrc={threeDotsIcon} />
                 </div>
-                <div>
-                    <img 
-                        src={threeDotsIcon}
-                        alt="" 
-                    />
-                </div>
+
             </div>
         </div>
     );
 }
 
-function SmallP({ children }) {
+function SmallP({ children, className }) {
     return (
-        <p className='text-stone-400 text-[13px]/[13px] tablet:text-[15px]/[15px]'>
+        <p className={`text-stone-400 text-[13px]/[13px] tablet:text-[15px]/[18px] line-clamp-1 ${className}`}>
             { children }
         </p>
+    );
+}
+
+function Icon({ iconSrc }) {
+    return (
+        <div className='w-8 h-8 flex justify-center items-center p-2'>
+            <img 
+                src={iconSrc}
+                className='w-full h-full'
+            />
+        </div>
     );
 }
 
