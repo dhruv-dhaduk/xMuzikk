@@ -12,11 +12,12 @@ function Header({ className }) {
     const location = useLocation();
 
     const gotoHome = () => {
+        window.scrollTo(0, 0);
+        
         if (playerContext.isPlayerShowing || location.pathname === '/')
             return;
 
         navigate('/');
-        window.scrollTo(0, 0);
     }
     
     return (

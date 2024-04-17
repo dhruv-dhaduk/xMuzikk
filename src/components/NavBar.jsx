@@ -15,6 +15,7 @@ function NavBar({ className }) {
     const location = useLocation();
 
     const gotoPath = (path) => {
+        window.scrollTo(0, 0);
         if (!playerContext.isPlayerShowing && location.pathname !== path)
             navigate(path);
     }
