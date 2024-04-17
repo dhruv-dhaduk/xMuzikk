@@ -29,6 +29,10 @@ export default {
             colors: {
                 'primary-light': '#00F0FF',
                 'primary-dark': '#1400FF'
+            },
+
+            gridTemplateColumns: {
+                'feed': 'repeat(auto-fit, minmax(20rem, 1fr))'
             }
         },
 
