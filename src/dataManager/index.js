@@ -32,6 +32,7 @@ class Recommendation {
         
         this.#data = flatData;
         this.#currentFetchingIndex = 0;
+        console.log(flatData);
     }
     
     get data() {
@@ -83,8 +84,8 @@ class Recommendation {
         });
     }
 
-    resetFetchingIndex() {
-        this.#currentFetchingIndex = 0;
+    resetFetchingIndex(newIndex = 0) {
+        this.#currentFetchingIndex = newIndex;
     }
 };
 

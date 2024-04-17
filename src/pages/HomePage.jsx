@@ -5,13 +5,16 @@ import { Recommendation } from '../dataManager';
 const recmnd = new Recommendation();
 recmnd.init();
 
+const FETCH_AMOUNT = 5;
+
 function HomePage() {
 
     const [musicList, setMusicList] = useState([]);
     const [isMoreMusic, setIsMoreMusic] = useState(true);
 
     const getMoreData = async () => {
-        const data = await recmnd.getNextMusicDetails(5);
+        recmnd.resetFetchingIndex(musicList.length);
+        const data = await recmnd.getNextMusicDetails(FETCH_AMOUNT);
         if (!data.length)
             setIsMoreMusic(false);
         setMusicList([...musicList, ...data]);
@@ -35,7 +38,7 @@ function HomePage() {
         if (!recmnd.data.length) {
             recmnd.init()
             .then(() => {
-                getMoreData();
+                getMoreData()
             });
         }
         else {
