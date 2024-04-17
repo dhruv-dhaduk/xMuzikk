@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Feed from '../components/Feed';
 
 import { Recommendation } from '../dataManager';
@@ -8,17 +8,56 @@ recmnd.init();
 function HomePage() {
 
     const [musicList, setMusicList] = useState([]);
+    const [isMoreMusic, setIsMoreMusic] = useState(true);
 
     const getMoreData = async () => {
         const data = await recmnd.getNextMusicDetails(5);
+        if (!data.length)
+            setIsMoreMusic(false);
         setMusicList([...musicList, ...data]);
     }
+
+    const handleScrollToEnd = async () => {
+        const scrollRemaining = document.body.offsetHeight - window.scrollY - window.innerHeight;
+
+        if (scrollRemaining <= 0) {
+            const scrollY = window.scrollY;
+            window.removeEventListener('scrollend', handleScrollToEnd);
+            await getMoreData();
+            window.scrollTo(0, scrollY);
+        }
+    }
+
+    useEffect(() => {
+        if (musicList.length)
+            return;
+
+        if (!recmnd.data.length) {
+            recmnd.init()
+            .then(() => {
+                getMoreData();
+            });
+        }
+        else {
+            recmnd.resetFetchingIndex();
+            getMoreData();
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!musicList.length)
+            return;
+
+        window.addEventListener('scrollend', handleScrollToEnd);
+
+        return () => {
+            window.removeEventListener('scrollend', handleScrollToEnd);
+        };
+    });
 
     return (
         <div>
             <p>xMuzikk Home Page</p>
-
-            <Feed musicList={musicList} />
 
             <button 
                 className='bg-white text-black font-bold rounded p-4'
@@ -26,12 +65,10 @@ function HomePage() {
             >
                 Print All IDs
             </button>
-            <button 
-                className='bg-white text-black font-bold rounded p-4'
-                onClick={getMoreData}
-            >
-                Get More Data   
-            </button>
+
+            <Feed musicList={musicList} />
+
+            <p> { isMoreMusic ? "Fetching more." : "No more music" }</p>
 
         </div>
     );

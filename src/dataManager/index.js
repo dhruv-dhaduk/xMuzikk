@@ -35,6 +35,9 @@ class Recommendation {
     }
     
     get data() {
+        if (!this.#data) {
+            return [];
+        }
         return [...this.#data];
     }
 
@@ -78,6 +81,10 @@ class Recommendation {
             
             return {id, notFound: true};
         });
+    }
+
+    resetFetchingIndex() {
+        this.#currentFetchingIndex = 0;
     }
 };
 
