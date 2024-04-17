@@ -5,7 +5,7 @@ import { Recommendation } from '../dataManager';
 const recmnd = new Recommendation();
 recmnd.init();
 
-const FETCH_AMOUNT = 5;
+const FETCH_AMOUNT = 10;
 
 function HomePage() {
 
