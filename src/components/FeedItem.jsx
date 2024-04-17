@@ -1,11 +1,16 @@
 function FeedItem({ music }) {
     return (
-        <div className='bg-slate-800'>
-            <img src={music.thumbnail} className='w-full' />
-            <br />
-            <p className='mb-4 w-full overflow-x-hidden'>
-                { JSON.stringify(music) }
-            </p>
+        <div className='rounded-xl flex p-3 gap-2 tablet:p-4'>
+
+            <div className='aspect-square w-[6.5rem] flex-none tablet:flex-1'>
+                <img src={music.thumbnail} className='w-full h-full object-cover rounded-xl' />
+            </div>
+
+            <div className='tablet:flex-1 flex-1'>
+                <p className='line-clamp-2 text-[16px]/[20px] tablet:line-clamp-3 tablet:text-[18px]'>
+                    { music.title }
+                </p>
+            </div>
         </div>
     );
 }
