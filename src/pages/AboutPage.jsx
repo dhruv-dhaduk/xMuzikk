@@ -1,7 +1,9 @@
 function AboutPage() {
     return (
-        <div>
-            xMuzikk About Page.
+        <div className='w-full pt-56'>
+            <p className='text-5xl text-center select-none'>
+                Coming Soon
+            </p>
         </div>
     );
 }
