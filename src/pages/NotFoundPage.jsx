@@ -1,7 +1,12 @@
 function NotFoundPage() {
     return (
-        <div>
-            404 Not Found
+        <div className='w-full pt-56'>
+            <p className='text-8xl text-center'>
+                404
+            </p>
+            <p className='text-5xl text-center'>
+                Not Found
+            </p>
         </div>
     );
 }
