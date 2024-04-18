@@ -3,7 +3,6 @@ import Feed from '../components/Feed';
 
 import { Recommendation } from '../dataManager';
 const recmnd = new Recommendation();
-recmnd.init();
 
 const FETCH_AMOUNT = 10;
 
