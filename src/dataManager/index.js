@@ -26,6 +26,8 @@ class Recommendation {
             if (doShuffle)
                 shuffleInPlace(langSongs);
             langSongs.forEach((item) => {
+                if (doShuffle)
+                    shuffleInPlace(item.ids);
                 flatData.push(...item.ids);
             });
         });
