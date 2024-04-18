@@ -5,10 +5,15 @@ import threeDotsIcon from '/icons/threedots.svg';
 
 function FeedItem({ music }) {
     return (
-        <div className='bg-transparent rounded-xl flex p-3 gap-2 tablet:p-4 hover:bg-gradient-to-r from-primary-light-35 to-primary-dark-35'>
+        <div className='bg-transparent rounded-xl select-none cursor-pointer flex p-3 gap-2 tablet:p-4 hover:bg-gradient-to-r from-primary-light-35 to-primary-dark-35'>
 
             <div className='aspect-square w-[6.5rem] flex-none tablet:flex-1'>
-                <img src={music.thumbnail} className='w-full h-full object-cover rounded-xl' />
+                <img 
+                    src={music.thumbnail} 
+                    draggable={false}
+                    onContextMenu={e => e.preventDefault()}
+                    className='w-full h-full object-cover rounded-xl'
+                />
             </div>
 
             <div className='flex-1 relative flex flex-col items-start justify-between py-1.5 pr-10 tablet:p-0 tablet:justify-evenly'>
@@ -57,6 +62,8 @@ function Icon({ iconSrc }) {
         <div className='w-8 h-8 flex justify-center items-center p-2'>
             <img 
                 src={iconSrc}
+                draggable={false}
+                onContextMenu={e => e.preventDefault()}
                 className='w-full h-full'
             />
         </div>
