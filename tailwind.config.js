@@ -7,7 +7,9 @@ export default {
     theme: {
         extend: {
             spacing: {
-                'out': '120vh'
+                'out': '120vh',
+                'footer-thmb-m': '52px',
+                'footer-thmb': '60px'
             },
 
             height: {
