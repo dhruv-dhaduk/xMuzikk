@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
+import { PlayerContext } from '../contexts/PlayerContext.js';
 
 function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
-    const [count, setCount] = useState(0);
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
+    const { playingMusic } = useContext(PlayerContext) || {};
+
+    const { id, title, thumbnail, duration, uploadTime, channelTitle } = playingMusic || {};
 
     useEffect(() => {
         isFirstRender.current = true;
@@ -27,21 +30,16 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     return (
         <div 
             ref={containerRef}
-            className={`bg-black w-dvw h-dvh fixed p-4 inset-x-0 ${isPlayerShowing ? 'top-0' : 'top-out'} ${className}`}    
+            className={`bg-black w-dvw h-dvh fixed inset-x-0 flex justify-center tablet:flex-col tablet:px-3 laptop:px-24 tablet:py-14 ${isPlayerShowing ? 'top-0' : 'top-out'} ${className}`}    
         >
-            <div className='h-full w-full border border-white'>
-                <button 
-                    className='bg-white text-black font-bold rounded p-4'
-                    onClick={hidePlayer}
-                >
-                    Hide Player
-                </button>
-                <button 
-                    className='bg-white text-black font-bold rounded p-4'
-                    onClick={() => setCount(count + 1)}
-                >
-                    Increment { count }
-                </button>
+            <div className='-z-10 w-full h-full absolute inset-0'>
+                <img 
+                    src={thumbnail}
+                    className='w-full h-full object-cover'
+                />
+            </div>
+            <div className='w-full h-fit max-h-full bg-white bg-opacity-45 overflow-y-scroll'>
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quidem, iusto!
             </div>
         </div>
     );
