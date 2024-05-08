@@ -19,7 +19,7 @@ function Footer({ className, onClick, playingMusic }) {
                 className='-z-10 w-full h-full object-cover absolute inset-0 blur-xl tablet:blur-2xl opacity-50'
             />
             
-            <div className='flex-1 flex items-center pl-6 pr-4 tablet:px-4'>
+            <div className='flex-1 flex items-center pl-6 pr-2.5 tablet:px-4'>
                 <div className='w-footer-thmb-m h-footer-thmb-m tablet:w-footer-thmb tablet:h-footer-thmb'>
                     <img 
                         src={playingMusic.thumbnail}
