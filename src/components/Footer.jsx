@@ -2,10 +2,7 @@ import pauseIcon from '/icons/pause.svg';
 import previousIcon from '/icons/previous.svg';
 import nextIcon from '/icons/next.svg';
 
-function Footer({ className, onClick, playingMusicId }) {
-    let imgURL = '';
-    if (playingMusicId)
-        imgURL = `https://img.youtube.com/vi/${playingMusicId}/maxresdefault.jpg`;
+function Footer({ className, onClick, playingMusic }) {
 
     return (
         <footer
@@ -14,25 +11,25 @@ function Footer({ className, onClick, playingMusicId }) {
         >
 
             <img 
-                src={imgURL}
+                src={playingMusic.thumbnail}
                 className='-z-10 w-full h-full object-cover absolute inset-0 blur-xl tablet:blur-2xl opacity-50'
             />
             
             <div className='flex-1 flex items-center pl-6 pr-4 tablet:px-4'>
                 <div className='w-footer-thmb-m h-footer-thmb-m tablet:w-footer-thmb tablet:h-footer-thmb'>
                     <img 
-                        src={imgURL}
+                        src={playingMusic.thumbnail}
                         className='w-full h-full object-cover rounded-md'
                     />
                 </div>
 
                 <div className='flex-1 mx-2'>
                     <p className='line-clamp-1 font-bold tablet:text-lg'>
-                        Illenium - Fractures (feat. Nevve)
+                        { playingMusic.title }
                     </p>
 
                     <p className='text-xs tablet:text-sm'>
-                        <span>The Script</span>
+                        <span> { playingMusic.channelTitle } </span>
                         <span className='hidden tablet:inline font-bold mx-1'> · </span>
                         <span className='hidden tablet:inline'>3 years ago</span>
                         <span className='hidden tablet:inline font-bold mx-1'> · </span>

@@ -12,15 +12,15 @@ import { PlayerContext } from "./contexts/PlayerContext.js";
 function App() {
     
     const [isPlayerShowing, setIsPlayerShowing] = useState(window.history.state.player ? true : false);
-    const [playingMusicId, setPlayingMusicId] = useState('');
+    const [playingMusic, setPlayingMusic] = useState({});
 
     if (isPlayerShowing)
         document.body.classList.add('disable-scroll');
     else
         document.body.classList.remove('disable-scroll');
 
-    const playMusic = (id) => {
-        setPlayingMusicId(id);
+    const playMusic = (item) => {
+        setPlayingMusic(item);
     }
 
     const showPlayer = () => {
@@ -66,7 +66,7 @@ function App() {
 
                 <Footer
                     onClick={showPlayer}
-                    playingMusicId={playingMusicId}
+                    playingMusic={playingMusic}
                     className='z-footer w-full h-footer-m fixed inset-x-0 bottom-footer-b-m tablet:bottom-0 tablet:h-footer' 
                 />
 
