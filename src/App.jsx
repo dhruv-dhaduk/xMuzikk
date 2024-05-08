@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import Header from "./components/Header";
 import NavBar from "./components/NavBar";
+import Footer from "./components/Footer.jsx";
 import PlayerPage from "./pages/PlayerPage.jsx";
 
 import { Outlet } from "react-router-dom";
@@ -54,9 +55,14 @@ function App() {
             <PlayerContext.Provider value={{isPlayerShowing}}>
                 <Header className='w-full h-12 fixed top-0 inset-x-0 tablet:h-14'/>
                 
-                <main className='mt-12 mb-12 tablet:mt-14 tablet:mb-0 tablet:ml-36'>
+                <main className='mt-12 mb-32 tablet:mt-14 tablet:mb-[4.5rem] tablet:ml-36'>
                     <Outlet />
                 </main>
+
+                <Footer
+                    onClick={showPlayer}
+                    className='z-40 w-full h-16 fixed inset-x-0 bottom-14 tablet:bottom-0 tablet:h-[4.5rem]' 
+                />
 
                 <PlayerPage isPlayerShowing={isPlayerShowing} hidePlayer={hidePlayer} />
 
