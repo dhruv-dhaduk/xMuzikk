@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-function PlayerPage({ isPlayerShowing, hidePlayer }) {
+function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     const [count, setCount] = useState(0);
     const isFirstRender = useRef(true);
     useEffect(() => {
@@ -20,7 +20,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer }) {
         showHideClasses += ' top-out';
     }
     return (
-        <div className={`z-[100] bg-black w-dvw h-dvh fixed p-4 inset-x-0 ${showHideClasses}`}>
+        <div className={`bg-black w-dvw h-dvh fixed p-4 inset-x-0 ${showHideClasses} ${className}`}>
             <div className='h-full w-full border border-white'>
                 <button 
                     className='bg-white text-black font-bold rounded p-4'

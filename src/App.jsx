@@ -53,20 +53,24 @@ function App() {
         <>  
 
             <PlayerContext.Provider value={{isPlayerShowing}}>
-                <Header className='w-full h-12 fixed top-0 inset-x-0 tablet:h-14'/>
+                <Header className='z-header w-full h-header-m fixed top-0 inset-x-0 tablet:h-header'/>
                 
-                <main className='mt-12 mb-32 tablet:mt-14 tablet:mb-[4.5rem] tablet:ml-36'>
+                <main className='mt-main-t-m mb-main-b-m tablet:mt-main-t tablet:mb-main-b tablet:ml-main-l'>
                     <Outlet />
                 </main>
 
                 <Footer
                     onClick={showPlayer}
-                    className='z-40 w-full h-16 fixed inset-x-0 bottom-14 tablet:bottom-0 tablet:h-[4.5rem]' 
+                    className='z-footer w-full h-footer-m fixed inset-x-0 bottom-footer-b-m tablet:bottom-0 tablet:h-footer' 
                 />
 
-                <PlayerPage isPlayerShowing={isPlayerShowing} hidePlayer={hidePlayer} />
+                <PlayerPage 
+                    isPlayerShowing={isPlayerShowing} 
+                    hidePlayer={hidePlayer}
+                    className='z-playerpage'
+                />
 
-                <NavBar className='w-full h-12 tablet:w-36 tablet:h-full fixed bottom-0 inset-x-0 tablet:left-0 tablet:top-14' />
+                <NavBar className='z-navbar w-full h-navbar-m tablet:w-navbar tablet:h-full fixed bottom-0 inset-x-0 tablet:left-0 tablet:top-14' />
             </PlayerContext.Provider>
         </>
     );

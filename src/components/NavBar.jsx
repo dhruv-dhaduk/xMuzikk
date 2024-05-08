@@ -21,7 +21,7 @@ function NavBar({ className }) {
     }
 
     return (
-        <nav className={`bg-black z-30 flex gap-1 border-t border-slate-900 tablet:block tablet:border-t-0 tablet:border-r ${className}`}>
+        <nav className={`bg-black flex gap-1 border-t border-slate-900 tablet:block tablet:border-t-0 tablet:border-r ${className}`}>
             <NavItem label="Home" iconSrc={homeIcon} isActive={location.pathname === '/'} onClick={() => gotoPath("/")} />
             <NavItem label="Liked" iconSrc={heartIcon} isActive={location.pathname === '/liked'} onClick={() => gotoPath("/liked")} />
             <NavItem label="Playlists" iconSrc={playlistIcon} isActive={location.pathname === '/playlists'} onClick={() => gotoPath("/playlists")} />
