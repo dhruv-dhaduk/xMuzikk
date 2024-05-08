@@ -2,8 +2,10 @@ import pauseIcon from '/icons/pause.svg';
 import previousIcon from '/icons/previous.svg';
 import nextIcon from '/icons/next.svg';
 
-function Footer({ className, onClick }) {
-    const imgURL = 'https://img.youtube.com/vi/ZCu2gwLj9ok/maxresdefault.jpg';
+function Footer({ className, onClick, playingMusicId }) {
+    let imgURL = '';
+    if (playingMusicId)
+        imgURL = `https://img.youtube.com/vi/${playingMusicId}/maxresdefault.jpg`;
 
     return (
         <footer
@@ -13,7 +15,7 @@ function Footer({ className, onClick }) {
 
             <img 
                 src={imgURL}
-                className='-z-10 w-full h-full object-cover absolute inset-0 blur-lg opacity-50'
+                className='-z-10 w-full h-full object-cover absolute inset-0 blur-xl tablet:blur-2xl opacity-50'
             />
             
             <div className='flex-1 flex items-center pl-6 pr-4 tablet:px-4'>
