@@ -8,7 +8,7 @@ function Footer({ className, onClick }) {
     return (
         <footer
             onClick={onClick}
-            className={`bg-slate-900 flex flex-col tablet:flex-col-reverse overflow-hidden rounded-full tablet:rounded-none ${className}`}
+            className={`bg-black flex flex-col tablet:flex-col-reverse overflow-hidden rounded-full tablet:rounded-none ${className}`}
         >
             
             <div className='flex-1 flex items-center pl-6 pr-4 tablet:px-4'>
@@ -40,7 +40,7 @@ function Footer({ className, onClick }) {
                 </div>
             </div>
 
-            <progress className='w-full h-1 tablet:h-1.5 flex-none' min={0} max={100} value={70} />
+            <progress className='footer-progressbar w-full h-1 tablet:h-1.5 flex-none' min={0} max={100} value={70} />
 
         </footer>
     );
