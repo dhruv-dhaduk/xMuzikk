@@ -65,6 +65,10 @@ export default {
                 'primary-dark-35': 'rgba(20, 0, 255, 0.35)'
             },
 
+            boxShadow: {
+                'footer': 'rgba(255, 255, 255, 0.25) 0 0 20px'
+            },
+
             gridTemplateColumns: {
                 'feed': 'repeat(auto-fit, minmax(20rem, 1fr))'
             }
