@@ -4,6 +4,10 @@ import nextIcon from '/icons/next.svg';
 
 function Footer({ className, onClick, playingMusic }) {
 
+    if (!playingMusic || !playingMusic.id) {
+        return null;
+    }
+
     return (
         <footer
             onClick={onClick}
