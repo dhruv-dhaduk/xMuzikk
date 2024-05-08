@@ -34,7 +34,6 @@ class Recommendation {
         
         this.#data = flatData;
         this.#currentFetchingIndex = 0;
-        console.log(flatData);
     }
     
     get data() {
