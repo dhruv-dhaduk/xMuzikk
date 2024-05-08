@@ -3,11 +3,11 @@ import { convertDurationFormat, convertUploadTimeFormat } from '../utils/convert
 import playIcon from '/icons/play.svg';
 import threeDotsIcon from '/icons/threedots.svg';
 
-function FeedItem({ music, onClick }) {
+function FeedItem({ music, onClick, isPlaying }) {
     return (
         <div 
             onClick={onClick}
-            className='bg-transparent rounded-xl select-none cursor-pointer flex p-3 gap-2 tablet:p-4 hover:bg-gradient-to-r from-primary-light-35 to-primary-dark-35'
+            className={`bg-transparent rounded-xl select-none cursor-pointer flex p-3 gap-2 tablet:p-4 ${isPlaying ? 'bg-gradient-to-r' : ''} from-primary-light-35 to-primary-dark-35`}
         >
 
             <div className='aspect-square w-[6.5rem] flex-none tablet:flex-1'>

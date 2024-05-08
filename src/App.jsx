@@ -57,7 +57,7 @@ function App() {
     return (
         <>  
 
-            <PlayerContext.Provider value={{isPlayerShowing, playMusic}}>
+            <PlayerContext.Provider value={{playingMusic, isPlayerShowing, playMusic}}>
                 <Header className='z-header w-full h-header-m fixed top-0 inset-x-0 tablet:h-header'/>
                 
                 <main className='mt-main-t-m mb-main-b-m tablet:mt-main-t tablet:mb-main-b tablet:ml-main-l'>
