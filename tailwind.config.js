@@ -24,7 +24,7 @@ export default {
             },
 
             inset: {
-                'footer-b-m': '56px'
+                'footer-b-m': '52px'
             },
 
             margin: {
