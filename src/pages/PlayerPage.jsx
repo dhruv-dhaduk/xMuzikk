@@ -67,7 +67,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             <Icon imgSrc={closeIcon} className='ml-auto w-16 p-2 rounded-full bg-white bg-opacity-25' />
                         </div>
 
-                        <div className='flex items-start justify-between mt-8'>
+                        <div className='flex items-start justify-between mt-8 mb-8'>
                             <div className='flex-1'>
                                 <p className='line-clamp-2 text-xl font-bold mb-1.5'>
                                     { title }
@@ -84,8 +84,14 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             <Icon imgSrc={heartHollowIcon} className='flex-none w-16 p-2' />
                         </div>
 
-                        <div>
-                            <Toggle isActive={false} className='h-8' />
+                        <div className='flex items-center justify-between'>
+                            <div className='flex flex-col items-center justify-center'>
+                                <Toggle isActive={false} className='h-8' />
+                                <p className='text-sm'>Play Video</p>
+                            </div>
+                            <div>
+                                
+                            </div>
                         </div>
                     </div>
 
