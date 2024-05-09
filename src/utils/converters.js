@@ -1,4 +1,7 @@
 function convertDurationFormat(duration) {
+    if (!duration) {
+        return '00:00';
+    }
     const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
     const hours = (parseInt(match[1]) || 0);
     const minutes = (parseInt(match[2]) || 0);

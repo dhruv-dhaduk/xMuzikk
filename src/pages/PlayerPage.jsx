@@ -45,7 +45,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     return (
         <div 
             ref={containerRef}
-            className={`bg-black w-dvw h-dvh fixed inset-x-0 flex justify-center tablet:flex-col tablet:px-3 laptop:px-24 tablet:py-14 ${isPlayerShowing ? 'top-0' : 'top-out'} ${className}`}    
+            className={`bg-black w-dvw h-dvh fixed inset-x-0 flex justify-center tablet:flex-col tablet:px-3 laptop:px-24 tablet:py-14 select-none ${isPlayerShowing ? 'top-0' : 'top-out'} ${className}`}    
         >
             <div className='-z-10 w-full h-full absolute inset-0'>
                 <img 
@@ -74,10 +74,10 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
 
                     <div className='flex-1 bg-blackk flex flex-col justify-start'>
 
-                        <div className='absolute right-6 bottom-6 tablet:static flex justify-start items-center tablet:w-full'>
-                            <Icon imgSrc={youtubeIcon} className='w-16 p-4 rounded-full' />
-                            <Icon imgSrc={shareIcon} className='w-16 p-4 rounded-full' />
-                            <Icon imgSrc={closeIcon} onClick={hidePlayer} className='tablet:ml-auto w-16 p-2 rounded-full bg-white bg-opacity-25' />
+                        <div className='absolute right-6 bottom-6 tablet:static flex justify-start items-center gap-2 tablet:w-full'>
+                            <Icon imgSrc={youtubeIcon} className='w-14 p-3 tablet:w-16 tablet:p-4 rounded-full' />
+                            <Icon imgSrc={shareIcon} className='w-14 p-3 tablet:w-16 tablet:p-4 rounded-full' />
+                            <Icon imgSrc={closeIcon} onClick={hidePlayer} className='tablet:ml-auto w-14 p-2.5 tablet:w-16 tablet:p-2 rounded-full bg-white bg-opacity-25' />
                         </div>
 
                         <div className='flex items-start justify-between mt-3 tablet:mt-8 mb-8'>
@@ -100,7 +100,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                         <div className='absolute left-6 bottom-6 tablet:static flex items-center justify-between gap-2'>
                             <div className='flex flex-col items-center justify-center'>
                                 <Toggle isActive={false} className='h-8' />
-                                <p className='line-clamp-1 text-sm'>Play Video</p>
+                                <p className='line-clamp-1 text-xs tablet:text-sm'>Play Video</p>
                             </div>
                             <div className='hidden tablet:flex flex-col justify-center w-full max-w-60'>
                                 <Slider />
@@ -113,7 +113,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
 
                         <div className='mb-6 tablet:mb-8 mt-auto'>
                             <Slider className='w-full' />
-                            <p className='w-full flex items-center justify-between text-sm'>
+                            <p className='w-full flex items-center justify-between text-sm font-semibold'>
                                 <span>2:11</span>
                                 <span> { convertDurationFormat(duration) } </span>
                             </p>
