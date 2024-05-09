@@ -78,7 +78,6 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             <div className='flex-1'>
                                 <p className='line-clamp-1 tablet:line-clamp-2 text-xl font-bold mb-1.5'>
                                     { title }
-                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta maxime possimus placeat. Voluptates, blanditiis quae. Hic vitae aspernatur doloremque saepe?
                                 </p>
 
                                 <p className='line-clamp-1 text-sm'>
