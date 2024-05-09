@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState, useContext } from "react";
 import { PlayerContext } from '../contexts/PlayerContext.js';
 
+import closeIcon from '/icons/close.svg';
+import shareIcon from '/icons/share.svg';
+import youtubeIcon from '/icons/youtube.svg';
+
 function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
@@ -54,7 +58,9 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                     </div>
 
                     <div className='flex-1'>
-                        
+                        <img src={closeIcon} className='w-10 h-10' />
+                        <img src={shareIcon} className='w-10 h-10' />
+                        <img src={youtubeIcon} className='w-10 h-10' />
                     </div>
 
                 </div>
