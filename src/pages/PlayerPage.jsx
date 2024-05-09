@@ -88,7 +88,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                                 </p>
                             </div>
 
-                            <Icon imgSrc={heartHollowIcon} className='flex-none w-16 p-2' />
+                            <Icon imgSrc={heartHollowIcon} className='flex-none w-12 p-0' />
                         </div>
 
                         <div className='absolute left-6 bottom-6 tablet:static flex items-center justify-between gap-2'>
