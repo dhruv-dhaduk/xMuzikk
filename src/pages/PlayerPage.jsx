@@ -48,6 +48,8 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
             <div className='-z-10 w-full h-full absolute inset-0'>
                 <img 
                     src={thumbnail}
+                    draggable={false}
+                    onContextMenu={e => e.preventDefault()}
                     className='w-full h-full object-cover blur-xl opacity-50 tablet:blur-sm tablet:opacity-65'
                 />
             </div>
@@ -60,6 +62,8 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             <div className='absolute w-full h-full inset-0'>
                                 <img 
                                     src={thumbnail}
+                                    draggable={false}
+                                    onContextMenu={e => e.preventDefault()}
                                     className='w-full h-full object-cover'
                                 />
                             </div>
@@ -71,7 +75,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                         <div className='absolute right-6 bottom-6 tablet:static flex justify-start items-center tablet:w-full'>
                             <Icon imgSrc={youtubeIcon} className='w-16 p-4 rounded-full' />
                             <Icon imgSrc={shareIcon} className='w-16 p-4 rounded-full' />
-                            <Icon imgSrc={closeIcon} className='tablet:ml-auto w-16 p-2 rounded-full bg-white bg-opacity-25' />
+                            <Icon imgSrc={closeIcon} onClick={hidePlayer} className='tablet:ml-auto w-16 p-2 rounded-full bg-white bg-opacity-25' />
                         </div>
 
                         <div className='flex items-start justify-between mt-3 tablet:mt-8 mb-8'>
@@ -129,11 +133,16 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     );
 }
 
-function Icon({ imgSrc, className }) {
+function Icon({ imgSrc, className, onClick }) {
     return (
-        <div className={`aspect-square ${className}`}>
+        <div
+            onClick={onClick}
+            className={`aspect-square cursor-pointer active:scale-[0.8] duration-200 ${className}`}
+        >
             <img 
                 src={imgSrc}
+                draggable={false}
+                onContextMenu={e => e.preventDefault()}
                 className='w-full h-full object-cover'
             />
         </div>
