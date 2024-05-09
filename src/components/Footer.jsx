@@ -2,6 +2,8 @@ import pauseIcon from '/icons/pause.svg';
 import previousIcon from '/icons/previous.svg';
 import nextIcon from '/icons/next.svg';
 
+import { convertUploadTimeFormat, convertDurationFormat } from '../utils/converters.js';
+
 function Footer({ className, onClick, playingMusic }) {
 
     if (!playingMusic || !playingMusic.id) {
@@ -35,9 +37,9 @@ function Footer({ className, onClick, playingMusic }) {
                     <p className='text-xs tablet:text-sm'>
                         <span> { playingMusic.channelTitle } </span>
                         <span className='hidden tablet:inline font-bold mx-1'> · </span>
-                        <span className='hidden tablet:inline'>3 years ago</span>
+                        <span className='hidden tablet:inline'> { convertUploadTimeFormat(playingMusic.uploadTime) } </span>
                         <span className='hidden tablet:inline font-bold mx-1'> · </span>
-                        <span className='hidden tablet:inline'>02:11 <span className='font-bold'>/</span> 03:54</span>
+                        <span className='hidden tablet:inline'>2:11 <span className='font-bold'>/</span> { convertDurationFormat(playingMusic.duration) } </span>
                     </p>
                 </div>
 

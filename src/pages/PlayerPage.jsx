@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, useContext } from "react";
 import { PlayerContext } from '../contexts/PlayerContext.js';
 
+import { convertUploadTimeFormat, convertDurationFormat } from '../utils/converters.js';
+
 import closeIcon from '/icons/close.svg';
 import shareIcon from '/icons/share.svg';
 import youtubeIcon from '/icons/youtube.svg';
@@ -88,7 +90,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                                 <p className='line-clamp-1 text-sm'>
                                     { channelTitle }
                                     <span className='mx-2 font-bold'>·</span>
-                                    3 years ago
+                                    { convertUploadTimeFormat(uploadTime) }
                                 </p>
                             </div>
 
@@ -112,8 +114,8 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                         <div className='mb-6 tablet:mb-8 mt-auto'>
                             <Slider className='w-full' />
                             <p className='w-full flex items-center justify-between text-sm'>
-                                <span>02:11</span>
-                                <span>03:54</span>
+                                <span>2:11</span>
+                                <span> { convertDurationFormat(duration) } </span>
                             </p>
                         </div>
 
