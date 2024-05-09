@@ -5,6 +5,11 @@ import closeIcon from '/icons/close.svg';
 import shareIcon from '/icons/share.svg';
 import youtubeIcon from '/icons/youtube.svg';
 import heartHollowIcon from '/icons/heart_hollow.svg';
+import loopIcon from '/icons/loop.svg';
+import previousIcon from '/icons/previous.svg';
+import pauseIcon from '/icons/pause.svg';
+import nextIcon from '/icons/next.svg';
+import queueIcon from '/icons/queue.svg';
 
 import Toggle from "../components/ui/Toggle.jsx";
 import Slider from "../components/ui/Slider.jsx";
@@ -107,8 +112,12 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             </p>
                         </div>
 
-                        <div>
-                            
+                        <div className='flex items-center justify-center gap-3'>
+                            <Icon imgSrc={loopIcon} className='w-16 p-3.5' />
+                            <Icon imgSrc={previousIcon} className='w-16 p-3.5' />
+                            <Icon imgSrc={pauseIcon} className='w-20 p-5 rounded-full bg-white bg-opacity-25' />
+                            <Icon imgSrc={nextIcon} className='w-16 p-3.5' />
+                            <Icon imgSrc={queueIcon} className='w-16 p-3.5' />
                         </div>
                     </div>
 
