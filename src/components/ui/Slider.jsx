@@ -5,7 +5,7 @@ function Slider({ className }) {
             min={0} 
             max={100} 
             value={70} 
-            className={`m-0 p-0 ${className}`}
+            className={`slider m-0 p-0 ${className}`}
         />
     );
 }

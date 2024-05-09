@@ -30,3 +30,43 @@ html, body {
 .footer-progressbar::-moz-progress-bar {
     @apply bg-gradient-to-r from-primary-light to-primary-dark;
 }
+
+
+.slider {
+    background: transparent;
+    cursor: pointer;
+
+    --color: linear-gradient(90deg, #00F0FF, #1400FF);
+    accent-color: #1400FF;
+    --thumb-size: 1.15rem;
+    --track-height: 0.25rem;
+}
+.slider::-webkit-slider-runnable-track {
+    height: var(--track-height);
+    border-radius: 9999999px;
+}
+.slider::-moz-range-track {
+    background: #acacac;
+    height: var(--track-height);
+    border-radius: 9999999px;
+}
+.slider::-moz-range-progress {
+    background: var(--color);
+    height: var(--track-height);
+    border-radius: 9999999px;
+}
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: #1400FF;
+    width: var(--thumb-size);
+    height: var(--thumb-size);
+    margin-top: calc((var(--track-height) / 2) - (var(--thumb-size) / 2));
+    border-radius: 9999999px;
+}
+.slider::-moz-range-thumb {
+    background: #1400FF;
+    width: var(--thumb-size);
+    height: var(--thumb-size);
+    border: none;
+    border-radius: 9999999px;
+}
