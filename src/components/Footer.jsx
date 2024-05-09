@@ -13,11 +13,13 @@ function Footer({ className, onClick, playingMusic }) {
     return (
         <footer
             onClick={onClick}
-            className={`bg-black flex flex-col tablet:flex-col-reverse overflow-hidden shadow-footer rounded-full tablet:rounded-none ${className}`}
+            className={`bg-black flex flex-col tablet:flex-col-reverse overflow-hidden shadow-footer rounded-full tablet:rounded-none cursor-pointer select-none ${className}`}
         >
 
             <img 
                 src={playingMusic.thumbnail}
+                draggable={false}
+                onContextMenu={e => e.preventDefault()}
                 className='-z-10 w-full h-full object-cover absolute inset-0 blur-xl tablet:blur-2xl opacity-50'
             />
             
@@ -25,6 +27,8 @@ function Footer({ className, onClick, playingMusic }) {
                 <div className='w-footer-thmb-m h-footer-thmb-m tablet:w-footer-thmb tablet:h-footer-thmb'>
                     <img 
                         src={playingMusic.thumbnail}
+                        draggable={false}
+                        onContextMenu={e => e.preventDefault()}
                         className='w-full h-full object-cover rounded-md'
                     />
                 </div>
@@ -56,9 +60,12 @@ function Footer({ className, onClick, playingMusic }) {
     );
 }
 
-function Icon({ iconSrc, className }) {
+function Icon({ iconSrc, className, onClick = () => {} }) {
     return (
-        <div className={`flex justify-center items-center ${className}`}>
+        <div 
+            className={`flex cursor-pointer active:scale-[0.8] duration-200 justify-center items-center ${className}`}
+            onClick={(e) => { e.stopPropagation(); onClick(); }}
+        >
             <img 
                 src={iconSrc}
                 draggable={false}
