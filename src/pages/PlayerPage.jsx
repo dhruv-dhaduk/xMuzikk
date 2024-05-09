@@ -6,6 +6,8 @@ import shareIcon from '/icons/share.svg';
 import youtubeIcon from '/icons/youtube.svg';
 import heartHollowIcon from '/icons/heart_hollow.svg';
 
+import Toggle from "../components/ui/Toggle.jsx";
+
 function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
@@ -83,7 +85,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                         </div>
 
                         <div>
-                            
+                            <Toggle isActive={false} className='h-8' />
                         </div>
                     </div>
 
