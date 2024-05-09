@@ -99,8 +99,16 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             </div>
                         </div>
 
-                        <div className=''>
+                        <div className='my-8 mt-auto'>
+                            <Slider className='w-full' />
+                            <p className='w-full flex items-center justify-between text-sm'>
+                                <span>02:11</span>
+                                <span>03:54</span>
+                            </p>
+                        </div>
 
+                        <div>
+                            
                         </div>
                     </div>
 
