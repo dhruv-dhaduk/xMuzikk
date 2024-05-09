@@ -7,6 +7,7 @@ import youtubeIcon from '/icons/youtube.svg';
 import heartHollowIcon from '/icons/heart_hollow.svg';
 
 import Toggle from "../components/ui/Toggle.jsx";
+import Slider from "../components/ui/Slider.jsx";
 
 function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     const containerRef = useRef(null);
@@ -60,7 +61,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                         </div>
                     </div>
 
-                    <div className='flex-1 bg-blackk'>
+                    <div className='flex-1 bg-blackk flex flex-col justify-start'>
                         <div className='flex justify-start items-center w-full'>
                             <Icon imgSrc={youtubeIcon} className='w-16 p-4 rounded-full' />
                             <Icon imgSrc={shareIcon} className='w-16 p-4 rounded-full' />
@@ -84,14 +85,22 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             <Icon imgSrc={heartHollowIcon} className='flex-none w-16 p-2' />
                         </div>
 
-                        <div className='flex items-center justify-between'>
+                        <div className='flex items-center justify-between gap-2'>
                             <div className='flex flex-col items-center justify-center'>
                                 <Toggle isActive={false} className='h-8' />
-                                <p className='text-sm'>Play Video</p>
+                                <p className='line-clamp-1 text-sm'>Play Video</p>
                             </div>
-                            <div>
-                                
+                            <div className='flex flex-col justify-center w-full max-w-60'>
+                                <Slider />
+                                <p className='line-clamp-1 text-sm flex items-center justify-between'>
+                                    <span>Volume</span>
+                                    <span>70%</span>
+                                </p>
                             </div>
+                        </div>
+
+                        <div className=''>
+
                         </div>
                     </div>
 
