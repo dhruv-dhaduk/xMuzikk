@@ -51,12 +51,12 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                     className='w-full h-full object-cover blur-xl opacity-50 tablet:blur-sm tablet:opacity-65'
                 />
             </div>
-            <div className='relative p-6 tablet:p-8 w-full h-full bg-opacity-45 overflow-y-scroll tablet:bg-white tablet:backdrop-blur-[35px] tablet:bg-opacity-10'>
+            <div className='relative p-6 tablet:p-8 w-full h-full bg-opacity-45 overflow-y-scroll rounded-2xl tablet:bg-white tablet:backdrop-blur-[35px] tablet:bg-opacity-10'>
                 
                 <div className='tablet:flex aspect-[2] h-full gap-5 w-full'>
 
                     <div className='aspect-square'>
-                        <div className='bg-slate-700 w-full h-full overflow-hidden relative'>
+                        <div className='bg-slate-700 w-full h-full rounded-2xl overflow-hidden relative'>
                             <div className='absolute w-full h-full inset-0'>
                                 <img 
                                     src={thumbnail}
@@ -74,9 +74,10 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             <Icon imgSrc={closeIcon} className='tablet:ml-auto w-16 p-2 rounded-full bg-white bg-opacity-25' />
                         </div>
 
-                        <div className='flex items-start justify-between mt-8 mb-8'>
+                        <div className='flex items-start justify-between mt-3 tablet:mt-8 mb-8'>
+
                             <div className='flex-1'>
-                                <p className='line-clamp-1 tablet:line-clamp-2 text-xl font-bold mb-1.5'>
+                                <p className='line-clamp-1 tablet:line-clamp-2 text-xl font-bold mb-0.5 tablet:mb-1.5'>
                                     { title }
                                 </p>
 
@@ -87,7 +88,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                                 </p>
                             </div>
 
-                            <Icon imgSrc={heartHollowIcon} className='flex-none w-12 p-0' />
+                            <Icon imgSrc={heartHollowIcon} className='flex-none w-10 tablet:w-12 p-0' />
                         </div>
 
                         <div className='absolute left-6 bottom-6 tablet:static flex items-center justify-between gap-2'>
@@ -104,7 +105,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             </div>
                         </div>
 
-                        <div className='my-8 mt-auto'>
+                        <div className='mb-6 tablet:mb-8 mt-auto'>
                             <Slider className='w-full' />
                             <p className='w-full flex items-center justify-between text-sm'>
                                 <span>02:11</span>
