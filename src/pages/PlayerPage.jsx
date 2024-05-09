@@ -51,7 +51,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                     className='w-full h-full object-cover blur-xl opacity-50 tablet:blur-sm tablet:opacity-65'
                 />
             </div>
-            <div className='p-8 w-full h-fit max-h-full bg-opacity-45 overflow-y-scroll tablet:bg-white tablet:backdrop-blur-[35px] tablet:bg-opacity-10'>
+            <div className='relative p-6 tablet:p-8 w-full h-full bg-opacity-45 overflow-y-scroll tablet:bg-white tablet:backdrop-blur-[35px] tablet:bg-opacity-10'>
                 
                 <div className='tablet:flex aspect-[2] h-full gap-5 w-full'>
 
@@ -67,10 +67,11 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                     </div>
 
                     <div className='flex-1 bg-blackk flex flex-col justify-start'>
-                        <div className='flex justify-start items-center w-full'>
+
+                        <div className='absolute right-6 bottom-6 tablet:static flex justify-start items-center tablet:w-full'>
                             <Icon imgSrc={youtubeIcon} className='w-16 p-4 rounded-full' />
                             <Icon imgSrc={shareIcon} className='w-16 p-4 rounded-full' />
-                            <Icon imgSrc={closeIcon} className='ml-auto w-16 p-2 rounded-full bg-white bg-opacity-25' />
+                            <Icon imgSrc={closeIcon} className='tablet:ml-auto w-16 p-2 rounded-full bg-white bg-opacity-25' />
                         </div>
 
                         <div className='flex items-start justify-between mt-8 mb-8'>
@@ -90,12 +91,12 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             <Icon imgSrc={heartHollowIcon} className='flex-none w-16 p-2' />
                         </div>
 
-                        <div className='flex items-center justify-between gap-2'>
+                        <div className='absolute left-6 bottom-6 tablet:static flex items-center justify-between gap-2'>
                             <div className='flex flex-col items-center justify-center'>
                                 <Toggle isActive={false} className='h-8' />
                                 <p className='line-clamp-1 text-sm'>Play Video</p>
                             </div>
-                            <div className='flex flex-col justify-center w-full max-w-60'>
+                            <div className='hidden tablet:flex flex-col justify-center w-full max-w-60'>
                                 <Slider />
                                 <p className='line-clamp-1 text-sm flex items-center justify-between'>
                                     <span>Volume</span>
