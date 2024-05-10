@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Feed from '../components/Feed';
 import LoadingFeed from '../components/Loading.jsx';
+import Spinner from '../components/ui/Spinner.jsx';
 
 import { Recommendation } from '../dataManager';
 const recmnd = new Recommendation();
@@ -65,7 +66,13 @@ function HomePage() {
                 !musicList || !musicList.length ? <LoadingFeed count={12} /> : <Feed musicList={musicList} />
             }
 
-            <p> { isMoreMusic ? "Fetching more." : "No more music" }</p>
+            <div className="flex justify-center items-center border-t border-stone-700">
+                <div
+                    className="p-4 text-stone-300 text-lg font-bold"
+                >
+                    {isMoreMusic ? <Spinner /> : "No more music"}
+                </div> 
+            </div>
 
         </div>
     );
