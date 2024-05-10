@@ -55,11 +55,11 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                     className='w-full h-full object-cover blur-xl opacity-50 tablet:blur-sm tablet:opacity-65'
                 />
             </div>
-            <div className='relative p-6 tablet:p-8 w-full h-full bg-opacity-45 overflow-y-scroll rounded-2xl tablet:bg-white tablet:backdrop-blur-[35px] tablet:bg-opacity-10'>
+            <div className='p-6 tablet:p-8 w-full h-full bg-opacity-45 overflow-y-scroll rounded-2xl tablet:bg-white tablet:backdrop-blur-[35px] tablet:bg-opacity-10'>
                 
-                <div className='tablet:flex aspect-[2] h-full gap-5 w-full'>
+                <div className='flex flex-col tablet:flex-row aspect-[2] h-full gap-5 w-full'>
 
-                    <div className='aspect-square'>
+                    <div className='aspect-square flex-none tablet:flex-initial'>
                         <div className='bg-slate-700 w-full h-full rounded-2xl overflow-hidden relative'>
                             <div className='absolute w-full h-full inset-0'>
                                 <img 
@@ -74,7 +74,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
 
                     <div className='flex-1 bg-blackk flex flex-col justify-start'>
 
-                        <div className='absolute right-6 bottom-6 tablet:static flex justify-start items-center gap-2 tablet:w-full'>
+                        <div className='hidden tablet:flex justify-start items-center gap-2 tablet:w-full'>
                             <Icon imgSrc={youtubeIcon} className='w-14 p-3 tablet:w-16 tablet:p-4 rounded-full' />
                             <Icon imgSrc={shareIcon} className='w-14 p-3 tablet:w-16 tablet:p-4 rounded-full' />
                             <Icon imgSrc={closeIcon} onClick={hidePlayer} className='tablet:ml-auto w-14 p-2.5 tablet:w-16 tablet:p-2 rounded-full bg-white bg-opacity-25' />
@@ -97,7 +97,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             <Icon imgSrc={heartHollowIcon} className='flex-none w-10 tablet:w-12 p-0' />
                         </div>
 
-                        <div className='absolute left-6 bottom-6 tablet:static flex items-center justify-between gap-2'>
+                        <div className='hidden tablet:flex items-center justify-between gap-2'>
                             <div className='flex flex-col items-center justify-center'>
                                 <Toggle isActive={false} className='h-8' />
                                 <p className='line-clamp-1 text-xs tablet:text-sm'>Play Video</p>
@@ -111,7 +111,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             </div>
                         </div>
 
-                        <div className='mb-6 tablet:mb-8 mt-auto'>
+                        <div className='mb-6 tablet:mb-8 tablet:mt-auto'>
                             <Slider className='w-full' />
                             <p className='w-full flex items-center justify-between text-sm font-semibold'>
                                 <span>2:11</span>
@@ -119,12 +119,22 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             </p>
                         </div>
 
-                        <div className='flex items-center justify-center gap-3'>
+                        <div className='flex items-center justify-center gap-3 mb-10'>
                             <Icon imgSrc={loopIcon} className='w-16 p-3.5' />
                             <Icon imgSrc={previousIcon} className='w-16 p-3.5' />
                             <Icon imgSrc={pauseIcon} className='w-20 p-5 rounded-full bg-white bg-opacity-25' />
                             <Icon imgSrc={nextIcon} className='w-16 p-3.5' />
                             <Icon imgSrc={queueIcon} className='w-16 p-3.5' />
+                        </div>
+
+                        <div className='tablet:hidden flex justify-start items-center mt-auto'>
+                            <div className='flex flex-col items-center justify-center'>
+                                <Toggle isActive={false} className='h-8' />
+                                <p className='line-clamp-1 text-xs tablet:text-sm'>Play Video</p>
+                            </div>
+                            <Icon imgSrc={youtubeIcon} className='ml-auto w-14 p-3 tablet:w-16 tablet:p-4 rounded-full' />
+                            <Icon imgSrc={shareIcon} className='w-14 p-3 tablet:w-16 tablet:p-4 rounded-full' />
+                            <Icon imgSrc={closeIcon} onClick={hidePlayer} className='tablet:ml-auto w-14 p-2.5 tablet:w-16 tablet:p-2 rounded-full bg-white bg-opacity-25' />
                         </div>
                     </div>
 
