@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Feed from '../components/Feed';
+import LoadingFeed from '../components/Loading.jsx';
 
 import { Recommendation } from '../dataManager';
 const recmnd = new Recommendation();
@@ -60,7 +61,9 @@ function HomePage() {
     return (
         <div>
 
-            <Feed musicList={musicList} />
+            {
+                !musicList || !musicList.length ? <LoadingFeed count={12} /> : <Feed musicList={musicList} />
+            }
 
             <p> { isMoreMusic ? "Fetching more." : "No more music" }</p>
 
