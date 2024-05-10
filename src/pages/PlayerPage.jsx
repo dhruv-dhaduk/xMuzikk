@@ -74,10 +74,10 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
 
                     <div className='flex-1 bg-blackk flex flex-col justify-start'>
 
-                        <div className='hidden tablet:flex justify-start items-center gap-2 tablet:w-full'>
-                            <Icon imgSrc={youtubeIcon} className='w-14 p-3 tablet:w-16 tablet:p-4 rounded-full' />
-                            <Icon imgSrc={shareIcon} className='w-14 p-3 tablet:w-16 tablet:p-4 rounded-full' />
-                            <Icon imgSrc={closeIcon} onClick={hidePlayer} className='tablet:ml-auto w-14 p-2.5 tablet:w-16 tablet:p-2 rounded-full bg-white bg-opacity-25' />
+                        <div className='hidden tablet:flex justify-start items-center gap-2 w-full'>
+                            <Icon imgSrc={youtubeIcon} className='w-16 p-4 rounded-full' />
+                            <Icon imgSrc={shareIcon} className='w-16 p-4 rounded-full' />
+                            <Icon imgSrc={closeIcon} onClick={hidePlayer} className='ml-auto w-16 p-2 rounded-full bg-white bg-opacity-25' />
                         </div>
 
                         <div className='flex items-start justify-between mt-3 tablet:mt-8 mb-8'>
@@ -100,9 +100,9 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                         <div className='hidden tablet:flex items-center justify-between gap-2'>
                             <div className='flex flex-col items-center justify-center'>
                                 <Toggle isActive={false} className='h-8' />
-                                <p className='line-clamp-1 text-xs tablet:text-sm'>Play Video</p>
+                                <p className='line-clamp-1 text-sm'>Play Video</p>
                             </div>
-                            <div className='hidden tablet:flex flex-col justify-center w-full max-w-60'>
+                            <div className='flex flex-col justify-center w-full max-w-60'>
                                 <Slider />
                                 <p className='line-clamp-1 text-sm flex items-center justify-between'>
                                     <span>Volume</span>
@@ -127,14 +127,14 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                             <Icon imgSrc={queueIcon} className='w-16 p-3.5' />
                         </div>
 
-                        <div className='tablet:hidden flex justify-start items-center mt-auto'>
+                        <div className='tablet:hidden flex justify-start items-center gap-1 mt-auto'>
                             <div className='flex flex-col items-center justify-center'>
-                                <Toggle isActive={false} className='h-8' />
-                                <p className='line-clamp-1 text-xs tablet:text-sm'>Play Video</p>
+                                <Toggle isActive={false} className='h-7' />
+                                <p className='line-clamp-1 text-xs'>Play Video</p>
                             </div>
-                            <Icon imgSrc={youtubeIcon} className='ml-auto w-14 p-3 tablet:w-16 tablet:p-4 rounded-full' />
-                            <Icon imgSrc={shareIcon} className='w-14 p-3 tablet:w-16 tablet:p-4 rounded-full' />
-                            <Icon imgSrc={closeIcon} onClick={hidePlayer} className='tablet:ml-auto w-14 p-2.5 tablet:w-16 tablet:p-2 rounded-full bg-white bg-opacity-25' />
+                            <Icon imgSrc={youtubeIcon} className='ml-auto w-12 p-3 rounded-full' />
+                            <Icon imgSrc={shareIcon} className='w-12 p-3 rounded-full' />
+                            <Icon imgSrc={closeIcon} onClick={hidePlayer} className='w-14 p-2.5 rounded-full bg-white bg-opacity-25' />
                         </div>
                     </div>
 
