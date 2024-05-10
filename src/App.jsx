@@ -58,16 +58,16 @@ function App() {
         <>  
 
             <PlayerContext.Provider value={{playingMusic, isPlayerShowing, playMusic}}>
-                <Header className='z-header w-full h-header-m fixed top-0 inset-x-0 tablet:h-header'/>
+                <Header className='z-header w-full h-header-m tablet:h-header fixed inset-x-0 top-0'/>
                 
-                <main className='mt-main-t-m mb-main-b-m tablet:mt-main-t tablet:mb-main-b tablet:ml-main-l'>
+                <main className='mt-main-t-m tablet:mt-main-t mb-main-b-m tablet:mb-main-b tablet:ml-main-l'>
                     <Outlet />
                 </main>
 
                 <Footer
                     onClick={showPlayer}
                     playingMusic={playingMusic}
-                    className='z-footer w-full h-footer-m fixed inset-x-0 bottom-footer-b-m tablet:bottom-0 tablet:h-footer' 
+                    className='z-footer w-full h-footer-m tablet:h-footer fixed inset-x-0 bottom-footer-b-m tablet:bottom-0' 
                 />
 
                 <PlayerPage 
@@ -76,7 +76,7 @@ function App() {
                     className='z-playerpage'
                 />
 
-                <NavBar className='z-navbar w-full h-navbar-m tablet:w-navbar tablet:h-full fixed bottom-0 inset-x-0 tablet:left-0 tablet:top-14' />
+                <NavBar className='z-navbar w-full tablet:w-navbar h-navbar-m tablet:h-full fixed inset-x-0 tablet:top-14 bottom-0 tablet:left-0' />
             </PlayerContext.Provider>
         </>
     );

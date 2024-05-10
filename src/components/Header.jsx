@@ -22,10 +22,10 @@ function Header({ className }) {
     
     return (
         <header 
-            className={`bg-black flex justify-start border-b border-slate-900 backdrop-blur-[8px] bg-opacity-50 ${className}`}
+            className={`flex justify-start bg-black backdrop-blur-[8px] bg-opacity-50 border-b border-slate-900 ${className}`}
         >
             <div 
-                className={`w-fit h-full p-2.5 flex justify-start items-center cursor-pointer tablet:p-3 active:bg-slate-800 ${!isMobileDevice ? 'hover:bg-slate-900' : ''}`}
+                className={`w-fit h-full flex justify-start items-center p-2.5 tablet:p-3 active:bg-slate-800 cursor-pointer ${!isMobileDevice ? 'hover:bg-slate-900' : ''}`}
                 onClick={gotoHome}    
             >
                 <img 

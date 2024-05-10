@@ -5,9 +5,9 @@ function Toggle({ className = 'h-10' }) {
     return (
         <div
             onClick={() => setIsActive(!isActive)}
-            className={`aspect-[1.8] p-1 flex rounded-full cursor-pointer ${isActive ? 'justify-end bg-gradient-to-r' : 'justify-start bg-black'} from-primary-light to-primary-dark ${className}`}
+            className={`flex aspect-[1.8] p-1 from-primary-light to-primary-dark rounded-full cursor-pointer ${isActive ? 'justify-end bg-gradient-to-r' : 'justify-start bg-black'} ${className}`}
         >
-            <div className={`aspect-square h-full rounded-full ${isActive ? 'bg-black' : 'bg-white'}`}></div>
+            <div className={`h-full aspect-square rounded-full ${isActive ? 'bg-black' : 'bg-white'}`}></div>
         </div>
     );
 }

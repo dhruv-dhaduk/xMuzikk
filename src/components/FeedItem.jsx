@@ -7,10 +7,10 @@ function FeedItem({ music, onClick, isPlaying }) {
     return (
         <div 
             onClick={onClick}
-            className={`bg-transparent rounded-xl select-none cursor-pointer flex p-3 gap-2 tablet:p-4 ${isPlaying ? 'bg-gradient-to-r' : ''} from-primary-light-35 to-primary-dark-35`}
+            className={`flex gap-2 p-3 tablet:p-4 bg-transparent from-primary-light-35 to-primary-dark-35 rounded-xl cursor-pointer select-none ${isPlaying ? 'bg-gradient-to-r' : ''}`}
         >
 
-            <div className='aspect-square w-[6.5rem] flex-none tablet:flex-1'>
+            <div className='flex-none w-[6.5rem] tablet:flex-1 aspect-square'>
                 <img 
                     src={music.thumbnail} 
                     draggable={false}
@@ -19,13 +19,13 @@ function FeedItem({ music, onClick, isPlaying }) {
                 />
             </div>
 
-            <div className='flex-1 relative flex flex-col items-start justify-between py-1.5 pr-10 tablet:p-0 tablet:justify-evenly'>
-                <p className='line-clamp-2 text-[16px]/[20px] tablet:line-clamp-3 tablet:text-[18px]'>
+            <div className='flex-1 flex flex-col justify-between tablet:justify-evenly items-start relative tablet:p-0 py-1.5 pr-10'>
+                <p className='text-[16px]/[20px] tablet:text-[18px] line-clamp-2 tablet:line-clamp-3'>
                     { music.title }
                 </p>
 
 
-                <div className='flex items-center justify-start tablet:flex-col tablet:justify-evenly tablet:items-start tablet:gap-2'>
+                <div className='flex tablet:flex-col justify-start tablet:justify-evenly items-center tablet:items-start tablet:gap-2'>
                     <SmallP>
                         { music.channelTitle }
                     </SmallP>
@@ -42,7 +42,7 @@ function FeedItem({ music, onClick, isPlaying }) {
                     { convertDurationFormat(music.duration) }
                 </SmallP>
 
-                <div className='absolute inset-y-0 right-0 h-full w-8 flex flex-col-reverse justify-between items-center tablet:w-fit tablet:h-8 tablet:right-0 tablet:bottom-0 tablet:top-auto tablet:flex-row tablet:justify-center'>
+                <div className='w-8 tablet:w-fit h-full tablet:h-8 flex flex-col-reverse tablet:flex-row justify-between tablet:justify-center items-center absolute inset-y-0 tablet:top-auto right-0 tablet:right-0 tablet:bottom-0'>
                     <Icon iconSrc={playIcon} />
                     <Icon iconSrc={threeDotsIcon} />
                 </div>
@@ -54,7 +54,7 @@ function FeedItem({ music, onClick, isPlaying }) {
 
 function SmallP({ children, className }) {
     return (
-        <p className={`text-stone-400 text-[13px]/[13px] tablet:text-[15px]/[18px] line-clamp-1 ${className}`}>
+        <p className={`text-[13px]/[13px] tablet:text-[15px]/[18px] text-stone-400 line-clamp-1 ${className}`}>
             { children }
         </p>
     );
