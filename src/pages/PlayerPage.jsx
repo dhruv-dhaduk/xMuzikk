@@ -16,12 +16,23 @@ import queueIcon from '/icons/queue.svg';
 import Toggle from "../components/ui/Toggle.jsx";
 import Slider from "../components/ui/Slider.jsx";
 
+import YouTubePlayer from "../components/YouTubePlayer.jsx";
+
 function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
+
+    const [isVideoShowing, setIsVideoShowing] = useState(false);
+    const [showVideo, setShowVideo] = useState(false);
+
     const { playingMusic } = useContext(PlayerContext) || {};
 
     const { id, title, thumbnail, duration, uploadTime, channelTitle } = playingMusic || {};
+
+    const toggleVideoVisibility = () => {
+        setShowVideo(!showVideo);
+        setIsVideoShowing(!showVideo);
+    }
 
     useEffect(() => {
         isFirstRender.current = true;
@@ -60,15 +71,17 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                 <div className='flex flex-col tablet:flex-row w-full h-full gap-5 aspect-[2]'>
 
                     <div className='flex-none tablet:flex-initial aspect-square'>
-                        <div className='w-full h-full relative overflow-hidden bg-slate-700 rounded-2xl'>
+                        <div className='w-full h-full flex justify-center relative overflow-hidden bg-slate-700 rounded-2xl'>
                             <div className='w-full h-full absolute inset-0'>
                                 <img 
                                     src={thumbnail}
                                     draggable={false}
                                     onContextMenu={e => e.preventDefault()}
-                                    className='w-full h-full object-cover'
+                                    className={`w-full h-full object-cover ${isVideoShowing ? 'opacity-0' : 'opacity-100'}`}
                                 />
                             </div>
+
+                            <YouTubePlayer exposePlayerRef={() => {}} handleStateChange={() => {}} />
                         </div>
                     </div>
 
@@ -99,7 +112,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
 
                         <div className='hidden tablet:flex justify-between items-center gap-2'>
                             <div className='flex flex-col justify-center items-center'>
-                                <Toggle isActive={false} className='h-8' />
+                                <Toggle isActive={showVideo} onClick={toggleVideoVisibility} className='h-8' />
                                 <p className='text-sm line-clamp-1'>Play Video</p>
                             </div>
                             <div className='w-full max-w-60 flex flex-col justify-center'>
@@ -129,7 +142,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
 
                         <div className='tablet:hidden flex justify-start items-center gap-1 mt-auto'>
                             <div className='flex flex-col justify-center items-center'>
-                                <Toggle isActive={false} className='h-7' />
+                                <Toggle isActive={showVideo} onClick={toggleVideoVisibility} className='h-7' />
                                 <p className='text-xs line-clamp-1'>Play Video</p>
                             </div>
                             <Icon imgSrc={youtubeIcon} className='w-12 p-3 ml-auto rounded-full' />
