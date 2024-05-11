@@ -21,7 +21,7 @@ import YouTubePlayer from "../components/YouTubePlayer.jsx";
 
 import { YTstates } from "../constants.js";
 
-function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
+function PlayerPage({ isPlayerShowing, hidePlayer, exposePlayerRef = () => {}, className }) {
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
     const playerRef = useRef({});
@@ -60,6 +60,8 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
         playerRef.current = passedRef.current;
         playerRef.current.addEventListener('onStateChange', handleStateChange);
         window.player = playerRef.current;
+
+        exposePlayerRef(passedRef);
     };
 
     const playpause = () => {
