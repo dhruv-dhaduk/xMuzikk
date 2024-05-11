@@ -2,15 +2,52 @@ function convertDurationFormat(duration) {
     if (!duration) {
         return '00:00';
     }
-    const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-    const hours = (parseInt(match[1]) || 0);
-    const minutes = (parseInt(match[2]) || 0);
-    const seconds = (parseInt(match[3]) || 0);
+
+    let hours;
+    let minutes;
+    let seconds;
+
+    if (typeof(duration) === 'number') {
+        if (isNaN(duration)) {
+            return '00:00';
+        }
+        hours = Math.floor(duration / 3600);
+        duration -= 3600 * hours;
+
+        minutes = Math.floor(duration / 60);
+        duration -= 60 * minutes;
+
+        seconds = parseInt(duration);
+    }
+    else {
+        const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+        if (!match) {
+            return '00:00';
+        }
+        hours = (parseInt(match[1]) || 0);
+        minutes = (parseInt(match[2]) || 0);
+        seconds = (parseInt(match[3]) || 0);
+    }
 
     if (hours == 0)
         return `${minutes.toString()}:${seconds.toString().padStart(2, '0')}`;
     else
         return `${hours.toString()}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function getDurationFromISO(duration) {
+    if (!duration)
+        return 0;
+    
+    const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+    if (!match) {
+        return 0;
+    }
+    const hours = (parseInt(match[1]) || 0);
+    const minutes = (parseInt(match[2]) || 0);
+    const seconds = (parseInt(match[3]) || 0);
+
+    return hours * 3600 + minutes * 60 + seconds;
 }
 
 function convertUploadTimeFormat(uploadTime)
@@ -47,4 +84,4 @@ function time_relative_to(timediff, unitTime, label)
         return x + " " + label + " ago";
 }
 
-export { convertDurationFormat, convertUploadTimeFormat };
+export { convertDurationFormat, convertUploadTimeFormat, getDurationFromISO };

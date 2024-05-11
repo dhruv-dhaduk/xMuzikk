@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useContext, useCallback } from "react";
 import { PlayerContext } from '../contexts/PlayerContext.js';
 
-import { convertUploadTimeFormat, convertDurationFormat } from '../utils/converters.js';
+import { convertUploadTimeFormat, convertDurationFormat, getDurationFromISO } from '../utils/converters.js';
 
 import closeIcon from '/icons/close.svg';
 import shareIcon from '/icons/share.svg';
@@ -25,6 +25,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
     const playerRef = useRef({});
+    const itvIdRef = useRef(-1);
 
     const [isVideoShowing, setIsVideoShowing] = useState(false);
     const [showVideo, setShowVideo] = useState(false);
@@ -32,9 +33,17 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     const [playerElapsedTime, setPlayerElapsedTime] = useState(0);
 
     const handleStateChange = useCallback(() => {
-        console.log("STATE CHANGED");
-        if (playerRef.current.getPlayerState) {
-            setPlayerState(playerRef.current.getPlayerState());
+        
+        if (playerRef.current?.getPlayerState) {
+            const stat = playerRef.current.getPlayerState();
+            setPlayerState(stat);
+
+            if (stat === YTstates.PLAYING) {
+                startTimeUpdateInterval();
+            }
+            else {
+                clearInterval(itvIdRef);
+            }
         }
     }, [playerState, setPlayerState]);
 
@@ -61,6 +70,17 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
             playerRef.current?.playVideo && playerRef.current.playVideo();
         }
     }
+
+    const updateCurrentTime = useCallback(() => {
+        let t = parseInt(playerRef.current?.getCurrentTime && playerRef.current.getCurrentTime());
+        t = isNaN(t) ? 0 : t;
+        setPlayerElapsedTime(t);
+    }, [setPlayerElapsedTime]);
+
+    const startTimeUpdateInterval = useCallback(() => {
+        clearInterval(itvIdRef);
+        itvIdRef.current = setInterval(updateCurrentTime, 300);
+    }, [updateCurrentTime]);
 
     useEffect(() => {
         isFirstRender.current = true;
@@ -159,9 +179,9 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                         </div>
 
                         <div className='tablet:mt-auto mb-6 tablet:mb-8'>
-                            <Slider className='w-full' />
+                            <Slider min={0} max={getDurationFromISO(duration)} value={playerElapsedTime} className='w-full' />
                             <p className='w-full flex justify-between items-center text-sm font-semibold'>
-                                <span>2:11</span>
+                                <span> { convertDurationFormat(playerElapsedTime) } </span>
                                 <span> { convertDurationFormat(duration) } </span>
                             </p>
                         </div>
