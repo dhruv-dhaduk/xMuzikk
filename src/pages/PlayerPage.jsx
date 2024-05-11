@@ -21,6 +21,7 @@ import YouTubePlayer from "../components/YouTubePlayer.jsx";
 function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
+    const playerRef = useRef({});
 
     const [isVideoShowing, setIsVideoShowing] = useState(false);
     const [showVideo, setShowVideo] = useState(false);
@@ -32,6 +33,14 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     const toggleVideoVisibility = () => {
         setShowVideo(!showVideo);
         setIsVideoShowing(!showVideo);
+    }
+
+    const getPlayerRef = (passedRef) => {
+        console.log("GET PLAYER REF");
+        console.log(passedRef.current);
+        playerRef.current = passedRef.current;
+        console.log(playerRef.current);
+        window.player = playerRef.current;
     }
 
     useEffect(() => {
@@ -81,7 +90,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                                 />
                             </div>
 
-                            <YouTubePlayer exposePlayerRef={() => {}} handleStateChange={() => {}} />
+                            <YouTubePlayer exposePlayerRef={getPlayerRef} handleStateChange={() => {}} />
                         </div>
                     </div>
 

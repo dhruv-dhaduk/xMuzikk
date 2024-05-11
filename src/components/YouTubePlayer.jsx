@@ -26,20 +26,9 @@ function YouTubePlayer({ exposePlayerRef, handleStateChange }) {
         if (!isApiLoaded) return;
 
         const handleReady = () => {
-            window.player = playerRef.current;
             playerRef.current.playVideo();
 
-            exposePlayerRef(
-                () => {
-                return playerRef.current.getPlayerState(); 
-            });
-
-            exposePlayerRef({
-                getPlayerState: () => playerRef.current.getPlayerState(),
-                playVideo: () => playerRef.current.playVideo(),
-                pauseVideo: () => playerRef.current.pauseVideo(),
-                loadVideoById: (id) => playerRef.current.loadVideoById(id, 0)
-            });
+            exposePlayerRef(playerRef);
         }
         
         playerRef.current = new window.YT.Player(playerElementID, {
