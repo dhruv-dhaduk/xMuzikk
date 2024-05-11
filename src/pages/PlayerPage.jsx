@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useContext } from "react";
+import { useEffect, useRef, useState, useContext, useCallback } from "react";
 import { PlayerContext } from '../contexts/PlayerContext.js';
 
 import { convertUploadTimeFormat, convertDurationFormat } from '../utils/converters.js';
@@ -10,6 +10,7 @@ import heartHollowIcon from '/icons/heart_hollow.svg';
 import loopIcon from '/icons/loop.svg';
 import previousIcon from '/icons/previous.svg';
 import pauseIcon from '/icons/pause.svg';
+import playIcon from '/icons/play.svg';
 import nextIcon from '/icons/next.svg';
 import queueIcon from '/icons/queue.svg';
 
@@ -18,6 +19,8 @@ import Slider from "../components/ui/Slider.jsx";
 
 import YouTubePlayer from "../components/YouTubePlayer.jsx";
 
+import { YTstates } from "../constants.js";
+
 function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
@@ -25,6 +28,15 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
 
     const [isVideoShowing, setIsVideoShowing] = useState(false);
     const [showVideo, setShowVideo] = useState(false);
+    const [playerState, setPlayerState] = useState(YTstates.UNSTARTED);
+    const [playerElapsedTime, setPlayerElapsedTime] = useState(0);
+
+    const handleStateChange = useCallback(() => {
+        console.log("STATE CHANGED");
+        if (playerRef.current.getPlayerState) {
+            setPlayerState(playerRef.current.getPlayerState());
+        }
+    }, [playerState, setPlayerState]);
 
     const { playingMusic } = useContext(PlayerContext) || {};
 
@@ -36,11 +48,18 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
     }
 
     const getPlayerRef = (passedRef) => {
-        console.log("GET PLAYER REF");
-        console.log(passedRef.current);
         playerRef.current = passedRef.current;
-        console.log(playerRef.current);
+        playerRef.current.addEventListener('onStateChange', handleStateChange);
         window.player = playerRef.current;
+    };
+
+    const playpause = () => {
+        if (playerState === YTstates.PLAYING) {
+            playerRef.current?.pauseVideo && playerRef.current.pauseVideo();
+        }
+        else if (playerState === YTstates.PAUSED) {
+            playerRef.current?.playVideo && playerRef.current.playVideo();
+        }
     }
 
     useEffect(() => {
@@ -61,6 +80,12 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
 
         isFirstRender.current = false;
     }, [isPlayerShowing]);
+
+    useEffect(() => {
+        if (playerRef.current?.loadVideoById) {
+            playerRef.current?.loadVideoById(id);
+        }
+    }, [id]);
 
     return (
         <div 
@@ -144,7 +169,11 @@ function PlayerPage({ isPlayerShowing, hidePlayer, className }) {
                         <div className='flex justify-center items-center gap-3 mb-10'>
                             <Icon imgSrc={loopIcon} className='w-16 p-3.5' />
                             <Icon imgSrc={previousIcon} className='w-16 p-3.5' />
-                            <Icon imgSrc={pauseIcon} className='w-20 p-5 bg-white bg-opacity-25 rounded-full' />
+                            <Icon 
+                                imgSrc={playerState === YTstates.PLAYING || playerState === YTstates.BUFFERING ? pauseIcon : playIcon} 
+                                className='w-20 p-5 bg-white bg-opacity-25 rounded-full'
+                                onClick={playpause}
+                            />
                             <Icon imgSrc={nextIcon} className='w-16 p-3.5' />
                             <Icon imgSrc={queueIcon} className='w-16 p-3.5' />
                         </div>
