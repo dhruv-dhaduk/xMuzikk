@@ -17,72 +17,15 @@ import queueIcon from '/icons/queue.svg';
 import Toggle from "../components/ui/Toggle.jsx";
 import Slider from "../components/ui/Slider.jsx";
 
-import YouTubePlayer from "../components/YouTubePlayer.jsx";
-
 import { YTstates } from "../constants.js";
 
-function PlayerPage({ isPlayerShowing, hidePlayer, exposePlayerRef = () => {}, className }) {
+function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className }) {
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
-    const playerRef = useRef({});
-    const itvIdRef = useRef(-1);
-
-    const [isVideoShowing, setIsVideoShowing] = useState(false);
-    const [showVideo, setShowVideo] = useState(false);
-    const [playerState, setPlayerState] = useState(YTstates.UNSTARTED);
-    const [playerElapsedTime, setPlayerElapsedTime] = useState(0);
-
-    const handleStateChange = useCallback(() => {
-        
-        if (playerRef.current?.getPlayerState) {
-            const stat = playerRef.current.getPlayerState();
-            setPlayerState(stat);
-
-            if (stat === YTstates.PLAYING) {
-                startTimeUpdateInterval();
-            }
-            else {
-                clearInterval(itvIdRef);
-            }
-        }
-    }, [playerState, setPlayerState]);
 
     const { playingMusic } = useContext(PlayerContext) || {};
 
     const { id, title, thumbnail, duration, uploadTime, channelTitle } = playingMusic || {};
-
-    const toggleVideoVisibility = () => {
-        setShowVideo(!showVideo);
-        setIsVideoShowing(!showVideo);
-    }
-
-    const getPlayerRef = (passedRef) => {
-        playerRef.current = passedRef.current;
-        playerRef.current.addEventListener('onStateChange', handleStateChange);
-        window.player = playerRef.current;
-
-        exposePlayerRef(passedRef);
-    };
-
-    const playpause = () => {
-        if (playerState === YTstates.PLAYING) {
-            playerRef.current?.pauseVideo && playerRef.current.pauseVideo();
-        }
-        else if (playerState === YTstates.PAUSED) {
-            playerRef.current?.playVideo && playerRef.current.playVideo();
-        }
-    }
-
-    const updateCurrentTime = useCallback(() => {
-        let t = parseInt(playerRef.current?.getCurrentTime && playerRef.current.getCurrentTime());
-        t = isNaN(t) ? 0 : t;
-        setPlayerElapsedTime(t);
-    }, [setPlayerElapsedTime]);
-
-    const startTimeUpdateInterval = useCallback(() => {
-        clearInterval(itvIdRef);
-        itvIdRef.current = setInterval(updateCurrentTime, 300);
-    }, [updateCurrentTime]);
 
     useEffect(() => {
         isFirstRender.current = true;
@@ -102,12 +45,6 @@ function PlayerPage({ isPlayerShowing, hidePlayer, exposePlayerRef = () => {}, c
 
         isFirstRender.current = false;
     }, [isPlayerShowing]);
-
-    useEffect(() => {
-        if (playerRef.current?.loadVideoById) {
-            playerRef.current?.loadVideoById(id);
-        }
-    }, [id]);
 
     return (
         <div 
@@ -133,11 +70,16 @@ function PlayerPage({ isPlayerShowing, hidePlayer, exposePlayerRef = () => {}, c
                                     src={thumbnail}
                                     draggable={false}
                                     onContextMenu={e => e.preventDefault()}
-                                    className={`w-full h-full object-cover ${isVideoShowing ? 'opacity-0' : 'opacity-100'}`}
+                                    className={`w-full h-full object-cover opacity-0`}
                                 />
                             </div>
 
-                            <YouTubePlayer exposePlayerRef={getPlayerRef} handleStateChange={() => {}} />
+                            <div className='h-full aspect-video'>
+                                <div
+                                    id={playerElementID}
+                                    className='w-full h-full pointer-events-none'
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -168,7 +110,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, exposePlayerRef = () => {}, c
 
                         <div className='hidden tablet:flex justify-between items-center gap-2'>
                             <div className='flex flex-col justify-center items-center'>
-                                <Toggle isActive={showVideo} onClick={toggleVideoVisibility} className='h-8' />
+                                <Toggle className='h-8' />
                                 <p className='text-sm line-clamp-1'>Play Video</p>
                             </div>
                             <div className='w-full max-w-60 flex flex-col justify-center'>
@@ -181,9 +123,9 @@ function PlayerPage({ isPlayerShowing, hidePlayer, exposePlayerRef = () => {}, c
                         </div>
 
                         <div className='tablet:mt-auto mb-6 tablet:mb-8'>
-                            <Slider min={0} max={getDurationFromISO(duration)} value={playerElapsedTime} className='w-full' />
+                            <Slider min={0} max={getDurationFromISO(duration)} value={0} className='w-full' />
                             <p className='w-full flex justify-between items-center text-sm font-semibold'>
-                                <span> { convertDurationFormat(playerElapsedTime) } </span>
+                                <span> { convertDurationFormat(0) } </span>
                                 <span> { convertDurationFormat(duration) } </span>
                             </p>
                         </div>
@@ -192,9 +134,8 @@ function PlayerPage({ isPlayerShowing, hidePlayer, exposePlayerRef = () => {}, c
                             <Icon imgSrc={loopIcon} className='w-16 p-3.5' />
                             <Icon imgSrc={previousIcon} className='w-16 p-3.5' />
                             <Icon 
-                                imgSrc={playerState === YTstates.PLAYING || playerState === YTstates.BUFFERING ? pauseIcon : playIcon} 
+                                imgSrc={pauseIcon} 
                                 className='w-20 p-5 bg-white bg-opacity-25 rounded-full'
-                                onClick={playpause}
                             />
                             <Icon imgSrc={nextIcon} className='w-16 p-3.5' />
                             <Icon imgSrc={queueIcon} className='w-16 p-3.5' />
@@ -202,7 +143,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, exposePlayerRef = () => {}, c
 
                         <div className='tablet:hidden flex justify-start items-center gap-1 mt-auto'>
                             <div className='flex flex-col justify-center items-center'>
-                                <Toggle isActive={showVideo} onClick={toggleVideoVisibility} className='h-7' />
+                                <Toggle className='h-7' />
                                 <p className='text-xs line-clamp-1'>Play Video</p>
                             </div>
                             <Icon imgSrc={youtubeIcon} className='w-12 p-3 ml-auto rounded-full' />

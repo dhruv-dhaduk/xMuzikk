@@ -12,7 +12,6 @@ import { YTstates } from "./constants.js";
 
 function App() {
     
-    const playerRef = useRef({});
     const [isPlayerShowing, setIsPlayerShowing] = useState(window.history.state.player ? true : false);
     const [playingMusic, setPlayingMusic] = useState({});
 
@@ -56,41 +55,6 @@ function App() {
         }
     });
 
-    const getPlayerRef = (passedRef) => {
-        playerRef.current = passedRef.current;
-    }
-
-    const addStateChangeListener = (fn) => {
-        if (typeof(fn) === 'function' && playerRef.current?.addEventListener) {
-            playerRef.current.addEventListener('onStateChange', fn);
-        }
-    }
-
-    const getPlayerState = () => {
-        if (playerRef.current?.getPlayerState)
-            return playerRef.current.getPlayerState();
-        return YTstates.UNSTARTED;
-    }
-
-    const getCurrentTime = () => {
-        if (playerRef.current?.getCurrentTime) 
-            return playerRef.current.getCurrentTime();
-        return 0;
-    }
-
-    const playpause = () => {
-        if (playerRef.current?.getPlayerState) {
-            const stat = playerRef.current.getPlayerState();
-
-            if (stat === YTstates.PLAYING) {
-                playerRef.current.pauseVideo();
-            }
-            else if (stat === YTstates.PAUSED) {
-                playerRef.current.playVideo();
-            }
-        }
-    }
-
     return (
         <>  
 
@@ -104,17 +68,12 @@ function App() {
                 <Footer
                     onClick={showPlayer}
                     playingMusic={playingMusic}
-                    addStateChangeListener={addStateChangeListener}
-                    getPlayerState={getPlayerState}
-                    getCurrentTime={getCurrentTime}
-                    playpause={playpause}
                     className='z-footer w-full h-footer-m tablet:h-footer fixed inset-x-0 bottom-footer-b-m tablet:bottom-0' 
                 />
 
                 <PlayerPage 
                     isPlayerShowing={isPlayerShowing} 
                     hidePlayer={hidePlayer}
-                    exposePlayerRef={getPlayerRef}
                     className='z-playerpage'
                 />
 
