@@ -2,9 +2,34 @@ import { useState, useEffect, useRef } from "react";
 
 function useYT(playerElementID) {
     const isYtApiLoaded = useYtApiLoadedStatus();
-    
 
-    return [isYtApiLoaded];
+    const playerRef = useRef({});
+    
+    useEffect(() => {
+        if (!isYtApiLoaded) return;
+        
+        playerRef.current = new window.YT.Player(playerElementID, {
+            videoId: "",
+            
+            playerVars: {
+                'start': 0,
+                'color': 'red',
+            },
+            
+            events: {
+                'onReady': () => { playerRef.current.playVideo(); }
+            }
+        });
+        
+        console.log(playerRef);
+        return () => {
+            if (playerRef?.current?.destroy) 
+                playerRef.current.destroy();
+        }
+
+    }, [isYtApiLoaded, playerElementID]);
+
+    return [isYtApiLoaded, playerRef];
 }
 
 function useYtApiLoadedStatus() {

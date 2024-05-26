@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import Header from "./components/Header";
 import NavBar from "./components/NavBar";
@@ -9,11 +9,14 @@ import { Outlet } from "react-router-dom";
 
 import { PlayerContext } from "./contexts/PlayerContext.js";
 import { YTstates } from "./constants.js";
+import { useYT } from "./hooks/useYT.js";
 
 function App() {
     
     const [isPlayerShowing, setIsPlayerShowing] = useState(window.history.state.player ? true : false);
     const [playingMusic, setPlayingMusic] = useState({});
+    const playerElementID = useId();
+    const [isYtApiLoaded, playerRef] = useYT(playerElementID);
 
     if (isPlayerShowing)
         document.body.classList.add('disable-scroll');
@@ -22,6 +25,8 @@ function App() {
 
     const playMusic = (item) => {
         setPlayingMusic(item);
+        console.log(playerRef);
+        playerRef.current.loadVideoById(item.id);
     }
 
     const showPlayer = () => {
@@ -72,7 +77,8 @@ function App() {
                 />
 
                 <PlayerPage 
-                    isPlayerShowing={isPlayerShowing} 
+                    isPlayerShowing={isPlayerShowing}
+                    playerElementID={playerElementID}
                     hidePlayer={hidePlayer}
                     className='z-playerpage'
                 />
