@@ -1,4 +1,6 @@
 import Icon from './Icon.jsx';
+import Toggle from '../ui/Toggle.jsx';
+import Slider from '../ui/Slider.jsx';
 
 import youtubeIcon from '/icons/youtube.svg';
 import shareIcon from '/icons/share.svg';
@@ -14,4 +16,22 @@ function OtherButtonsLg({ hidePlayer }) {
     );
 }
 
-export { OtherButtonsLg };
+function ShowVideoToggleAndVolumeBarLg() {
+    return (
+        <div className='hidden tablet:flex justify-between items-center gap-2'>
+            <div className='flex flex-col justify-center items-center'>
+                <Toggle className='h-8' />
+                <p className='text-sm line-clamp-1'>Play Video</p>
+            </div>
+            <div className='w-full max-w-60 flex flex-col justify-center'>
+                <Slider />
+                <p className='flex justify-between items-center text-sm line-clamp-1'>
+                    <span>Volume</span>
+                    <span>70%</span>
+                </p>
+            </div>
+        </div>
+    );
+}
+
+export { OtherButtonsLg, ShowVideoToggleAndVolumeBarLg };

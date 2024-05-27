@@ -18,7 +18,7 @@ import Toggle from "../components/ui/Toggle.jsx";
 import Slider from "../components/ui/Slider.jsx";
 
 import Screen from "../components/player/Screen.jsx";
-import { OtherButtonsLg } from "../components/player/OtherButtons.jsx";
+import { OtherButtonsLg, ShowVideoToggleAndVolumeBarLg } from "../components/player/OtherButtons.jsx";
 import TitlesAndLike from "../components/player/TitlesAndLike.jsx";
 
 import { YTstates } from "../constants.js";
@@ -83,19 +83,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                             uploadTime={uploadTime}
                         />
 
-                        <div className='hidden tablet:flex justify-between items-center gap-2'>
-                            <div className='flex flex-col justify-center items-center'>
-                                <Toggle className='h-8' />
-                                <p className='text-sm line-clamp-1'>Play Video</p>
-                            </div>
-                            <div className='w-full max-w-60 flex flex-col justify-center'>
-                                <Slider />
-                                <p className='flex justify-between items-center text-sm line-clamp-1'>
-                                    <span>Volume</span>
-                                    <span>70%</span>
-                                </p>
-                            </div>
-                        </div>
+                        <ShowVideoToggleAndVolumeBarLg />
 
                         <div className='tablet:mt-auto mb-6 tablet:mb-8'>
                             <Slider min={0} max={getDurationFromISO(duration)} value={0} className='w-full' />
