@@ -21,7 +21,7 @@ function App() {
     return (
         <>  
 
-            <PlayerContext.Provider value={{playingMusic, isPlayerShowing, playMusic}}>
+            <PlayerContext.Provider value={{isPlayerShowing, isYtApiLoaded, playerState, playerRef, playingMusic, playMusic}}>
                 <Header className='z-header w-full h-header-m tablet:h-header fixed inset-x-0 top-0'/>
                 
                 <main className='mt-main-t-m tablet:mt-main-t mb-main-b-m tablet:mb-main-b tablet:ml-main-l'>
@@ -43,6 +43,7 @@ function App() {
 
                 <NavBar className='z-navbar w-full tablet:w-navbar h-navbar-m tablet:h-full fixed inset-x-0 tablet:top-14 bottom-0 tablet:left-0' />
             </PlayerContext.Provider>
+            
         </>
     );
 }
