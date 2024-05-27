@@ -1,9 +1,24 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+
+import { YTstates } from "../constants.js";
 
 function useYT(playerElementID) {
     const isYtApiLoaded = useYtApiLoadedStatus();
+    
+    const [playerState, setPlayerState] = useState(YTstates.NULL);
 
     const playerRef = useRef({});
+
+    const handleStateChange = useCallback(() => {
+        const currentState = playerRef?.current?.getPlayerState ? playerRef.current.getPlayerState() : YTstates.NULL;
+        setPlayerState(currentState);
+    }, [setPlayerState, playerRef]);
+
+    useEffect(() => {
+        return () => {
+            playerRef.current.previousState = playerState;
+        }
+    }, [playerState]);
     
     useEffect(() => {
         if (!isYtApiLoaded) return;
@@ -19,14 +34,11 @@ function useYT(playerElementID) {
                 'fs': 0,
                 'iv_load_policy': 3,
                 'rel': 0
-            },
-            
-            events: {
-                'onReady': () => { playerRef.current.playVideo(); }
             }
         });
-        
-        console.log(playerRef);
+
+        playerRef.current.previousState = YTstates.NULL;
+        playerRef.current.addEventListener('onStateChange', handleStateChange);
         return () => {
             if (playerRef?.current?.destroy) 
                 playerRef.current.destroy();
@@ -34,7 +46,7 @@ function useYT(playerElementID) {
 
     }, [isYtApiLoaded, playerElementID]);
 
-    return [isYtApiLoaded, playerRef];
+    return {isYtApiLoaded, playerState, playerRef};
 }
 
 function useYtApiLoadedStatus() {

@@ -16,7 +16,7 @@ function App() {
     const [isPlayerShowing, setIsPlayerShowing] = useState(window.history.state.player ? true : false);
     const [playingMusic, setPlayingMusic] = useState({});
     const playerElementID = useId();
-    const [isYtApiLoaded, playerRef] = useYT(playerElementID);
+    const {isYtApiLoaded, playerState, playerRef} = useYT(playerElementID);
 
     if (isPlayerShowing)
         document.body.classList.add('disable-scroll');
@@ -25,7 +25,6 @@ function App() {
 
     const playMusic = (item) => {
         setPlayingMusic(item);
-        console.log(playerRef);
         playerRef.current.loadVideoById(item.id);
     }
 
