@@ -17,6 +17,8 @@ import queueIcon from '/icons/queue.svg';
 import Toggle from "../components/ui/Toggle.jsx";
 import Slider from "../components/ui/Slider.jsx";
 
+import Screen from "../components/player/Screen.jsx";
+
 import { YTstates } from "../constants.js";
 
 function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className }) {
@@ -63,25 +65,11 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                 
                 <div className='flex flex-col tablet:flex-row w-full h-full gap-5 aspect-[2]'>
 
-                    <div className='flex-none tablet:flex-initial aspect-square'>
-                        <div className='w-full h-full flex justify-center relative overflow-hidden bg-slate-700 rounded-2xl'>
-                            <div className='w-full h-full absolute inset-0'>
-                                <img 
-                                    src={thumbnail}
-                                    draggable={false}
-                                    onContextMenu={e => e.preventDefault()}
-                                    className={`w-full h-full object-cover opacity-0`}
-                                />
-                            </div>
-
-                            <div className='h-full aspect-video'>
-                                <div
-                                    id={playerElementID}
-                                    className='w-full h-full pointer-events-none'
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <Screen
+                        thumbnail={thumbnail}
+                        isYtApiLoaded={isYtApiLoaded} 
+                        playerElementID={playerElementID} 
+                    />
 
                     <div className='flex-1 flex flex-col justify-start'>
 
