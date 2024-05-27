@@ -4,15 +4,19 @@ import { YTstates } from "../constants.js";
 
 function useYT(playerElementID) {
     const isYtApiLoaded = useYtApiLoadedStatus();
-    
     const [playerState, setPlayerState] = useState(YTstates.NULL);
-
+    const [playingMusic, setPlayingMusic] = useState({});
     const playerRef = useRef({});
 
     const handleStateChange = useCallback(() => {
         const currentState = playerRef?.current?.getPlayerState ? playerRef.current.getPlayerState() : YTstates.NULL;
         setPlayerState(currentState);
     }, [setPlayerState, playerRef]);
+
+    const playMusic = (item) => {
+        setPlayingMusic(item);
+        playerRef.current.loadVideoById(item.id);
+    }
 
     useEffect(() => {
         return () => {
@@ -46,7 +50,7 @@ function useYT(playerElementID) {
 
     }, [isYtApiLoaded, playerElementID]);
 
-    return {isYtApiLoaded, playerState, playerRef};
+    return {isYtApiLoaded, playerState, playerRef, playingMusic, playMusic};
 }
 
 function useYtApiLoadedStatus() {

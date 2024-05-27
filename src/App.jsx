@@ -15,14 +15,8 @@ import { usePopUpPage } from "./hooks/usePopUpPage.js";
 function App() {
     
     const [isPlayerShowing, showPlayer, hidePlayer] = usePopUpPage();
-    const [playingMusic, setPlayingMusic] = useState({});
     const playerElementID = useId();
-    const {isYtApiLoaded, playerState, playerRef} = useYT(playerElementID);
-
-    const playMusic = (item) => {
-        setPlayingMusic(item);
-        playerRef.current.loadVideoById(item.id);
-    }
+    const {isYtApiLoaded, playerState, playerRef, playingMusic, playMusic} = useYT(playerElementID);
 
     return (
         <>  
