@@ -10,54 +10,19 @@ import { Outlet } from "react-router-dom";
 import { PlayerContext } from "./contexts/PlayerContext.js";
 import { YTstates } from "./constants.js";
 import { useYT } from "./hooks/useYT.js";
+import { usePopUpPage } from "./hooks/usePopUpPage.js";
 
 function App() {
     
-    const [isPlayerShowing, setIsPlayerShowing] = useState(window.history.state.player ? true : false);
+    const [isPlayerShowing, showPlayer, hidePlayer] = usePopUpPage();
     const [playingMusic, setPlayingMusic] = useState({});
     const playerElementID = useId();
     const {isYtApiLoaded, playerState, playerRef} = useYT(playerElementID);
-
-    if (isPlayerShowing)
-        document.body.classList.add('disable-scroll');
-    else
-        document.body.classList.remove('disable-scroll');
 
     const playMusic = (item) => {
         setPlayingMusic(item);
         playerRef.current.loadVideoById(item.id);
     }
-
-    const showPlayer = () => {
-        if (!window.history.state.player) 
-            window.history.pushState({ player: true }, '');
-
-        if (!isPlayerShowing)
-            setIsPlayerShowing(true);
-    }
-
-    const hidePlayer = () => {
-        if (window.history.state.player)
-            window.history.back();
-        
-        if (isPlayerShowing)
-            setIsPlayerShowing(false);
-    }
-
-    const popStateHandler = () => {
-        if (!window.history.state.player)
-            hidePlayer();
-        else
-            showPlayer();
-    }
-
-    useEffect(() => {
-        window.addEventListener("popstate", popStateHandler);
-
-        return () => {
-            window.removeEventListener("popstate", popStateHandler);
-        }
-    });
 
     return (
         <>  
