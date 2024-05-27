@@ -13,7 +13,12 @@ function useYT(playerElementID) {
             
             playerVars: {
                 'start': 0,
-                'color': 'red',
+                'color': 'white',
+                'controls': 0,
+                'disablekb': 1,
+                'fs': 0,
+                'iv_load_policy': 3,
+                'rel': 0
             },
             
             events: {
