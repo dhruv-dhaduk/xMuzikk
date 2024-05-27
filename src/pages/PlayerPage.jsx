@@ -20,6 +20,7 @@ import Slider from "../components/ui/Slider.jsx";
 import Screen from "../components/player/Screen.jsx";
 import { OtherButtonsLg, ShowVideoToggleAndVolumeBarLg } from "../components/player/OtherButtons.jsx";
 import TitlesAndLike from "../components/player/TitlesAndLike.jsx";
+import ProgressBar from "../components/player/ProgressBar.jsx";
 
 import { YTstates } from "../constants.js";
 
@@ -85,13 +86,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
 
                         <ShowVideoToggleAndVolumeBarLg />
 
-                        <div className='tablet:mt-auto mb-6 tablet:mb-8'>
-                            <Slider min={0} max={getDurationFromISO(duration)} value={0} className='w-full' />
-                            <p className='w-full flex justify-between items-center text-sm font-semibold'>
-                                <span> { convertDurationFormat(0) } </span>
-                                <span> { convertDurationFormat(duration) } </span>
-                            </p>
-                        </div>
+                        <ProgressBar duration={duration} />
 
                         <div className='flex justify-center items-center gap-3 mb-10'>
                             <Icon imgSrc={loopIcon} className='w-16 p-3.5' />
