@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useId } from "react";
 
 import Header from "./components/Header";
 import NavBar from "./components/NavBar";
@@ -8,7 +8,6 @@ import PlayerPage from "./pages/PlayerPage.jsx";
 import { Outlet } from "react-router-dom";
 
 import { PlayerContext } from "./contexts/PlayerContext.js";
-import { YTstates } from "./constants.js";
 import { useYT } from "./hooks/useYT.js";
 import { usePopUpPage } from "./hooks/usePopUpPage.js";
 

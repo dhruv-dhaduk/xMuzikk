@@ -1,29 +1,11 @@
-import { useEffect, useRef, useState, useContext, useCallback } from "react";
+import { useEffect, useRef, useContext } from "react";
 import { PlayerContext } from '../contexts/PlayerContext.js';
-
-import { convertUploadTimeFormat, convertDurationFormat, getDurationFromISO } from '../utils/converters.js';
-
-import closeIcon from '/icons/close.svg';
-import shareIcon from '/icons/share.svg';
-import youtubeIcon from '/icons/youtube.svg';
-import heartHollowIcon from '/icons/heart_hollow.svg';
-import loopIcon from '/icons/loop.svg';
-import previousIcon from '/icons/previous.svg';
-import pauseIcon from '/icons/pause.svg';
-import playIcon from '/icons/play.svg';
-import nextIcon from '/icons/next.svg';
-import queueIcon from '/icons/queue.svg';
-
-import Toggle from "../components/ui/Toggle.jsx";
-import Slider from "../components/ui/Slider.jsx";
 
 import Screen from "../components/player/Screen.jsx";
 import { OtherButtonsLg, ShowVideoToggleAndVolumeBarLg, OtherButtonsSm } from "../components/player/OtherButtons.jsx";
 import TitlesAndLike from "../components/player/TitlesAndLike.jsx";
 import ProgressBar from "../components/player/ProgressBar.jsx";
 import ControlButtons from "../components/player/ControlButtons.jsx";
-
-import { YTstates } from "../constants.js";
 
 function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className }) {
     const containerRef = useRef(null);
@@ -98,22 +80,6 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                 </div>
 
             </div>
-        </div>
-    );
-}
-
-function Icon({ imgSrc, className, onClick }) {
-    return (
-        <div
-            onClick={onClick}
-            className={`aspect-square cursor-pointer active:scale-[0.8] duration-200 ${className}`}
-        >
-            <img 
-                src={imgSrc}
-                draggable={false}
-                onContextMenu={e => e.preventDefault()}
-                className='w-full h-full object-cover'
-            />
         </div>
     );
 }

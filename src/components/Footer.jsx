@@ -1,11 +1,8 @@
-import playIcon from '/icons/play.svg';
 import pauseIcon from '/icons/pause.svg';
 import previousIcon from '/icons/previous.svg';
 import nextIcon from '/icons/next.svg';
 
 import { convertUploadTimeFormat, convertDurationFormat, getDurationFromISO } from '../utils/converters.js';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { YTstates } from '../constants.js';
 
 function Footer({ className, onClick, playingMusic }) {
 
