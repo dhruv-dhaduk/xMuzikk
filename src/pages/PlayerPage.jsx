@@ -18,6 +18,7 @@ import Toggle from "../components/ui/Toggle.jsx";
 import Slider from "../components/ui/Slider.jsx";
 
 import Screen from "../components/player/Screen.jsx";
+import { OtherButtonsLg } from "../components/player/OtherButtons.jsx";
 
 import { YTstates } from "../constants.js";
 
@@ -73,11 +74,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
 
                     <div className='flex-1 flex flex-col justify-start'>
 
-                        <div className='w-full hidden tablet:flex justify-start items-center gap-2'>
-                            <Icon imgSrc={youtubeIcon} className='w-16 p-4 rounded-full' />
-                            <Icon imgSrc={shareIcon} className='w-16 p-4 rounded-full' />
-                            <Icon imgSrc={closeIcon} onClick={hidePlayer} className='w-16 ml-auto p-2 bg-white bg-opacity-25 rounded-full' />
-                        </div>
+                        <OtherButtonsLg hidePlayer={hidePlayer} />
 
                         <div className='flex justify-between items-start mt-3 tablet:mt-8 mb-8'>
 
