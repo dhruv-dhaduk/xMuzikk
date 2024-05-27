@@ -23,7 +23,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
 
-    const { playingMusic } = useContext(PlayerContext) || {};
+    const { isYtApiLoaded, playerState, playerRef, playingMusic } = useContext(PlayerContext) || {};
 
     const { id, title, thumbnail, duration, uploadTime, channelTitle } = playingMusic || {};
 
