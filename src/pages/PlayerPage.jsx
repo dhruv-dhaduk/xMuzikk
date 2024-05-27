@@ -21,6 +21,7 @@ import Screen from "../components/player/Screen.jsx";
 import { OtherButtonsLg, ShowVideoToggleAndVolumeBarLg } from "../components/player/OtherButtons.jsx";
 import TitlesAndLike from "../components/player/TitlesAndLike.jsx";
 import ProgressBar from "../components/player/ProgressBar.jsx";
+import ControlButtons from "../components/player/ControlButtons.jsx";
 
 import { YTstates } from "../constants.js";
 
@@ -88,16 +89,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
 
                         <ProgressBar duration={duration} />
 
-                        <div className='flex justify-center items-center gap-3 mb-10'>
-                            <Icon imgSrc={loopIcon} className='w-16 p-3.5' />
-                            <Icon imgSrc={previousIcon} className='w-16 p-3.5' />
-                            <Icon 
-                                imgSrc={pauseIcon} 
-                                className='w-20 p-5 bg-white bg-opacity-25 rounded-full'
-                            />
-                            <Icon imgSrc={nextIcon} className='w-16 p-3.5' />
-                            <Icon imgSrc={queueIcon} className='w-16 p-3.5' />
-                        </div>
+                        <ControlButtons />
 
                         <div className='tablet:hidden flex justify-start items-center gap-1 mt-auto'>
                             <div className='flex flex-col justify-center items-center'>
