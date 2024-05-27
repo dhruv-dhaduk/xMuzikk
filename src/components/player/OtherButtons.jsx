@@ -34,4 +34,18 @@ function ShowVideoToggleAndVolumeBarLg() {
     );
 }
 
-export { OtherButtonsLg, ShowVideoToggleAndVolumeBarLg };
+function OtherButtonsSm({ hidePlayer }) {
+    return (
+        <div className='tablet:hidden flex justify-start items-center gap-1 mt-auto'>
+            <div className='flex flex-col justify-center items-center'>
+                <Toggle className='h-7' />
+                <p className='text-xs line-clamp-1'>Play Video</p>
+            </div>
+            <Icon imgSrc={youtubeIcon} className='w-12 p-3 ml-auto rounded-full' />
+            <Icon imgSrc={shareIcon} className='w-12 p-3 rounded-full' />
+            <Icon imgSrc={closeIcon} onClick={hidePlayer} className='w-14 p-2.5 bg-white bg-opacity-25 rounded-full' />
+        </div>
+    );
+}
+
+export { OtherButtonsLg, ShowVideoToggleAndVolumeBarLg, OtherButtonsSm };

@@ -18,7 +18,7 @@ import Toggle from "../components/ui/Toggle.jsx";
 import Slider from "../components/ui/Slider.jsx";
 
 import Screen from "../components/player/Screen.jsx";
-import { OtherButtonsLg, ShowVideoToggleAndVolumeBarLg } from "../components/player/OtherButtons.jsx";
+import { OtherButtonsLg, ShowVideoToggleAndVolumeBarLg, OtherButtonsSm } from "../components/player/OtherButtons.jsx";
 import TitlesAndLike from "../components/player/TitlesAndLike.jsx";
 import ProgressBar from "../components/player/ProgressBar.jsx";
 import ControlButtons from "../components/player/ControlButtons.jsx";
@@ -91,15 +91,8 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
 
                         <ControlButtons />
 
-                        <div className='tablet:hidden flex justify-start items-center gap-1 mt-auto'>
-                            <div className='flex flex-col justify-center items-center'>
-                                <Toggle className='h-7' />
-                                <p className='text-xs line-clamp-1'>Play Video</p>
-                            </div>
-                            <Icon imgSrc={youtubeIcon} className='w-12 p-3 ml-auto rounded-full' />
-                            <Icon imgSrc={shareIcon} className='w-12 p-3 rounded-full' />
-                            <Icon imgSrc={closeIcon} onClick={hidePlayer} className='w-14 p-2.5 bg-white bg-opacity-25 rounded-full' />
-                        </div>
+                        <OtherButtonsSm hidePlayer={hidePlayer} />
+                        
                     </div>
 
                 </div>
