@@ -19,6 +19,7 @@ import Slider from "../components/ui/Slider.jsx";
 
 import Screen from "../components/player/Screen.jsx";
 import { OtherButtonsLg } from "../components/player/OtherButtons.jsx";
+import TitlesAndLike from "../components/player/TitlesAndLike.jsx";
 
 import { YTstates } from "../constants.js";
 
@@ -76,22 +77,11 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
 
                         <OtherButtonsLg hidePlayer={hidePlayer} />
 
-                        <div className='flex justify-between items-start mt-3 tablet:mt-8 mb-8'>
-
-                            <div className='flex-1'>
-                                <p className='mb-0.5 tablet:mb-1.5 text-xl font-bold line-clamp-1 tablet:line-clamp-2'>
-                                    { title }
-                                </p>
-
-                                <p className='text-sm line-clamp-1'>
-                                    { channelTitle }
-                                    <span className='mx-2 font-bold'>·</span>
-                                    { convertUploadTimeFormat(uploadTime) }
-                                </p>
-                            </div>
-
-                            <Icon imgSrc={heartHollowIcon} className='flex-none w-10 tablet:w-12 p-0' />
-                        </div>
+                        <TitlesAndLike
+                            title={title}
+                            channelTitle={channelTitle}
+                            uploadTime={uploadTime}
+                        />
 
                         <div className='hidden tablet:flex justify-between items-center gap-2'>
                             <div className='flex flex-col justify-center items-center'>
