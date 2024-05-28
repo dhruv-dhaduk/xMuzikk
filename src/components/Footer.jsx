@@ -1,10 +1,16 @@
+import playIcon from '/icons/play.svg';
 import pauseIcon from '/icons/pause.svg';
 import previousIcon from '/icons/previous.svg';
 import nextIcon from '/icons/next.svg';
 
 import { convertUploadTimeFormat, convertDurationFormat, getDurationFromISO } from '../utils/converters.js';
+import { useContext } from 'react';
+import { PlayerContext } from '../contexts/PlayerContext.js';
+import { YTstates } from '../constants.js';
 
-function Footer({ className, onClick, playingMusic }) {
+function Footer({ className, onClick }) {
+
+    const { playerState, playingMusic, playerRef } = useContext(PlayerContext);
 
     if (!playingMusic || !playingMusic.id) {
         return null;
@@ -50,8 +56,9 @@ function Footer({ className, onClick, playingMusic }) {
                 <div className='flex justify-center items-center gap-2'>
                     <Icon iconSrc={previousIcon} className='tablet:w-12 tablet:h-12 hidden tablet:block tablet:p-3 rounded-full' />
                     <Icon 
-                        iconSrc={pauseIcon}
-                        className='w-11 tablet:w-12 h-11 tablet:h-12 p-3 tablet:p-3.5 bg-white bg-opacity-25 rounded-full' 
+                        onClick={playerRef.current.playpause}
+                        iconSrc={playerState === YTstates.BUFFERING || playerState === YTstates.PLAYING ? pauseIcon : playIcon}
+                        className={`w-11 tablet:w-12 h-11 tablet:h-12 p-3 tablet:p-3.5 bg-white bg-opacity-25 rounded-full ${playerState === YTstates.BUFFERING ? 'animate-blink' : ''}`} 
                     />
                     <Icon iconSrc={nextIcon} className='tablet:w-12 tablet:h-12 hidden tablet:block tablet:p-3 rounded-full' />
                 </div>
