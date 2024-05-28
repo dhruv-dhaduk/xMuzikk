@@ -73,7 +73,18 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
 
                         <ShowVideoToggleAndVolumeBarLg />
 
-                        <ProgressBar duration={duration} />
+                        <ProgressBar
+                            playerState={playerState}
+                            duration={duration}
+                            getCurrentTime={
+                                () => { 
+                                    if (playerRef?.current?.getCurrentTime) 
+                                        return playerRef?.current?.getCurrentTime() 
+                                    else    
+                                        return 0;
+                                }
+                            }
+                        />
 
                         <ControlButtons
                             playerState={playerState}
