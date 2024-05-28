@@ -59,7 +59,11 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
 
                     <div className='flex-1 flex flex-col justify-start'>
 
-                        <OtherButtonsLg hidePlayer={hidePlayer} />
+                        <OtherButtonsLg
+                            id={id}
+                            title={title}
+                            hidePlayer={hidePlayer} 
+                        />
 
                         <TitlesAndLike
                             title={title}
@@ -76,7 +80,11 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                             playpause={playerRef.current.playpause} 
                         />
 
-                        <OtherButtonsSm hidePlayer={hidePlayer} />
+                        <OtherButtonsSm
+                            id={id}
+                            title={title}
+                            hidePlayer={hidePlayer}
+                        />
                         
                     </div>
 

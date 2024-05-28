@@ -6,11 +6,35 @@ import youtubeIcon from '/icons/youtube.svg';
 import shareIcon from '/icons/share.svg';
 import closeIcon from '/icons/close.svg';
 
-function OtherButtonsLg({ hidePlayer }) {
+function OtherButtonsLg({ id, title, hidePlayer }) {
+
+    const shareMusic = () => {
+        if (!navigator.share) return;
+
+        navigator.share({
+            title,
+            url: `https://youtu.be/${id}`
+        });
+    }
+
+    const openInYouTube = () => {
+        const isAgreed = window.confirm('Play this song in YouTube ?');
+        if (isAgreed)
+                window.open(`https://youtu.be/${id}`, '_blank');
+    }
+    
     return (
         <div className='w-full hidden tablet:flex justify-start items-center gap-2'>
-            <Icon imgSrc={youtubeIcon} className='w-16 p-4 rounded-full' />
-            <Icon imgSrc={shareIcon} className='w-16 p-4 rounded-full' />
+            <Icon
+                onClick={openInYouTube}
+                imgSrc={youtubeIcon}
+                className='w-16 p-4 rounded-full'
+            />
+            <Icon
+                onClick={shareMusic}
+                imgSrc={shareIcon}
+                className='w-16 p-4 rounded-full'
+            />
             <Icon imgSrc={closeIcon} onClick={hidePlayer} className='w-16 ml-auto p-2 bg-white bg-opacity-25 rounded-full' />
         </div>
     );
@@ -34,15 +58,39 @@ function ShowVideoToggleAndVolumeBarLg() {
     );
 }
 
-function OtherButtonsSm({ hidePlayer }) {
+function OtherButtonsSm({ id, title, hidePlayer }) {
+
+    const shareMusic = () => {
+        if (!navigator.share) return;
+
+        navigator.share({
+            title,
+            url: `https://youtu.be/${id}`
+        });
+    }
+
+    const openInYouTube = () => {
+        const isAgreed = window.confirm('Play this song in YouTube ?');
+        if (isAgreed)
+                window.open(`https://youtu.be/${id}`, '_blank');
+    }
+
     return (
         <div className='tablet:hidden flex justify-start items-center gap-1 mt-auto'>
             <div className='flex flex-col justify-center items-center'>
                 <Toggle className='h-7' />
                 <p className='text-xs line-clamp-1'>Play Video</p>
             </div>
-            <Icon imgSrc={youtubeIcon} className='w-12 p-3 ml-auto rounded-full' />
-            <Icon imgSrc={shareIcon} className='w-12 p-3 rounded-full' />
+            <Icon
+                onClick={openInYouTube}
+                imgSrc={youtubeIcon}
+                className='w-12 p-3 ml-auto rounded-full'
+            />
+            <Icon
+                onClick={shareMusic}
+                imgSrc={shareIcon}
+                className='w-12 p-3 rounded-full'
+            />
             <Icon imgSrc={closeIcon} onClick={hidePlayer} className='w-14 p-2.5 bg-white bg-opacity-25 rounded-full' />
         </div>
     );
