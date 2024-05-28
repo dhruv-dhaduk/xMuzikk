@@ -8,9 +8,18 @@ import { useContext } from 'react';
 import { PlayerContext } from '../contexts/PlayerContext.js';
 import { YTstates } from '../constants.js';
 
+import { usePlayerProgressBar } from '../hooks/usePlayerProgressBar.js';
+
 function Footer({ className, onClick }) {
 
     const { playerState, playingMusic, playerRef } = useContext(PlayerContext);
+
+    const progressBarValue = usePlayerProgressBar(playerState, () => { 
+        if (playerRef?.current?.getCurrentTime) 
+            return playerRef?.current?.getCurrentTime() 
+        else    
+            return 0;
+    });
 
     if (!playingMusic || !playingMusic.id) {
         return null;
@@ -49,7 +58,7 @@ function Footer({ className, onClick }) {
                         <span className='hidden tablet:inline mx-1 font-bold'> · </span>
                         <span className='hidden tablet:inline'> { convertUploadTimeFormat(playingMusic.uploadTime) } </span>
                         <span className='hidden tablet:inline mx-1 font-bold'> · </span>
-                        <span className='hidden tablet:inline'> { "00:00" } <span className='font-bold'>/</span> { convertDurationFormat(playingMusic.duration) } </span>
+                        <span className='hidden tablet:inline'> { convertDurationFormat(progressBarValue) } <span className='font-bold'>/</span> { convertDurationFormat(playingMusic.duration) } </span>
                     </p>
                 </div>
 
@@ -64,9 +73,24 @@ function Footer({ className, onClick }) {
                 </div>
             </div>
 
-            <progress className='footer-progressbar flex-none w-full h-1 tablet:h-1.5' min={0} max={getDurationFromISO(playingMusic.duration)} value={0} />
+            <FooterProgressBar
+                value={progressBarValue}
+                duration={playingMusic.duration}
+            />
 
         </footer>
+    );
+}
+
+function FooterProgressBar({ value, duration }) {
+
+    return (
+        <progress
+            min={0}
+            max={getDurationFromISO(duration)}
+            value={value} 
+            className='footer-progressbar flex-none w-full h-1 tablet:h-1.5'
+        />
     );
 }
 

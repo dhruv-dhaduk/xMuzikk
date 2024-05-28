@@ -1,40 +1,11 @@
 import Slider from "../ui/Slider.jsx";
 
 import { getDurationFromISO, convertDurationFormat } from "../../utils/converters.js"; 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { YTstates } from "../../constants.js";
+import { usePlayerProgressBar } from "../../hooks/usePlayerProgressBar.js";
 
 function ProgressBar({ playerState, duration, getCurrentTime }) {
 
-    const [value, setValue] = useState(0);
-    const itvID = useRef(-1);
-
-    const startUpdateTimeInterval = useCallback(() => {
-        clearInterval(itvID.current);
-        itvID.current = setInterval(() => {
-            console.log('Update time interval');
-            if (!getCurrentTime) {
-                return;
-            }
-            setValue(getCurrentTime());
-        }, 350);
-    }, [setValue]);
-
-    useEffect(() => {
-
-        return () => {
-            clearInterval(itvID.current);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (playerState === YTstates.PLAYING) {
-            startUpdateTimeInterval();
-        }
-        else {
-            clearInterval(itvID.current);
-        }
-    }, [playerState]);
+    const value = usePlayerProgressBar(playerState, getCurrentTime);
 
     return (
         <div className='tablet:mt-auto mb-6 tablet:mb-8'>
