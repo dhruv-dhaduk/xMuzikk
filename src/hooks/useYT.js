@@ -43,6 +43,21 @@ function useYT(playerElementID) {
 
         playerRef.current.previousState = YTstates.NULL;
         playerRef.current.addEventListener('onStateChange', handleStateChange);
+
+        playerRef.current.playpause = () => {
+            const state = playerRef?.current?.getPlayerState();
+            if (state === YTstates.PLAYING || state === YTstates.BUFFERING) {
+                playerRef.current.pauseVideo();
+            }
+            else if (state === YTstates.PAUSED || state === YTstates.UNSTARTED || state === YTstates.CUED) {
+                playerRef.current.playVideo();
+            }
+            else if (state === YTstates.ENDED) {
+                playerRef.current.seekTo(0, true);
+                playerRef.current.playVideo();
+            }
+        }
+        
         return () => {
             if (playerRef?.current?.destroy) 
                 playerRef.current.destroy();

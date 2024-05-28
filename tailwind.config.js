@@ -50,12 +50,19 @@ export default {
                 hide: {
                     '0%': { top: '0' },
                     '100%': { top: "120vh" }
+                },
+
+                blink: {
+                    '0%': { opacity: 1 },
+                    '50%': { opacity: 0 },
+                    '100%': { opacity: 1 }
                 }
             },
 
             animation: {
                 'show': 'show 500ms',
-                'hide': 'hide 500ms'
+                'hide': 'hide 500ms',
+                'blink': 'blink 1s infinite'
             },
 
             colors: {

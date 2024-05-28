@@ -71,7 +71,10 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
 
                         <ProgressBar duration={duration} />
 
-                        <ControlButtons />
+                        <ControlButtons
+                            playerState={playerState}
+                            playpause={playerRef.current.playpause} 
+                        />
 
                         <OtherButtonsSm hidePlayer={hidePlayer} />
                         
