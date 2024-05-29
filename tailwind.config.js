@@ -56,13 +56,19 @@ export default {
                     '0%': { opacity: 1 },
                     '50%': { opacity: 0 },
                     '100%': { opacity: 1 }
+                },
+                
+                'blink-once': {
+                    '0%': { opacity: 0 },
+                    '100%': { opacity: 1 }
                 }
             },
 
             animation: {
                 'show': 'show 500ms',
                 'hide': 'hide 500ms',
-                'blink': 'blink 1s infinite'
+                'blink': 'blink 1s infinite',
+                'blink-once': 'blink-once 3s'
             },
 
             colors: {
