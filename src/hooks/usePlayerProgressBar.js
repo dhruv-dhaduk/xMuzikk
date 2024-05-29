@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { YTstates } from "../constants.js";
 
-function usePlayerProgressBar(playerState, getCurrentTime) {
+function usePlayerProgressBar(playerState, getCurrentTime, seekTo) {
     const [value, setValue] = useState(0);
     const itvID = useRef(-1);
 
@@ -31,7 +31,24 @@ function usePlayerProgressBar(playerState, getCurrentTime) {
         }
     }, [playerState]);
 
-    return value;
+    const handleChange = !seekTo ? null : useCallback((e) => {
+        clearInterval(itvID.current);
+        let changedValue = Number(e.target.value);
+        if (isNaN(changedValue))
+            changedValue = 0;
+        setValue(changedValue);
+    }, [setValue]);
+
+    const handleClick = !seekTo ? null : useCallback((e) => {
+        const changedValue = Number(e.target.value);
+        if (isNaN(changedValue))
+            changedValue = 0;
+
+        seekTo(changedValue, true);
+        startUpdateTimeInterval();
+    }, [startUpdateTimeInterval]);
+
+    return [value, handleChange, handleClick];
 }
 
 export { usePlayerProgressBar };

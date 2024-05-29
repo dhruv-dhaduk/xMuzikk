@@ -84,6 +84,12 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                                         return 0;
                                 }
                             }
+                            seekTo={
+                                (seconds, allowSeekAhead) => {
+                                    if (playerRef?.current?.seekTo)
+                                        playerRef.current.seekTo(seconds, allowSeekAhead);
+                                }
+                            }
                         />
 
                         <ControlButtons

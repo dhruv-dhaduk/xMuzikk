@@ -14,7 +14,7 @@ function Footer({ className, onClick }) {
 
     const { playerState, playingMusic, playerRef } = useContext(PlayerContext);
 
-    const progressBarValue = usePlayerProgressBar(playerState, () => { 
+    const [progressBarValue] = usePlayerProgressBar(playerState, () => { 
         if (playerRef?.current?.getCurrentTime) 
             return playerRef?.current?.getCurrentTime() 
         else    
