@@ -6,7 +6,7 @@ import { OtherButtonsLg, ShowVideoToggleAndVolumeBarLg, OtherButtonsSm } from ".
 import TitlesAndLike from "../components/player/TitlesAndLike.jsx";
 import ProgressBar from "../components/player/ProgressBar.jsx";
 import ControlButtons from "../components/player/ControlButtons.jsx";
-import { useStoredBooleanState } from "../hooks/useStoredState.js";
+import { useStoredState } from "../hooks/useStoredState.js";
 import { localStorageKeys } from "../constants.js";
 
 function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className }) {
@@ -17,7 +17,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
 
     const { id, title, thumbnail, duration, uploadTime, channelTitle } = playingMusic || {};
 
-    const [showVideoToggle, setShowVideoToggle] = useStoredBooleanState(false, localStorageKeys.playVideoToggle);
+    const [showVideoToggle, setShowVideoToggle] = useStoredState(false, localStorageKeys.playVideoToggle);
 
     useEffect(() => {
         isFirstRender.current = true;
