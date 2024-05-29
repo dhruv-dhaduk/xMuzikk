@@ -40,7 +40,7 @@ function usePlayerProgressBar(playerState, getCurrentTime, seekTo) {
     }, [setValue]);
 
     const handleClick = !seekTo ? null : useCallback((e) => {
-        const changedValue = Number(e.target.value);
+        let changedValue = Number(e.target.value);
         if (isNaN(changedValue))
             changedValue = 0;
 
