@@ -8,14 +8,8 @@ function useYT(playerElementID) {
     const [playingMusic, setPlayingMusic] = useState({});
     const playerRef = useRef({});
 
-    const handleStateChange = useCallback(() => {
-        const currentState = playerRef?.current?.getPlayerState ? playerRef.current.getPlayerState() : YTstates.NULL;
-        setPlayerState(currentState);
-    }, [setPlayerState, playerRef]);
-
     const playMusic = (item) => {
         setPlayingMusic(item);
-        playerRef.current.loadVideoById(item.id);
     }
 
     useEffect(() => {
@@ -28,7 +22,7 @@ function useYT(playerElementID) {
         if (!isYtApiLoaded) return;
         
         playerRef.current = new window.YT.Player(playerElementID, {
-            videoId: "",
+            videoId: playingMusic.id,
             
             playerVars: {
                 'start': 0,
@@ -42,7 +36,14 @@ function useYT(playerElementID) {
         });
 
         playerRef.current.previousState = YTstates.NULL;
-        playerRef.current.addEventListener('onStateChange', handleStateChange);
+        playerRef.current.addEventListener('onReady', () => {
+            if (playerRef?.current?.playVideo)
+                playerRef.current.playVideo();
+        });
+        playerRef.current.addEventListener('onStateChange', () => {
+            const currentState = playerRef?.current?.getPlayerState ? playerRef.current.getPlayerState() : YTstates.NULL;
+            setPlayerState(currentState);
+        });
 
         playerRef.current.playpause = () => {
             const state = playerRef?.current?.getPlayerState();
@@ -63,7 +64,7 @@ function useYT(playerElementID) {
                 playerRef.current.destroy();
         }
 
-    }, [isYtApiLoaded, playerElementID]);
+    }, [isYtApiLoaded, playerElementID, playingMusic]);
 
     return {isYtApiLoaded, playerState, playerRef, playingMusic, playMusic};
 }
