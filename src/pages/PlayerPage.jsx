@@ -1,88 +1,23 @@
-import { useEffect, useRef, useState, useContext, useCallback } from "react";
+import { useEffect, useRef, useContext } from "react";
 import { PlayerContext } from '../contexts/PlayerContext.js';
 
-import { convertUploadTimeFormat, convertDurationFormat, getDurationFromISO } from '../utils/converters.js';
+import Screen from "../components/player/Screen.jsx";
+import { OtherButtonsLg, ShowVideoToggleAndVolumeBarLg, OtherButtonsSm } from "../components/player/OtherButtons.jsx";
+import TitlesAndLike from "../components/player/TitlesAndLike.jsx";
+import ProgressBar from "../components/player/ProgressBar.jsx";
+import ControlButtons from "../components/player/ControlButtons.jsx";
+import { useStoredState } from "../hooks/useStoredState.js";
+import { localStorageKeys } from "../constants.js";
 
-import closeIcon from '/icons/close.svg';
-import shareIcon from '/icons/share.svg';
-import youtubeIcon from '/icons/youtube.svg';
-import heartHollowIcon from '/icons/heart_hollow.svg';
-import loopIcon from '/icons/loop.svg';
-import previousIcon from '/icons/previous.svg';
-import pauseIcon from '/icons/pause.svg';
-import playIcon from '/icons/play.svg';
-import nextIcon from '/icons/next.svg';
-import queueIcon from '/icons/queue.svg';
-
-import Toggle from "../components/ui/Toggle.jsx";
-import Slider from "../components/ui/Slider.jsx";
-
-import YouTubePlayer from "../components/YouTubePlayer.jsx";
-
-import { YTstates } from "../constants.js";
-
-function PlayerPage({ isPlayerShowing, hidePlayer, exposePlayerRef = () => {}, className }) {
+function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className }) {
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
-    const playerRef = useRef({});
-    const itvIdRef = useRef(-1);
 
-    const [isVideoShowing, setIsVideoShowing] = useState(false);
-    const [showVideo, setShowVideo] = useState(false);
-    const [playerState, setPlayerState] = useState(YTstates.UNSTARTED);
-    const [playerElapsedTime, setPlayerElapsedTime] = useState(0);
-
-    const handleStateChange = useCallback(() => {
-        
-        if (playerRef.current?.getPlayerState) {
-            const stat = playerRef.current.getPlayerState();
-            setPlayerState(stat);
-
-            if (stat === YTstates.PLAYING) {
-                startTimeUpdateInterval();
-            }
-            else {
-                clearInterval(itvIdRef);
-            }
-        }
-    }, [playerState, setPlayerState]);
-
-    const { playingMusic } = useContext(PlayerContext) || {};
+    const { isYtApiLoaded, playerState, playerRef, playingMusic } = useContext(PlayerContext) || {};
 
     const { id, title, thumbnail, duration, uploadTime, channelTitle } = playingMusic || {};
 
-    const toggleVideoVisibility = () => {
-        setShowVideo(!showVideo);
-        setIsVideoShowing(!showVideo);
-    }
-
-    const getPlayerRef = (passedRef) => {
-        playerRef.current = passedRef.current;
-        playerRef.current.addEventListener('onStateChange', handleStateChange);
-        window.player = playerRef.current;
-
-        exposePlayerRef(passedRef);
-    };
-
-    const playpause = () => {
-        if (playerState === YTstates.PLAYING) {
-            playerRef.current?.pauseVideo && playerRef.current.pauseVideo();
-        }
-        else if (playerState === YTstates.PAUSED) {
-            playerRef.current?.playVideo && playerRef.current.playVideo();
-        }
-    }
-
-    const updateCurrentTime = useCallback(() => {
-        let t = parseInt(playerRef.current?.getCurrentTime && playerRef.current.getCurrentTime());
-        t = isNaN(t) ? 0 : t;
-        setPlayerElapsedTime(t);
-    }, [setPlayerElapsedTime]);
-
-    const startTimeUpdateInterval = useCallback(() => {
-        clearInterval(itvIdRef);
-        itvIdRef.current = setInterval(updateCurrentTime, 300);
-    }, [updateCurrentTime]);
+    const [showVideoToggle, setShowVideoToggle] = useStoredState(false, localStorageKeys.playVideoToggle);
 
     useEffect(() => {
         isFirstRender.current = true;
@@ -103,12 +38,6 @@ function PlayerPage({ isPlayerShowing, hidePlayer, exposePlayerRef = () => {}, c
         isFirstRender.current = false;
     }, [isPlayerShowing]);
 
-    useEffect(() => {
-        if (playerRef.current?.loadVideoById) {
-            playerRef.current?.loadVideoById(id);
-        }
-    }, [id]);
-
     return (
         <div 
             ref={containerRef}
@@ -126,110 +55,68 @@ function PlayerPage({ isPlayerShowing, hidePlayer, exposePlayerRef = () => {}, c
                 
                 <div className='flex flex-col tablet:flex-row w-full h-full gap-5 aspect-[2]'>
 
-                    <div className='flex-none tablet:flex-initial aspect-square'>
-                        <div className='w-full h-full flex justify-center relative overflow-hidden bg-slate-700 rounded-2xl'>
-                            <div className='w-full h-full absolute inset-0'>
-                                <img 
-                                    src={thumbnail}
-                                    draggable={false}
-                                    onContextMenu={e => e.preventDefault()}
-                                    className={`w-full h-full object-cover ${isVideoShowing ? 'opacity-0' : 'opacity-100'}`}
-                                />
-                            </div>
-
-                            <YouTubePlayer exposePlayerRef={getPlayerRef} handleStateChange={() => {}} />
-                        </div>
-                    </div>
+                    <Screen
+                        thumbnail={thumbnail}
+                        isYtApiLoaded={isYtApiLoaded} 
+                        playerElementID={playerElementID} 
+                    />
 
                     <div className='flex-1 flex flex-col justify-start'>
 
-                        <div className='w-full hidden tablet:flex justify-start items-center gap-2'>
-                            <Icon imgSrc={youtubeIcon} className='w-16 p-4 rounded-full' />
-                            <Icon imgSrc={shareIcon} className='w-16 p-4 rounded-full' />
-                            <Icon imgSrc={closeIcon} onClick={hidePlayer} className='w-16 ml-auto p-2 bg-white bg-opacity-25 rounded-full' />
-                        </div>
+                        <OtherButtonsLg
+                            id={id}
+                            title={title}
+                            hidePlayer={hidePlayer}
+                        />
 
-                        <div className='flex justify-between items-start mt-3 tablet:mt-8 mb-8'>
+                        <TitlesAndLike
+                            title={title}
+                            channelTitle={channelTitle}
+                            uploadTime={uploadTime}
+                        />
 
-                            <div className='flex-1'>
-                                <p className='mb-0.5 tablet:mb-1.5 text-xl font-bold line-clamp-1 tablet:line-clamp-2'>
-                                    { title }
-                                </p>
+                        <ShowVideoToggleAndVolumeBarLg
+                            showVideoToggle={showVideoToggle}
+                            setShowVideoToggle={setShowVideoToggle}
+                        />
 
-                                <p className='text-sm line-clamp-1'>
-                                    { channelTitle }
-                                    <span className='mx-2 font-bold'>·</span>
-                                    { convertUploadTimeFormat(uploadTime) }
-                                </p>
-                            </div>
+                        <ProgressBar
+                            playerState={playerState}
+                            duration={duration}
+                            getCurrentTime={
+                                () => { 
+                                    if (playerRef?.current?.getCurrentTime) 
+                                        return playerRef?.current?.getCurrentTime() 
+                                    else    
+                                        return 0;
+                                }
+                            }
+                            seekTo={
+                                (seconds, allowSeekAhead) => {
+                                    if (playerRef?.current?.seekTo)
+                                        playerRef.current.seekTo(seconds, allowSeekAhead);
+                                }
+                            }
+                        />
 
-                            <Icon imgSrc={heartHollowIcon} className='flex-none w-10 tablet:w-12 p-0' />
-                        </div>
+                        <ControlButtons
+                            playerState={playerState}
+                            playpause={playerRef.current.playpause} 
+                        />
 
-                        <div className='hidden tablet:flex justify-between items-center gap-2'>
-                            <div className='flex flex-col justify-center items-center'>
-                                <Toggle isActive={showVideo} onClick={toggleVideoVisibility} className='h-8' />
-                                <p className='text-sm line-clamp-1'>Play Video</p>
-                            </div>
-                            <div className='w-full max-w-60 flex flex-col justify-center'>
-                                <Slider />
-                                <p className='flex justify-between items-center text-sm line-clamp-1'>
-                                    <span>Volume</span>
-                                    <span>70%</span>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className='tablet:mt-auto mb-6 tablet:mb-8'>
-                            <Slider min={0} max={getDurationFromISO(duration)} value={playerElapsedTime} className='w-full' />
-                            <p className='w-full flex justify-between items-center text-sm font-semibold'>
-                                <span> { convertDurationFormat(playerElapsedTime) } </span>
-                                <span> { convertDurationFormat(duration) } </span>
-                            </p>
-                        </div>
-
-                        <div className='flex justify-center items-center gap-3 mb-10'>
-                            <Icon imgSrc={loopIcon} className='w-16 p-3.5' />
-                            <Icon imgSrc={previousIcon} className='w-16 p-3.5' />
-                            <Icon 
-                                imgSrc={playerState === YTstates.PLAYING || playerState === YTstates.BUFFERING ? pauseIcon : playIcon} 
-                                className='w-20 p-5 bg-white bg-opacity-25 rounded-full'
-                                onClick={playpause}
-                            />
-                            <Icon imgSrc={nextIcon} className='w-16 p-3.5' />
-                            <Icon imgSrc={queueIcon} className='w-16 p-3.5' />
-                        </div>
-
-                        <div className='tablet:hidden flex justify-start items-center gap-1 mt-auto'>
-                            <div className='flex flex-col justify-center items-center'>
-                                <Toggle isActive={showVideo} onClick={toggleVideoVisibility} className='h-7' />
-                                <p className='text-xs line-clamp-1'>Play Video</p>
-                            </div>
-                            <Icon imgSrc={youtubeIcon} className='w-12 p-3 ml-auto rounded-full' />
-                            <Icon imgSrc={shareIcon} className='w-12 p-3 rounded-full' />
-                            <Icon imgSrc={closeIcon} onClick={hidePlayer} className='w-14 p-2.5 bg-white bg-opacity-25 rounded-full' />
-                        </div>
+                        <OtherButtonsSm
+                            id={id}
+                            title={title}
+                            hidePlayer={hidePlayer}
+                            showVideoToggle={showVideoToggle}
+                            setShowVideoToggle={setShowVideoToggle}
+                        />
+                        
                     </div>
 
                 </div>
 
             </div>
-        </div>
-    );
-}
-
-function Icon({ imgSrc, className, onClick }) {
-    return (
-        <div
-            onClick={onClick}
-            className={`aspect-square cursor-pointer active:scale-[0.8] duration-200 ${className}`}
-        >
-            <img 
-                src={imgSrc}
-                draggable={false}
-                onContextMenu={e => e.preventDefault()}
-                className='w-full h-full object-cover'
-            />
         </div>
     );
 }

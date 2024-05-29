@@ -1,4 +1,5 @@
 const YTstates = Object.freeze({
+    NULL: -2,
     UNSTARTED: -1,
     ENDED: 0,
     PLAYING: 1,
@@ -7,4 +8,8 @@ const YTstates = Object.freeze({
     CUED: 5
 });
 
-export { YTstates };
+const localStorageKeys = Object.freeze({
+    playVideoToggle: 'xMuzikk_playVideo_Toggle'
+});
+
+export { YTstates, localStorageKeys };
