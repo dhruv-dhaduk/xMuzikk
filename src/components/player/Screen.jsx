@@ -23,13 +23,13 @@ function Screen({ thumbnail, playerElementID, isYtApiLoaded, playerState, showVi
 
     useEffect(() => {
         thumbnailContainerRef.current.classList.remove("animate-blink-once");
-        setTimeout(() => {
-            thumbnailContainerRef.current.classList.add("animate-blink-once");
-            if (showVideo)
-                thumbnailImgRef.current.style.opacity = 0;
-            else
-                thumbnailImgRef.current.style.opacity = 1;
-        }, 10);
+        void thumbnailContainerRef.current.offsetWidth;
+        thumbnailContainerRef.current.classList.add("animate-blink-once");
+        
+        if (showVideo)
+            thumbnailImgRef.current.style.opacity = 0;
+        else
+            thumbnailImgRef.current.style.opacity = 1;
     }, [showVideo]);
     
     return (
