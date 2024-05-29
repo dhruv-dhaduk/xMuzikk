@@ -58,7 +58,9 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                     <Screen
                         thumbnail={thumbnail}
                         isYtApiLoaded={isYtApiLoaded} 
-                        playerElementID={playerElementID} 
+                        playerElementID={playerElementID}
+                        playerState={playerState}
+                        showVideoToggle={showVideoToggle}
                     />
 
                     <div className='flex-1 flex flex-col justify-start'>
