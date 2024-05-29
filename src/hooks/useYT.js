@@ -24,7 +24,7 @@ function useYT(playerElementID) {
 
         let startTime = localStorage.getItem(localStorageKeys.currentTime);
         
-        if (startTime.length < 11) {
+        if (!startTime || startTime.length < 11) {
             startTime = 0;
         }
         else {
