@@ -56,4 +56,4 @@ function useStoredBooleanState(initialValue, key) {
     return [value, setValueAndStore];
 }
 
-export { useStoredStringState, useStoredNumberState, useStoredStringState };
+export { useStoredStringState, useStoredNumberState, useStoredBooleanState };

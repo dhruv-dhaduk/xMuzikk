@@ -40,11 +40,14 @@ function OtherButtonsLg({ id, title, hidePlayer }) {
     );
 }
 
-function ShowVideoToggleAndVolumeBarLg() {
+function ShowVideoToggleAndVolumeBarLg({ showVideoToggle, setShowVideoToggle }) {
     return (
         <div className='hidden tablet:flex justify-between items-center gap-2'>
             <div className='flex flex-col justify-center items-center'>
-                <Toggle className='h-8' />
+                <Toggle className='h-8' 
+                    isActive={showVideoToggle}
+                    onClick={() => setShowVideoToggle(!showVideoToggle)}
+                />
                 <p className='text-sm line-clamp-1'>Play Video</p>
             </div>
             <div className='w-full max-w-60 flex flex-col justify-center'>
@@ -58,7 +61,7 @@ function ShowVideoToggleAndVolumeBarLg() {
     );
 }
 
-function OtherButtonsSm({ id, title, hidePlayer }) {
+function OtherButtonsSm({ id, title, hidePlayer, showVideoToggle, setShowVideoToggle }) {
 
     const shareMusic = () => {
         if (!navigator.share) return;
@@ -78,7 +81,10 @@ function OtherButtonsSm({ id, title, hidePlayer }) {
     return (
         <div className='tablet:hidden flex justify-start items-center gap-1 mt-auto'>
             <div className='flex flex-col justify-center items-center'>
-                <Toggle className='h-7' />
+                <Toggle className='h-7'
+                    isActive={showVideoToggle}
+                    onClick={() => setShowVideoToggle(!showVideoToggle)}
+                />
                 <p className='text-xs line-clamp-1'>Play Video</p>
             </div>
             <Icon

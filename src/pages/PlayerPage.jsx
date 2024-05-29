@@ -6,6 +6,8 @@ import { OtherButtonsLg, ShowVideoToggleAndVolumeBarLg, OtherButtonsSm } from ".
 import TitlesAndLike from "../components/player/TitlesAndLike.jsx";
 import ProgressBar from "../components/player/ProgressBar.jsx";
 import ControlButtons from "../components/player/ControlButtons.jsx";
+import { useStoredBooleanState } from "../hooks/useStoredState.js";
+import { localStorageKeys } from "../constants.js";
 
 function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className }) {
     const containerRef = useRef(null);
@@ -14,6 +16,8 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
     const { isYtApiLoaded, playerState, playerRef, playingMusic } = useContext(PlayerContext) || {};
 
     const { id, title, thumbnail, duration, uploadTime, channelTitle } = playingMusic || {};
+
+    const [showVideoToggle, setShowVideoToggle] = useStoredBooleanState(false, localStorageKeys.playVideoToggle);
 
     useEffect(() => {
         isFirstRender.current = true;
@@ -62,7 +66,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                         <OtherButtonsLg
                             id={id}
                             title={title}
-                            hidePlayer={hidePlayer} 
+                            hidePlayer={hidePlayer}
                         />
 
                         <TitlesAndLike
@@ -71,7 +75,10 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                             uploadTime={uploadTime}
                         />
 
-                        <ShowVideoToggleAndVolumeBarLg />
+                        <ShowVideoToggleAndVolumeBarLg
+                            showVideoToggle={showVideoToggle}
+                            setShowVideoToggle={setShowVideoToggle}
+                        />
 
                         <ProgressBar
                             playerState={playerState}
@@ -101,6 +108,8 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                             id={id}
                             title={title}
                             hidePlayer={hidePlayer}
+                            showVideoToggle={showVideoToggle}
+                            setShowVideoToggle={setShowVideoToggle}
                         />
                         
                     </div>
