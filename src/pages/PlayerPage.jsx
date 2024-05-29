@@ -83,6 +83,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                         />
 
                         <ProgressBar
+                            id={id}
                             playerState={playerState}
                             duration={duration}
                             getCurrentTime={

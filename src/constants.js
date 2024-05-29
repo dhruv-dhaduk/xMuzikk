@@ -9,7 +9,9 @@ const YTstates = Object.freeze({
 });
 
 const localStorageKeys = Object.freeze({
-    playVideoToggle: 'xMuzikk_playVideo_Toggle'
+    playVideoToggle: 'xMuzikk_playVideo_Toggle',
+    playingMusic: 'xMuzikk_playingMusic',
+    currentTime: 'xMuzikk_playback_currentTime'
 });
 
 export { YTstates, localStorageKeys };

@@ -2,10 +2,18 @@ import Slider from "../ui/Slider.jsx";
 
 import { getDurationFromISO, convertDurationFormat } from "../../utils/converters.js"; 
 import { usePlayerProgressBar } from "../../hooks/usePlayerProgressBar.js";
+import { useEffect } from "react";
 
-function ProgressBar({ playerState, duration, getCurrentTime, seekTo }) {
+import { localStorageKeys } from "../../constants.js";
+
+function ProgressBar({ id, playerState, duration, getCurrentTime, seekTo }) {
 
     const [value, handleChange, handleClick] = usePlayerProgressBar(playerState, getCurrentTime, seekTo);
+
+    useEffect(() => {
+        if (!value || id?.length !== 11) return;
+        localStorage.setItem(localStorageKeys.currentTime, `${id}${parseInt(value)}`);
+    }, [value]);
 
     return (
         <div className='tablet:mt-auto mb-6 tablet:mb-8'>

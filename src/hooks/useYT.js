@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-import { YTstates } from "../constants.js";
+import { YTstates, localStorageKeys } from "../constants.js";
+import { useStoredState } from './useStoredState.js';
 
 function useYT(playerElementID) {
     const isYtApiLoaded = useYtApiLoadedStatus();
     const [playerState, setPlayerState] = useState(YTstates.NULL);
-    const [playingMusic, setPlayingMusic] = useState({});
+    const [playingMusic, setPlayingMusic] = useStoredState({}, localStorageKeys.playingMusic);
     const playerRef = useRef({});
 
     const playMusic = (item) => {
@@ -20,12 +21,25 @@ function useYT(playerElementID) {
     
     useEffect(() => {
         if (!isYtApiLoaded) return;
+
+        let startTime = localStorage.getItem(localStorageKeys.currentTime);
+        
+        if (startTime.length < 11) {
+            startTime = 0;
+        }
+        else {
+            let storedId = startTime.substring(0, 11);
+            startTime = parseInt(startTime.substring(11));
+            if (isNaN(startTime) || storedId !== playingMusic.id) {
+                startTime = 0;
+            }
+        }
         
         playerRef.current = new window.YT.Player(playerElementID, {
             videoId: playingMusic.id,
             
             playerVars: {
-                'start': 0,
+                'start': startTime,
                 'color': 'white',
                 'controls': 0,
                 'disablekb': 1,
