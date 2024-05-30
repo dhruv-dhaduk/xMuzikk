@@ -49,6 +49,7 @@ function Queue({ musicIDs, queueVisible, setQueueVisible }) {
             <div
                 className='flex-1 w-full overflow-y-auto'
             >
+                <p className='text-center'>(This is Dummy Data)</p>
                 { 
                     musicDetails.map(musicItem => <QueueItem key={musicItem.id} music={musicItem} />)
                 }
