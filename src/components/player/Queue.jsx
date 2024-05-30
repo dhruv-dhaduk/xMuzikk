@@ -16,11 +16,11 @@ function Queue({ musicIDs, queueVisible, setQueueVisible }) {
     }, [musicIDs]);
 
     useEffect(() => {
-        containerRef.current.classList.remove('animate-blink-once');
+        containerRef.current.classList.remove('animate-blink-once-1s');
 
         if (queueVisible) {
             void containerRef.offsetWidth;
-            containerRef.current.classList.add('animate-blink-once');
+            containerRef.current.classList.add('animate-blink-once-1s');
         }
 
     }, [queueVisible]);
