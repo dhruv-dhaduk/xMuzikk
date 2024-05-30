@@ -13,7 +13,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
 
-    const { isYtApiLoaded, playerState, playerRef, playingMusic } = useContext(PlayerContext) || {};
+    const { isYtApiLoaded, playerState, playerRef, playingMusic, looping, nextLoopingOption } = useContext(PlayerContext) || {};
 
     const { id, title, thumbnail, duration, uploadTime, channelTitle } = playingMusic || {};
 
@@ -104,7 +104,9 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
 
                         <ControlButtons
                             playerState={playerState}
-                            playpause={playerRef.current.playpause} 
+                            playpause={playerRef.current.playpause}
+                            looping={looping}
+                            nextLoopingOption={nextLoopingOption}
                         />
 
                         <OtherButtonsSm

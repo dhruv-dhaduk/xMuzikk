@@ -11,7 +11,14 @@ const YTstates = Object.freeze({
 const localStorageKeys = Object.freeze({
     playVideoToggle: 'xMuzikk_playVideo_Toggle',
     playingMusic: 'xMuzikk_playingMusic',
-    currentTime: 'xMuzikk_playback_currentTime'
+    currentTime: 'xMuzikk_playback_currentTime',
+    looping: 'xMuzikk_looping'
 });
 
-export { YTstates, localStorageKeys };
+const loopingOptions = Object.freeze({
+    LOOP: 0,
+    LOOP_ONCE: 1,
+    SHUFFLE: 2
+});
+
+export { YTstates, localStorageKeys, loopingOptions };

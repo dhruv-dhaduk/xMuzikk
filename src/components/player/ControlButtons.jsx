@@ -1,18 +1,30 @@
 import Icon from "./Icon.jsx";
 
 import loopIcon from '/icons/loop.svg';
+import loopOnceIcon from '/icons/loop_once.svg';
+import shuffleIcon from '/icons/shuffle.svg';
 import previousIcon from '/icons/previous.svg';
 import playIcon from '/icons/play.svg';
 import pauseIcon from '/icons/pause.svg';
 import nextIcon from '/icons/next.svg';
 import queueIcon from '/icons/queue.svg';
 
-import { YTstates } from '../../constants.js';
+import { YTstates, loopingOptions } from '../../constants.js';
 
-function ControlButtons({ playerState, playpause }) {
+function ControlButtons({ playerState, playpause, looping, nextLoopingOption }) {
+    let loopingIcon = loopIcon;
+    if (looping === loopingOptions.LOOP_ONCE)
+        loopingIcon = loopOnceIcon;
+    else if (looping === loopingOptions.SHUFFLE)
+        loopingIcon = shuffleIcon;
+    
     return (
         <div className='flex justify-center items-center gap-3 mb-10'>
-            <Icon imgSrc={loopIcon} className='w-16 p-3.5' />
+            <Icon
+                onClick={nextLoopingOption}
+                imgSrc={loopingIcon}
+                className='w-16 p-3.5'
+            />
             <Icon imgSrc={previousIcon} className='w-16 p-3.5' />
             <Icon
                 onClick={playpause}

@@ -1,17 +1,27 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-import { YTstates, localStorageKeys } from "../constants.js";
+import { YTstates, localStorageKeys, loopingOptions } from "../constants.js";
 import { useStoredState } from './useStoredState.js';
 
 function useYT(playerElementID) {
     const isYtApiLoaded = useYtApiLoadedStatus();
     const [playerState, setPlayerState] = useState(YTstates.NULL);
     const [playingMusic, setPlayingMusic] = useStoredState({}, localStorageKeys.playingMusic);
+    const [looping, setLooping] = useStoredState(loopingOptions.LOOP, localStorageKeys.looping);
     const playerRef = useRef({});
 
     const playMusic = (item) => {
         setPlayingMusic(item);
     }
+
+    const nextLoopingOption = useCallback(() => {
+        if (looping === loopingOptions.LOOP)
+            setLooping(loopingOptions.LOOP_ONCE);
+        else if (looping === loopingOptions.LOOP_ONCE)
+            setLooping(loopingOptions.SHUFFLE);
+        else if (looping === loopingOptions.SHUFFLE)
+            setLooping(loopingOptions.LOOP);
+    }, [looping, setLooping]);
 
     useEffect(() => {
         return () => {
@@ -80,7 +90,7 @@ function useYT(playerElementID) {
 
     }, [isYtApiLoaded, playerElementID, playingMusic]);
 
-    return {isYtApiLoaded, playerState, playerRef, playingMusic, playMusic};
+    return {isYtApiLoaded, playerState, playerRef, playingMusic, playMusic, looping, nextLoopingOption};
 }
 
 function useYtApiLoadedStatus() {
