@@ -46,43 +46,9 @@ class Recommendation {
     async getNextMusicDetails(count = 5, resetIndex) {
         const ids = this.#data.slice(this.#currentFetchingIndex, this.#currentFetchingIndex + count);
 
-        let dataFromIDB = {};
-        try {
-            dataFromIDB = await idb.get(ids);
-        } catch (err) {
-            console.log(`Error : ${err}`);
-            dataFromIDB.success = new Map();
-            dataFromIDB.fail = ids;
-        }
-
-        let dataFromAppwrite = new Map();
-
-        try {
-            if (dataFromIDB.fail.length)
-                dataFromAppwrite = await appwriteService.fetchDetails(dataFromIDB.fail);
-        } catch (err) {
-            console.log(`Error: ${err}`);
-        }
-
         this.#currentFetchingIndex += count;
 
-        idb.add(
-            dataFromIDB.fail
-                .map((id) => dataFromAppwrite.get(id))
-                .filter(item => item)
-        );
-
-        return ids.map((id) => {
-            const idbData = dataFromIDB.success.get(id);
-            if (idbData)
-                return idbData;
-
-            const appwriteData = dataFromAppwrite.get(id);
-            if (appwriteData)
-                return appwriteData;
-            
-            return {id, notFound: true};
-        });
+        return getMusicDetails(ids, true);
     }
 
     resetFetchingIndex(newIndex = 0) {
@@ -90,4 +56,44 @@ class Recommendation {
     }
 };
 
-export { Recommendation };
+async function getMusicDetails(ids, saveData = false) {
+    let dataFromIDB = {};
+    try {
+        dataFromIDB = await idb.get(ids);
+    } catch (err) {
+        console.log(`Error : ${err}`);
+        dataFromIDB.success = new Map();
+        dataFromIDB.fail = ids;
+    }
+
+    let dataFromAppwrite = new Map();
+
+    try {
+        if (dataFromIDB.fail.length)
+            dataFromAppwrite = await appwriteService.fetchDetails(dataFromIDB.fail);
+    } catch (err) {
+        console.log(`Error: ${err}`);
+    }
+
+    if (saveData) {
+        idb.add(
+            dataFromIDB.fail
+                .map((id) => dataFromAppwrite.get(id))
+                .filter(item => item)
+        );
+    }
+
+    return ids.map((id) => {
+        const idbData = dataFromIDB.success.get(id);
+        if (idbData)
+            return idbData;
+
+        const appwriteData = dataFromAppwrite.get(id);
+        if (appwriteData)
+            return appwriteData;
+        
+        return {id, notFound: true};
+    });
+} 
+
+export { Recommendation, getMusicDetails };
