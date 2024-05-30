@@ -3,6 +3,9 @@ import { useState } from "react";
 
 import { getMusicDetails } from '../../dataManager/index.js';
 
+import closeIcon from '/icons/close.svg';
+import Icon from "./Icon.jsx";
+
 function Queue({ musicIDs, queueVisible, setQueueVisible }) {
     const [musicDetails, setMusicDetails] = useState([]);
     const containerRef = useRef(null);
@@ -27,21 +30,54 @@ function Queue({ musicIDs, queueVisible, setQueueVisible }) {
 
     return (
         <div
-            onClick={() => setQueueVisible(false)} 
-            className={`${queueVisible ? '' : 'hidden'} absolute w-full h-full overflow-scroll bg-black`}
+            className={`${queueVisible ? '' : 'hidden'} absolute flex flex-col justify-start w-full h-full overflow-hidden bg-black rounded-2xl`}
             ref={containerRef}
         >
-            { 
-                musicDetails.map(musicItem => <QueueItem key={musicItem.id} music={musicItem} />)
-            }
+            <div
+                className='flex-none flex justify-between items-center h-14 pl-4 pr-2 border-b border-stone-600'
+            >
+                <p className='text-xl font-bold'>
+                    In Queue
+                </p>
+
+                <Icon
+                    onClick={() => setQueueVisible(false)}
+                    imgSrc={closeIcon}
+                    className='w-10 p-1.5 rounded-full bg-white bg-opacity-25'
+                />
+            </div>
+            <div
+                className='flex-1 w-full overflow-y-auto'
+            >
+                { 
+                    musicDetails.map(musicItem => <QueueItem key={musicItem.id} music={musicItem} />)
+                }
+            </div>
         </div>
     );
 }
 
 function QueueItem({ music }) {
     return (
-        <div className='p-4'>
-            { JSON.stringify(music) }
+        <div className='flex justify-start items-center h-16 gap-2 px-2 py-1.5'>
+            <div className='flex-none h-full aspect-square rounded-lg overflow-hidden'>
+                <img
+                    src={music.thumbnail}
+                    draggable={false}
+                    onContextMenu={e => e.preventDefault()}
+                    className='w-full h-full object-cover'
+                />
+            </div>
+
+            <div className='flex-1 flex flex-col justify-evenly'>
+                <p className='line-clamp-1'>{ music.title }</p>
+                <p className='line-clamp-1 text-xs text-stone-300'>{ music.channelTitle }</p>
+            </div>
+
+            <Icon
+                imgSrc={closeIcon}
+                className='w-9 p-1.5 bg-whit bg-opacity-25'
+            />
         </div>
     );
 }
