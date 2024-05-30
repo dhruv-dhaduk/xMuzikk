@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useRef, useContext, useState } from "react";
 import { PlayerContext } from '../contexts/PlayerContext.js';
 
 import Screen from "../components/player/Screen.jsx";
@@ -8,6 +8,7 @@ import ProgressBar from "../components/player/ProgressBar.jsx";
 import ControlButtons from "../components/player/ControlButtons.jsx";
 import { useStoredState } from "../hooks/useStoredState.js";
 import { localStorageKeys } from "../constants.js";
+import Queue from "../components/player/Queue.jsx";
 
 function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className }) {
     const containerRef = useRef(null);
@@ -18,6 +19,8 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
     const { id, title, thumbnail, duration, uploadTime, channelTitle } = playingMusic || {};
 
     const [showVideoToggle, setShowVideoToggle] = useStoredState(false, localStorageKeys.playVideoToggle);
+
+    const [queueVisible, setQueueVisible] = useState(false);
 
     useEffect(() => {
         isFirstRender.current = true;
@@ -63,7 +66,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                         showVideoToggle={showVideoToggle}
                     />
 
-                    <div className='flex-1 flex flex-col justify-start'>
+                    <div className='flex-1 flex flex-col justify-start relative'>
 
                         <OtherButtonsLg
                             id={id}
@@ -107,6 +110,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                             playpause={playerRef.current.playpause}
                             looping={looping}
                             nextLoopingOption={nextLoopingOption}
+                            showQueue={() => setQueueVisible(true)}
                         />
 
                         <OtherButtonsSm
@@ -115,6 +119,12 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                             hidePlayer={hidePlayer}
                             showVideoToggle={showVideoToggle}
                             setShowVideoToggle={setShowVideoToggle}
+                        />
+
+                        <Queue 
+                            musicIDs={['U9OQAySv184', 'mk48xRzuNvA', 'NVLpJBGVfSw', 'MvaT_TP3ajk', 'FhP5oMzxDos']}
+                            queueVisible={queueVisible}    
+                            setQueueVisible={setQueueVisible}
                         />
                         
                     </div>

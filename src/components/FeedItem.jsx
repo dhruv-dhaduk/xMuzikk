@@ -1,7 +1,7 @@
 import { convertDurationFormat, convertUploadTimeFormat } from '../utils/converters.js';
 
 import playIcon from '/icons/play.svg';
-import threeDotsIcon from '/icons/threedots.svg';
+import addToPlaylistIcon from '/icons/add_to_playlist.svg';
 
 function FeedItem({ music, onClick, isPlaying }) {
     return (
@@ -42,9 +42,9 @@ function FeedItem({ music, onClick, isPlaying }) {
                     { convertDurationFormat(music.duration) }
                 </SmallP>
 
-                <div className='w-8 tablet:w-fit h-full tablet:h-8 flex flex-col-reverse tablet:flex-row justify-between tablet:justify-center items-center absolute inset-y-0 tablet:top-auto right-0 tablet:right-0 tablet:bottom-0'>
-                    <Icon iconSrc={playIcon} />
-                    <Icon iconSrc={threeDotsIcon} />
+                <div className='w-8 tablet:w-fit h-full tablet:h-8 flex flex-col tablet:flex-row justify-between tablet:justify-center items-center absolute inset-y-0 tablet:top-auto right-0 tablet:right-0 tablet:bottom-0'>
+                    <Icon iconSrc={addToPlaylistIcon} className='p-1' />
+                    <Icon iconSrc={playIcon}  className='p-2' />
                 </div>
 
             </div>
@@ -60,9 +60,9 @@ function SmallP({ children, className }) {
     );
 }
 
-function Icon({ iconSrc }) {
+function Icon({ iconSrc, className }) {
     return (
-        <div className='w-8 h-8 flex justify-center items-center p-2'>
+        <div className={`w-8 h-8 flex justify-center items-center ${className}`}>
             <img 
                 src={iconSrc}
                 draggable={false}
