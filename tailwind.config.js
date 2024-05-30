@@ -68,7 +68,8 @@ export default {
                 'show': 'show 500ms',
                 'hide': 'hide 500ms',
                 'blink': 'blink 1s infinite',
-                'blink-once': 'blink-once 3s'
+                'blink-once': 'blink-once 3s',
+                'blink-once': 'blink-once 1s'
             },
 
             colors: {
