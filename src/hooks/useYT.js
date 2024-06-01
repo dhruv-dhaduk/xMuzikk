@@ -3,16 +3,72 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { YTstates, localStorageKeys, loopingOptions } from "../constants.js";
 import { useStoredState } from './useStoredState.js';
 
+import { getMusicDetails } from '../dataManager/index.js';
+
 function useYT(playerElementID) {
     const isYtApiLoaded = useYtApiLoadedStatus();
     const [playerState, setPlayerState] = useState(YTstates.NULL);
     const [playingMusic, setPlayingMusic] = useStoredState({}, localStorageKeys.playingMusic);
     const [looping, setLooping] = useStoredState(loopingOptions.LOOP, localStorageKeys.looping);
+    const [queue, setQueue] = useStoredState([], localStorageKeys.queue);
     const playerRef = useRef({});
 
-    const playMusic = (item) => {
+    const playMusic = useCallback((item) => {
         setPlayingMusic(item);
-    }
+        setQueue([item.id]);
+    }, [setPlayingMusic, setQueue]);
+
+    const playFromQueueAt = useCallback(async (index) => {
+        const id = queue[index];
+        if (!id) return;
+
+        const item = (await getMusicDetails([id], true))[0];
+
+        setPlayerState(item);
+
+    }, [queue, setPlayerState]);
+
+    const playPreviousMusic = useCallback(() => {
+        const currentQueueIndex = queue.indexOf(playingMusic.id);
+        if (currentQueueIndex > 0) {
+            playFromQueueAt(currentQueueIndex - 1);
+        }
+    }, [queue, playingMusic, playFromQueueAt]);
+
+    const playNextMusic = useCallback(() => {
+        if (!queue.length) return;
+        const currentQueueIndex = queue.indexOf(playingMusic.id);
+
+        if (currentQueueIndex < queue.length - 1) {
+            playFromQueueAt(currentQueueIndex + 1);
+        }
+        else if (currentQueueIndex === queue.length - 1) {
+            if (looping === loopingOptions.LOOP) {
+                playFromQueueAt(0);
+            }    
+        }
+    }, [queue, playMusic, playFromQueueAt, looping]);
+
+    const addToQueue = useCallback((id) => {
+        setQueue([...queue, id]);
+    }, [queue, setQueue]);
+
+    const removeFromQueue = useCallback(async (id) => {
+        const itemIndex = queue.indexOf(id);
+        if (itemIndex === -1) return;
+
+        setQueue(queue.filter(item => item !== id));
+
+        if (id === playMusic.id && queue.length > 1) {
+            let nextMusicId = queue[itemIndex + 1];
+            if (!nextMusicId)
+                nextMusicId = queue[0];
+            
+            const nextMusic = (await getMusicDetails([nextMusicId], true))[0];
+
+            setPlayerState(nextMusic);
+        }
+    }, [queue, setQueue, playingMusic, setPlayerState]);
 
     const nextLoopingOption = useCallback(() => {
         if (looping === loopingOptions.LOOP)
@@ -82,6 +138,9 @@ function useYT(playerElementID) {
                 playerRef.current.playVideo();
             }
         }
+
+        if (!queue.length)
+            setQueue([playingMusic.id]);
         
         return () => {
             if (playerRef?.current?.destroy) 
@@ -90,7 +149,16 @@ function useYT(playerElementID) {
 
     }, [isYtApiLoaded, playerElementID, playingMusic]);
 
-    return {isYtApiLoaded, playerState, playerRef, playingMusic, playMusic, looping, nextLoopingOption};
+    const playManager = {
+        playMusic,
+        playFromQueueAt,
+        playPreviousMusic,
+        playNextMusic,
+        addToQueue,
+        removeFromQueue
+    }
+
+    return {isYtApiLoaded, playerState, playerRef, playingMusic, playManager, looping, nextLoopingOption};
 }
 
 function useYtApiLoadedStatus() {

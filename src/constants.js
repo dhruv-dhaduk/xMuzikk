@@ -12,7 +12,8 @@ const localStorageKeys = Object.freeze({
     playVideoToggle: 'xMuzikk_playVideo_Toggle',
     playingMusic: 'xMuzikk_playingMusic',
     currentTime: 'xMuzikk_playback_currentTime',
-    looping: 'xMuzikk_looping'
+    looping: 'xMuzikk_looping',
+    queue: 'xMuzikk_queue'
 });
 
 const loopingOptions = Object.freeze({
