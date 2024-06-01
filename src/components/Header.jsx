@@ -1,4 +1,5 @@
 import logo from '/logos/xMuzikk.png';
+import codeIcon from '/icons/code.svg';
 import isMobileDevice from '../utils/isMobileDevice.js';
 
 import { useContext } from 'react';
@@ -22,7 +23,7 @@ function Header({ className }) {
     
     return (
         <header 
-            className={`flex justify-start bg-black backdrop-blur-[8px] bg-opacity-50 border-b border-slate-900 ${className}`}
+            className={`flex justify-between bg-black backdrop-blur-[8px] bg-opacity-50 border-b border-slate-900 ${className}`}
         >
             <div 
                 className={`w-fit h-full flex justify-start items-center p-2.5 tablet:p-3 active:bg-slate-800 cursor-pointer ${!isMobileDevice ? 'hover:bg-slate-900' : ''}`}
@@ -35,6 +36,23 @@ function Header({ className }) {
                     className='h-full'
                 />
             </div>
+
+            <a
+                href='https://github.com/dhruv-dhaduk/xMuzikk'
+                target='_blank'
+                className={`h-full flex justify-stretch items-center gap-1 p-2.5 tablet:p-3 active:bg-slate-800 ${!isMobileDevice ? 'hover:bg-slate-900' : ''}`}
+            >
+                <img
+                    src={codeIcon}
+                    onContextMenu={e => e.preventDefault()}
+                    draggable={false}
+                    className='w-full h-full'
+                />
+
+                <p className='hidden tablet:block w-fit h-full whitespace-nowrap text-lg font-bold'>
+                    View Source Code
+                </p>
+            </a>
         </header>
     );
 }

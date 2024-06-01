@@ -1,9 +1,8 @@
 import NavItem from './NavItem';
 import homeIcon from '/icons/home.svg';
-import heartIcon from '/icons/heart_filled_white.svg';
+import searchIcon from '/icons/search.svg';
 import playlistIcon from '/icons/playlist.svg';
 import infoIcon from '/icons/info.svg';
-import searchIcon from '/icons/search.svg';
 
 import { PlayerContext } from '../contexts/PlayerContext.js';
 import { useContext } from 'react';
