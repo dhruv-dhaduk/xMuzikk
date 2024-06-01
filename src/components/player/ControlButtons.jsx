@@ -11,7 +11,7 @@ import queueIcon from '/icons/queue.svg';
 
 import { YTstates, loopingOptions } from '../../constants.js';
 
-function ControlButtons({ playerState, playpause, looping, nextLoopingOption, showQueue }) {
+function ControlButtons({ playerState, playpause, looping, nextLoopingOption, showQueue, playPreviousMusic, playNextMusic }) {
     let loopingIcon = loopIcon;
     if (looping === loopingOptions.LOOP_ONCE)
         loopingIcon = loopOnceIcon;
@@ -25,13 +25,21 @@ function ControlButtons({ playerState, playpause, looping, nextLoopingOption, sh
                 imgSrc={loopingIcon}
                 className='w-16 p-3.5'
             />
-            <Icon imgSrc={previousIcon} className='w-16 p-3.5' />
+            <Icon
+                onClick={playPreviousMusic}
+                imgSrc={previousIcon}
+                className='w-16 p-3.5'
+            />
             <Icon
                 onClick={playpause}
                 imgSrc={playerState === YTstates.BUFFERING || playerState === YTstates.PLAYING ? pauseIcon : playIcon } 
                 className={`w-20 p-5 bg-white bg-opacity-25 rounded-full ${playerState === YTstates.BUFFERING ? 'animate-blink' : ''}`}
             />
-            <Icon imgSrc={nextIcon} className='w-16 p-3.5' />
+            <Icon
+                onClick={playNextMusic}
+                imgSrc={nextIcon}
+                className='w-16 p-3.5'
+            />
             <Icon
                 onClick={showQueue}
                 imgSrc={queueIcon} 

@@ -6,7 +6,7 @@ import { getMusicDetails } from '../../dataManager/index.js';
 import closeIcon from '/icons/close.svg';
 import Icon from "./Icon.jsx";
 
-function Queue({ musicIDs, queueVisible, setQueueVisible }) {
+function Queue({ musicIDs, queueVisible, setQueueVisible, playingMusic, playFromQueueAt, removeFromQueue }) {
     const [musicDetails, setMusicDetails] = useState([]);
     const containerRef = useRef(null);
 
@@ -49,18 +49,29 @@ function Queue({ musicIDs, queueVisible, setQueueVisible }) {
             <div
                 className='flex-1 w-full overflow-y-auto'
             >
-                <p className='text-center'>(This is Dummy Data)</p>
+                {/* <p className='text-center'>(This is Dummy Data)</p> */}
                 { 
-                    musicDetails.map(musicItem => <QueueItem key={musicItem.id} music={musicItem} />)
+                    musicDetails.map((musicItem, i) => (
+                        <QueueItem
+                            key={musicItem.id}
+                            music={musicItem}
+                            isPlaying={playingMusic.id === musicItem.id}
+                            play={() => playFromQueueAt(i)}
+                            remove={() => removeFromQueue(musicItem.id)}
+                        />
+                    ))
                 }
             </div>
         </div>
     );
 }
 
-function QueueItem({ music }) {
+function QueueItem({ music, isPlaying, play, remove }) {
     return (
-        <div className='flex justify-start items-center h-16 gap-2 px-2 py-1.5'>
+        <div
+            className={`flex justify-start items-center h-16 gap-2 px-2 py-1.5 bg-transparent from-primary-light-35 to-primary-dark-35 rounded-lg cursor-pointer ${isPlaying ? 'bg-gradient-to-r' : ''}`}
+            onClick={play}
+        >
             <div className='flex-none h-full aspect-square rounded-lg overflow-hidden'>
                 <img
                     src={music.thumbnail}
@@ -78,6 +89,7 @@ function QueueItem({ music }) {
             <Icon
                 imgSrc={closeIcon}
                 className='w-9 p-1.5 bg-whit bg-opacity-25'
+                onClick={e => { e.stopPropagation(); remove(); }}
             />
         </div>
     );

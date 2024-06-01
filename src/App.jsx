@@ -19,7 +19,8 @@ function App() {
         isYtApiLoaded, 
         playerState, 
         playerRef, 
-        playingMusic, 
+        playingMusic,
+        queue,
         playManager,
         looping,
         nextLoopingOption
@@ -28,7 +29,7 @@ function App() {
     return (
         <>  
 
-            <PlayerContext.Provider value={{isPlayerShowing, isYtApiLoaded, playerState, playerRef, playingMusic, playManager, looping, nextLoopingOption}}>
+            <PlayerContext.Provider value={{isPlayerShowing, showPlayer, isYtApiLoaded, playerState, playerRef, playingMusic, queue, playManager, looping, nextLoopingOption}}>
                 <Header className='z-header w-full h-header-m tablet:h-header fixed inset-x-0 top-0'/>
                 
                 <main className='mt-main-t-m tablet:mt-main-t mb-main-b-m tablet:mb-main-b tablet:ml-main-l'>

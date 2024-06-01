@@ -3,10 +3,10 @@ import { convertDurationFormat, convertUploadTimeFormat } from '../utils/convert
 import playIcon from '/icons/play.svg';
 import addToPlaylistIcon from '/icons/add_to_playlist.svg';
 
-function FeedItem({ music, onClick, isPlaying }) {
+function FeedItem({ music, isPlaying, playMusic, showPlayer, addToQueue }) {
     return (
         <div 
-            onClick={onClick}
+            onClick={() => { playMusic(); showPlayer(); }}
             className={`flex gap-2 p-3 tablet:p-4 bg-transparent from-primary-light-35 to-primary-dark-35 rounded-xl cursor-pointer select-none ${isPlaying ? 'bg-gradient-to-r' : ''}`}
         >
 
@@ -43,8 +43,16 @@ function FeedItem({ music, onClick, isPlaying }) {
                 </SmallP>
 
                 <div className='w-8 tablet:w-fit h-full tablet:h-8 flex flex-col tablet:flex-row justify-between tablet:justify-center items-center absolute inset-y-0 tablet:top-auto right-0 tablet:right-0 tablet:bottom-0'>
-                    <Icon iconSrc={addToPlaylistIcon} className='p-1' />
-                    <Icon iconSrc={playIcon}  className='p-2' />
+                    <Icon
+                        iconSrc={addToPlaylistIcon}
+                        className='p-1'
+                        onClick={addToQueue}
+                    />
+                    <Icon
+                        iconSrc={playIcon}
+                        className='p-2'
+                        onClick={playMusic}
+                    />
                 </div>
 
             </div>
@@ -60,9 +68,12 @@ function SmallP({ children, className }) {
     );
 }
 
-function Icon({ iconSrc, className }) {
+function Icon({ iconSrc, className, onClick }) {
     return (
-        <div className={`w-8 h-8 flex justify-center items-center ${className}`}>
+        <div
+            onClick={e => { e.stopPropagation(); onClick(); }}
+            className={`w-8 h-8 flex justify-center items-center ${className}`}
+        >
             <img 
                 src={iconSrc}
                 draggable={false}

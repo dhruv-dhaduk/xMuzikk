@@ -24,9 +24,9 @@ function useYT(playerElementID) {
 
         const item = (await getMusicDetails([id], true))[0];
 
-        setPlayerState(item);
+        setPlayingMusic(item);
 
-    }, [queue, setPlayerState]);
+    }, [queue, setPlayingMusic]);
 
     const playPreviousMusic = useCallback(() => {
         const currentQueueIndex = queue.indexOf(playingMusic.id);
@@ -55,20 +55,11 @@ function useYT(playerElementID) {
 
     const removeFromQueue = useCallback(async (id) => {
         const itemIndex = queue.indexOf(id);
-        if (itemIndex === -1) return;
+        if (itemIndex === -1 || id === playingMusic.id) return;
 
         setQueue(queue.filter(item => item !== id));
 
-        if (id === playMusic.id && queue.length > 1) {
-            let nextMusicId = queue[itemIndex + 1];
-            if (!nextMusicId)
-                nextMusicId = queue[0];
-            
-            const nextMusic = (await getMusicDetails([nextMusicId], true))[0];
-
-            setPlayerState(nextMusic);
-        }
-    }, [queue, setQueue, playingMusic, setPlayerState]);
+    }, [queue, setQueue, playingMusic]);
 
     const nextLoopingOption = useCallback(() => {
         if (looping === loopingOptions.LOOP)
@@ -139,8 +130,8 @@ function useYT(playerElementID) {
             }
         }
 
-        if (!queue.length)
-            setQueue([playingMusic.id]);
+        if (!queue.length || queue.indexOf(playingMusic.id) === -1)
+            setQueue([playingMusic.id, ...queue]);
         
         return () => {
             if (playerRef?.current?.destroy) 
@@ -158,7 +149,7 @@ function useYT(playerElementID) {
         removeFromQueue
     }
 
-    return {isYtApiLoaded, playerState, playerRef, playingMusic, playManager, looping, nextLoopingOption};
+    return {isYtApiLoaded, playerState, playerRef, playingMusic, playManager, queue, looping, nextLoopingOption};
 }
 
 function useYtApiLoadedStatus() {
