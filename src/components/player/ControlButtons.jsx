@@ -26,7 +26,6 @@ function ControlButtons({ playerState, playpause, looping, nextLoopingOption, sh
                 className='w-16 p-3.5'
             />
             <Icon
-                onClick={playPreviousMusic}
                 imgSrc={previousIcon}
                 className='w-16 p-3.5'
             />
@@ -36,7 +35,6 @@ function ControlButtons({ playerState, playpause, looping, nextLoopingOption, sh
                 className={`w-20 p-5 bg-white bg-opacity-25 rounded-full ${playerState === YTstates.BUFFERING ? 'animate-blink' : ''}`}
             />
             <Icon
-                onClick={playNextMusic}
                 imgSrc={nextIcon}
                 className='w-16 p-3.5'
             />
