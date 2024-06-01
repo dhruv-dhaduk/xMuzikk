@@ -14,7 +14,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
 
-    const { isYtApiLoaded, playerState, playerRef, playingMusic, looping, nextLoopingOption } = useContext(PlayerContext) || {};
+    const { isYtApiLoaded, playerState, playerRef, playingMusic, queue, playManager, looping, nextLoopingOption } = useContext(PlayerContext) || {};
 
     const { id, title, thumbnail, duration, uploadTime, channelTitle } = playingMusic || {};
 
@@ -111,6 +111,8 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                             looping={looping}
                             nextLoopingOption={nextLoopingOption}
                             showQueue={() => setQueueVisible(true)}
+                            playPreviousMusic={playManager.playPreviousMusic}
+                            playNextMusic={playManager.playNextMusic}
                         />
 
                         <OtherButtonsSm
@@ -122,9 +124,12 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                         />
 
                         <Queue 
-                            musicIDs={['U9OQAySv184', 'mk48xRzuNvA', 'NVLpJBGVfSw', 'MvaT_TP3ajk', 'FhP5oMzxDos']}
+                            musicIDs={queue}
                             queueVisible={queueVisible}    
                             setQueueVisible={setQueueVisible}
+                            playingMusic={playingMusic}
+                            playFromQueueAt={playManager.playFromQueueAt}
+                            removeFromQueue={playManager.removeFromQueue}
                         />
                         
                     </div>
