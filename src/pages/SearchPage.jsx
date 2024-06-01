@@ -1,4 +1,4 @@
-function LikedPage() {
+function SearchPage() {
     return (
         <div className='w-full pt-56'>
             <p className='text-5xl text-center select-none'>
@@ -8,4 +8,4 @@ function LikedPage() {
     );
 }
 
-export default LikedPage;
+export default SearchPage;
