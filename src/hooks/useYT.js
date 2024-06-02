@@ -75,9 +75,19 @@ function useYT(playerElementID) {
     }, [looping, setLooping]);
 
     useEffect(() => {
-        return () => {
-            playerRef.current.previousState = playerState;
+        if (playerState === YTstates.ENDED) {
+            if (looping === loopingOptions.LOOP_ONCE) {
+                playerRef.current.seekTo(0, true);
+                playerRef.current.playVideo();
+            }
+            else if (looping === loopingOptions.LOOP) {
+                playNextMusic();
+            }
+            else if (looping === loopingOptions.SHUFFLE) {
+                playFromQueueAt(Math.floor(queue.length * Math.random()));
+            }
         }
+
     }, [playerState]);
     
     useEffect(() => {
@@ -109,8 +119,7 @@ function useYT(playerElementID) {
                 'rel': 0
             }
         });
-
-        playerRef.current.previousState = YTstates.NULL;
+        
         playerRef.current.addEventListener('onReady', () => {
             if (playerRef?.current?.playVideo)
                 playerRef.current.playVideo();
