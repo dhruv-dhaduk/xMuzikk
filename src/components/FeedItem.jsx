@@ -3,7 +3,7 @@ import { convertDurationFormat, convertUploadTimeFormat } from '../utils/convert
 import playIcon from '/icons/play.svg';
 import addToPlaylistIcon from '/icons/add_to_playlist.svg';
 
-function FeedItem({ music, isPlaying, playMusic, showPlayer, addToQueue }) {
+function FeedItem({ music, isPlaying, playMusic, showPlayer, handleAddTo }) {
     return (
         <div 
             onClick={() => { playMusic(); showPlayer(); }}
@@ -46,7 +46,7 @@ function FeedItem({ music, isPlaying, playMusic, showPlayer, addToQueue }) {
                     <Icon
                         iconSrc={addToPlaylistIcon}
                         className='p-1'
-                        onClick={addToQueue}
+                        onClick={handleAddTo}
                     />
                     <Icon
                         iconSrc={playIcon}
@@ -72,7 +72,7 @@ function Icon({ iconSrc, className, onClick }) {
     return (
         <div
             onClick={e => { e.stopPropagation(); onClick(); }}
-            className={`w-8 h-8 flex justify-center items-center ${className}`}
+            className={`w-8 h-8 flex justify-center items-center active:scale-90 duration-200 ${className}`}
         >
             <img 
                 src={iconSrc}
