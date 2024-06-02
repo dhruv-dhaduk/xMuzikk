@@ -38,6 +38,8 @@ function App() {
 
                 <Footer
                     onClick={showPlayer}
+                    playPreviousMusic={playManager.playPreviousMusic}
+                    playNextMusic={playManager.playNextMusic}
                     className='z-footer w-full h-footer-m tablet:h-footer fixed inset-x-0 bottom-footer-b-m tablet:bottom-0' 
                 />
 

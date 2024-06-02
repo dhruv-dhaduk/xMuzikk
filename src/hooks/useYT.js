@@ -47,7 +47,7 @@ function useYT(playerElementID) {
                 playFromQueueAt(0);
             }    
         }
-    }, [queue, playMusic, playFromQueueAt, looping]);
+    }, [queue, playingMusic, playFromQueueAt, looping]);
 
     const addToQueue = useCallback((id) => {
         setQueue([...queue, id]);
