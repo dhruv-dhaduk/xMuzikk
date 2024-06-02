@@ -50,10 +50,14 @@ function useYT(playerElementID) {
     }, [queue, playingMusic, playFromQueueAt, looping]);
 
     const addToQueue = useCallback((id) => {
-        setQueue([...queue, id]);
+        if (queue.indexOf(id) === -1)
+            setQueue([...queue, id]);
+        else {
+            setQueue([...queue.filter(item => item !== id), id]);
+        }
     }, [queue, setQueue]);
 
-    const removeFromQueue = useCallback(async (id) => {
+    const removeFromQueue = useCallback(async (id) =>    {
         const itemIndex = queue.indexOf(id);
         if (itemIndex === -1 || id === playingMusic.id) return;
 
