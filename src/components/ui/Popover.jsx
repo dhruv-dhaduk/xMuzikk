@@ -20,10 +20,12 @@ function Popover({ popoverShowing, setPopoverShowing, children, className }) {
     }, [setPopoverShowing]);
 
     useEffect(() => {
-        popoverRef.current.addEventListener('toggle', changePopoverShowingState);
+        if (popoverRef.current)
+            popoverRef.current.addEventListener('toggle', changePopoverShowingState);
 
         return () => {
-            popoverRef.current.removeEventListener('toggle', changePopoverShowingState);
+            if (popoverRef.current)
+                popoverRef.current.removeEventListener('toggle', changePopoverShowingState);
         }
     }, [changePopoverShowingState]);
 
