@@ -10,7 +10,7 @@ import { YTstates } from '../constants.js';
 
 import { usePlayerProgressBar } from '../hooks/usePlayerProgressBar.js';
 
-function Footer({ className, onClick }) {
+function Footer({ className, onClick, playPreviousMusic, playNextMusic }) {
 
     const { playerState, playingMusic, playerRef } = useContext(PlayerContext);
 
@@ -63,13 +63,21 @@ function Footer({ className, onClick }) {
                 </div>
 
                 <div className='flex justify-center items-center gap-2'>
-                    <Icon iconSrc={previousIcon} className='tablet:w-12 tablet:h-12 hidden tablet:block tablet:p-3 rounded-full' />
+                    <Icon
+                        onClick={playPreviousMusic}
+                        iconSrc={previousIcon}
+                        className='tablet:w-12 tablet:h-12 hidden tablet:block tablet:p-3 rounded-full'
+                    />
                     <Icon 
                         onClick={playerRef.current.playpause}
                         iconSrc={playerState === YTstates.BUFFERING || playerState === YTstates.PLAYING ? pauseIcon : playIcon}
                         className={`w-11 tablet:w-12 h-11 tablet:h-12 p-3 tablet:p-3.5 bg-white bg-opacity-25 rounded-full ${playerState === YTstates.BUFFERING ? 'animate-blink' : ''}`} 
                     />
-                    <Icon iconSrc={nextIcon} className='tablet:w-12 tablet:h-12 hidden tablet:block tablet:p-3 rounded-full' />
+                    <Icon
+                        onClick={playNextMusic}
+                        iconSrc={nextIcon}
+                        className='tablet:w-12 tablet:h-12 hidden tablet:block tablet:p-3 rounded-full'
+                    />
                 </div>
             </div>
 
