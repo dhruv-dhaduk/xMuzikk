@@ -6,7 +6,11 @@ import addToPlaylistIcon from '/icons/add_to_playlist.svg';
 function FeedItem({ music, isPlaying, playMusic, showPlayer, handleAddTo }) {
     return (
         <div 
-            onClick={() => { playMusic(); showPlayer(); }}
+            onClick={() => { 
+                if (!isPlaying)
+                    playMusic();
+                showPlayer(); 
+            }}
             className={`flex gap-2 p-3 tablet:p-4 bg-transparent from-primary-light-35 to-primary-dark-35 rounded-xl cursor-pointer select-none ${isPlaying ? 'bg-gradient-to-r' : ''}`}
         >
 
@@ -51,7 +55,7 @@ function FeedItem({ music, isPlaying, playMusic, showPlayer, handleAddTo }) {
                     <Icon
                         iconSrc={playIcon}
                         className='p-2'
-                        onClick={playMusic}
+                        onClick={!isPlaying ? playMusic : null}
                     />
                 </div>
 
