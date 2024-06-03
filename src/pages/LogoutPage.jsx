@@ -5,14 +5,42 @@ import Popover from '../components/ui/Popover.jsx';
 
 import siteIcon from '/logos/wave.png';
 
+import { authService } from "../dataManager/AppwriteService.js";
+
 function LogoutPage() {
     const [logoutPopupShowing, setLogoutPopupShowing] = useState(true);
+
+    const [disabled, setDisabled] = useState(false);
 
     useEffect(() => {
         if (!logoutPopupShowing) {
             window.history.back();
         }
     }, [logoutPopupShowing]);
+
+    const handleLogout = async () => {
+        setDisabled(true);
+
+        authService
+            .logout()
+            .then(({response, error}) => {
+                if (error) {
+                    console.log(error);
+                    alert(`Error : ${error.message}`);
+                }
+                else {
+                    console.log(response);
+                    window.history.back();
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                alert(`Error : ${err.message}`);
+            })
+            .finally(() => {
+                setDisabled(false);
+            });
+    }
     
     return (
         <div>
@@ -39,7 +67,9 @@ function LogoutPage() {
                 </h1>
 
                 <button
-                    className='w-full h-9 my-1.5 text-[17px] font-semibold bg-red-600 rounded-full active:bg-opacity-80'
+                    onClick={handleLogout}
+                    disabled={disabled}
+                    className='w-full h-9 my-1.5 text-[17px] font-semibold bg-red-600 rounded-full active:bg-opacity-80 disabled:opacity-50'
                 >
                     Logout
                 </button>
