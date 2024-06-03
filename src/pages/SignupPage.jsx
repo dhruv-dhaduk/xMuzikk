@@ -54,7 +54,7 @@ function SignupPage() {
             .then(({response, error}) => {
                 if (error) {
                     console.log(error);
-                    alert(`Error : ${error}`);
+                    alert(`Error : ${error.message}`);
                     return;
                 }
                 else {
@@ -64,7 +64,7 @@ function SignupPage() {
             })
             .catch((err) => {
                 console.log(err);
-                alert(`Error : ${err}`);
+                alert(`Error : ${err.message}`);
             })
             .finally(() => {
                 setSubmitDisabled(false);

@@ -1,6 +1,53 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import { authService } from "../dataManager/AppwriteService.js";
 
 function LoginPage() {
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [submitDisabled, setSubmitDisabled] = useState(false);
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!email?.length) {
+            alert('Please Enter Your Email');
+            return;
+        }
+        
+        if (!password?.length) {
+            alert('Please Enter Your Password');
+            return;
+        }
+
+        setSubmitDisabled(true);
+
+        authService
+            .login(email, password)
+            .then(({response, error}) => {
+                if (error) {
+                    console.log(error);
+                    alert(`Error : ${error.message}`);
+                    return;
+                }
+                else {
+                    console.log(response);
+                    navigate('/about');
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                alert(`Error : ${err.message}`);
+            })
+            .finally(() => {
+                setSubmitDisabled(false);
+            });
+    }
+    
     return (
         <div className='flex justify-center p-4'>
             <div className='bg-card border border-card w-full tablet:max-w-[30rem] rounded-3xl'>
@@ -10,14 +57,15 @@ function LoginPage() {
 
                 <form
                     className='flex flex-col gap-4 px-4 pt-6'
-                    onSubmit={e => e.preventDefault()}
+                    onSubmit={handleSubmit}
                 >
 
                     <div>
                         <Label>Your Email</Label>
                         <input
                             type='email'
-                            name='email'
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
                             placeholder='Enter Your Email'
                             className='input-text w-full'
                         />
@@ -27,7 +75,8 @@ function LoginPage() {
                         <Label>Your Password</Label>
                         <input
                             type='password'
-                            name='password'
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
                             placeholder='Enter Your Password'
                             className='input-text w-full'
                         />
@@ -37,7 +86,8 @@ function LoginPage() {
                         <input
                             type='submit'
                             value='Log in'
-                            className='w-full h-10 bg-white text-black font-bold rounded-full cursor-pointer active:bg-opacity-80'
+                            disabled={submitDisabled}
+                            className='w-full h-10 bg-white text-black font-bold rounded-full cursor-pointer active:bg-opacity-80 disabled:bg-opacity-50'
                         />
                     </div>
 
