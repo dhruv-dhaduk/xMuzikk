@@ -122,4 +122,6 @@ class AuthService {
     }
 }
 
-export { AppwriteService, AuthService };
+const authService = new AuthService();
+
+export { AppwriteService, AuthService, authService };

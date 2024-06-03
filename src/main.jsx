@@ -14,6 +14,9 @@ import SearchPage from "./pages/SearchPage.jsx";
 import PlaylistsPage from "./pages/PlaylistsPage.jsx";
 import AboutPage from "./pages/AboutPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import SignupPage from "./pages/SignupPage.jsx";
+import LogoutPage from "./pages/LogoutPage.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -22,6 +25,9 @@ const router = createBrowserRouter(
             <Route path='search' element={<SearchPage />} />
             <Route path='playlists' element={<PlaylistsPage />} />
             <Route path='about' element={<AboutPage />} />
+            <Route path='login' element={<LoginPage />} />
+            <Route path='signup' element={<SignupPage />} />
+            <Route path='logout' element={<LogoutPage />} />
             <Route path='*' element={<NotFoundPage />} />
         </Route>
     )
