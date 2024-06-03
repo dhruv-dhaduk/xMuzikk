@@ -1,4 +1,4 @@
-import { Client, Databases, Query } from 'appwrite';
+import { Client, Databases, Query, ID, Account } from 'appwrite';
 
 const client = new Client();
 
@@ -52,4 +52,76 @@ class AppwriteService {
     }
 };
 
-export { AppwriteService };
+class AuthService {
+    account;
+
+    constructor() {
+        this.account = new Account(client);
+    }
+
+    async getAccountDetails() {
+        let response = null;
+        let error;
+
+        try {
+            response = await this.account.get();
+        }
+        catch(err) {
+            error = err;
+        }
+
+        return { response, error };
+    }
+
+    async createAccount(email, password, name) {
+        let response = null;
+        let error = null;
+
+        try {
+            response = await this.account.create(
+                ID.unique(),
+                email,
+                password,
+                name
+            );
+        }
+        catch(err) {
+            error = err;
+        }
+
+        return { response, error };
+    }
+
+    async login(email, password) {
+        let response;
+        let error;
+
+        try {
+            response = await this.account.createEmailSession(
+                email,
+                password
+            );
+        } catch (err) {
+            error = err;
+        }
+
+        return { response, error };
+    }
+
+    async logout() {
+        let response;
+        let error;
+
+        try {
+            response = await this.account.deleteSession('current');
+        } catch (err) {
+            error = err;
+        }
+
+        return { response, error };
+    }
+}
+
+const authService = new AuthService();
+
+export { AppwriteService, AuthService, authService };

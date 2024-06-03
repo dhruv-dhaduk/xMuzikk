@@ -1,9 +1,46 @@
+import { Link } from "react-router-dom";
+import { authService } from "../dataManager/AppwriteService.js";
+import { useEffect, useState } from "react";
+
 function AboutPage() {
+
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const { response } = await authService.getAccountDetails();
+
+            setUser(response);
+        }
+
+        fetchUser();
+    }, []);
+
     return (
-        <div className='w-full pt-56'>
-            <p className='text-5xl text-center select-none'>
-                Coming Soon
-            </p>
+        <div className='w-full'>
+
+            <div className='p-4'>
+                <p>Your Name : { user?.name }</p>
+                <p>Your Email : { user?.email }</p>
+            </div>
+
+            <div className='p-4'>
+                <Link to='/signup'>
+                    Sign Up
+                </Link>
+
+                <br />
+                
+                <Link to='/login'>
+                    Login
+                </Link>
+
+                <br />
+                
+                <Link to='/logout'>
+                    Logout
+                </Link>
+            </div>
         </div>
     );
 }
