@@ -60,42 +60,65 @@ class AuthService {
     }
 
     async getAccountDetails() {
-        let accountDetails = null;
+        let response = null;
+        let error;
 
         try {
-            accountDetails = await this.account.get();
+            response = await this.account.get();
         }
         catch(err) {
-            console.log(err);
+            error = err;
         }
 
-        return accountDetails;
+        return { response, error };
     }
 
     async createAccount(email, password, name) {
-        const response = await this.account.create(
-            ID.unique,
-            email,
-            password,
-            name
-        );
+        let response = null;
+        let error = null;
 
-        return response;
+        try {
+            response = await this.account.create(
+                ID.unique(),
+                email,
+                password,
+                name
+            );
+        }
+        catch(err) {
+            error = err;
+        }
+
+        return { response, error };
     }
 
     async login(email, password) {
-        const response = await this.account.createEmailPasswordSession(
-            email,
-            password
-        );
+        let response;
+        let error;
 
-        return response;
+        try {
+            response = await this.account.createEmailSession(
+                email,
+                password
+            );
+        } catch (err) {
+            error = err;
+        }
+
+        return { response, error };
     }
 
     async logout() {
-        const response = await this.account.deleteSession('current');
+        let response;
+        let error;
 
-        return response;
+        try {
+            response = await this.account.deleteSession('current');
+        } catch (err) {
+            error = err;
+        }
+
+        return { response, error };
     }
 }
 
