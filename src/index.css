@@ -94,3 +94,11 @@ html, body {
         transform: translateX(100%);
     }
 }
+
+.input-text {
+    @apply bg-input text-white h-10 px-2.5 rounded-lg border border-input;
+}
+
+.input-text::placeholder {
+    @apply text-placeholder;
+}

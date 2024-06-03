@@ -85,6 +85,17 @@ export default {
 
             gridTemplateColumns: {
                 'feed': 'repeat(auto-fit, minmax(20rem, 1fr))'
+            },
+            backgroundColor: {
+                'card': '#181818',
+                'input': '#0f0f0f'
+            },
+            borderColor: {
+                'card': '#4d4d4d',
+                'input': '#303030'
+            },
+            textColor: {
+                'placeholder': '#848484'
             }
         },
 
