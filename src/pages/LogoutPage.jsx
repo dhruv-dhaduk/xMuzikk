@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 
 import Popover from '../components/ui/Popover.jsx';
@@ -7,10 +7,14 @@ import siteIcon from '/logos/wave.png';
 
 import { authService } from "../dataManager/AppwriteService.js";
 
+import { ToastContext } from "../contexts/ToastContext.js";
+
 function LogoutPage() {
     const [logoutPopupShowing, setLogoutPopupShowing] = useState(true);
 
     const [disabled, setDisabled] = useState(false);
+
+    const { showToast } = useContext(ToastContext);
 
     useEffect(() => {
         if (!logoutPopupShowing) {
@@ -26,19 +30,20 @@ function LogoutPage() {
             .then(({response, error}) => {
                 if (error) {
                     console.log(error);
-                    alert(`Error : ${error.message}`);
+                    showToast.error(`Error : ${error.message}`);
                 }
                 else {
                     console.log(response);
-                    window.history.back();
+                    showToast.success('Logged out successfully');
                 }
             })
             .catch((err) => {
                 console.log(err);
-                alert(`Error : ${err.message}`);
+                showToast.error(`Error : ${err.message}`);
             })
             .finally(() => {
                 setDisabled(false);
+                window.history.back();
             });
     }
     

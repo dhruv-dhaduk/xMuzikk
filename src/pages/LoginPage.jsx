@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { authService } from "../dataManager/AppwriteService.js";
+
+import { ToastContext } from "../contexts/ToastContext.js";
 
 function LoginPage() {
 
@@ -11,16 +13,18 @@ function LoginPage() {
 
     const navigate = useNavigate();
 
+    const { showToast } = useContext(ToastContext);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!email?.length) {
-            alert('Please Enter Your Email');
+            showToast.warn('Please Enter Your Email');
             return;
         }
         
         if (!password?.length) {
-            alert('Please Enter Your Password');
+            showToast.warn('Please Enter Your Password');
             return;
         }
 
@@ -31,17 +35,18 @@ function LoginPage() {
             .then(({response, error}) => {
                 if (error) {
                     console.log(error);
-                    alert(`Error : ${error.message}`);
+                    showToast.error(`Error : ${error.message}`);
                     return;
                 }
                 else {
                     console.log(response);
+                    showToast.success('Logged in successfully');
                     navigate('/about');
                 }
             })
             .catch((err) => {
                 console.log(err);
-                alert(`Error : ${err.message}`);
+                showToast.error(`Error : ${err.message}`);
             })
             .finally(() => {
                 setSubmitDisabled(false);
