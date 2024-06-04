@@ -30,7 +30,7 @@ function LogoutPage() {
             .then(({response, error}) => {
                 if (error) {
                     console.log(error);
-                    showToast.error(`Error : ${error.message}`);
+                    showToast.info(`You are already logged out`);
                 }
                 else {
                     console.log(response);
@@ -39,7 +39,7 @@ function LogoutPage() {
             })
             .catch((err) => {
                 console.log(err);
-                showToast.error(`Error : ${err.message}`);
+                showToast.error(`You are already logged out`);
             })
             .finally(() => {
                 setDisabled(false);
