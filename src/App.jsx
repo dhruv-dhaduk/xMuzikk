@@ -8,8 +8,12 @@ import PlayerPage from "./pages/PlayerPage.jsx";
 import { Outlet } from "react-router-dom";
 
 import { PlayerContext } from "./contexts/PlayerContext.js";
+import { ToastContext } from "./contexts/ToastContext.js";
 import { useYT } from "./hooks/useYT.js";
 import { usePopUpPage } from "./hooks/usePopUpPage.js";
+
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
 
 function App() {
     
@@ -26,33 +30,46 @@ function App() {
         nextLoopingOption
     } = useYT(playerElementID);
 
+    const showToast = {
+        default: (content, options) => toast(content, { draggable: true, ...options }),
+        info: (content, options) => toast.info(content, { draggable: true, ...options }),
+        success: (content, options) => toast.success(content, { draggable: true, ...options }),
+        warn: (content, options) => toast.warn(content, { draggable: true, ...options }),
+        error: (content, options) => toast.error(content, { draggable: true, ...options })
+    }
+
     return (
         <>  
 
-            <PlayerContext.Provider value={{isPlayerShowing, showPlayer, isYtApiLoaded, playerState, playerRef, playingMusic, queue, playManager, looping, nextLoopingOption}}>
-                <Header className='z-header w-full h-header-m tablet:h-header fixed inset-x-0 top-0'/>
-                
-                <main className='mt-main-t-m tablet:mt-main-t mb-main-b-m tablet:mb-main-b tablet:ml-main-l'>
-                    <Outlet />
-                </main>
+            <ToastContext.Provider value={{ showToast }}>
+                <PlayerContext.Provider value={{isPlayerShowing, showPlayer, isYtApiLoaded, playerState, playerRef, playingMusic, queue, playManager, looping, nextLoopingOption}}>
 
-                <Footer
-                    onClick={showPlayer}
-                    playPreviousMusic={playManager.playPreviousMusic}
-                    playNextMusic={playManager.playNextMusic}
-                    className='z-footer w-full h-footer-m tablet:h-footer fixed inset-x-0 bottom-footer-b-m tablet:bottom-0' 
-                />
+                    <Header className='z-header w-full h-header-m tablet:h-header fixed inset-x-0 top-0'/>
+                    
+                    <main className='mt-main-t-m tablet:mt-main-t mb-main-b-m tablet:mb-main-b tablet:ml-main-l'>
+                        <Outlet />
+                    </main>
 
-                <PlayerPage 
-                    isPlayerShowing={isPlayerShowing}
-                    playerElementID={playerElementID}
-                    hidePlayer={hidePlayer}
-                    className='z-playerpage'
-                />
+                    <Footer
+                        onClick={showPlayer}
+                        playPreviousMusic={playManager.playPreviousMusic}
+                        playNextMusic={playManager.playNextMusic}
+                        className='z-footer w-full h-footer-m tablet:h-footer fixed inset-x-0 bottom-footer-b-m tablet:bottom-0' 
+                        />
 
-                <NavBar className='z-navbar w-full tablet:w-navbar h-navbar-m tablet:h-full fixed inset-x-0 tablet:top-14 bottom-0 tablet:left-0' />
-            </PlayerContext.Provider>
+                    <PlayerPage 
+                        isPlayerShowing={isPlayerShowing}
+                        playerElementID={playerElementID}
+                        hidePlayer={hidePlayer}
+                        className='z-playerpage'
+                        />
+
+                    <NavBar className='z-navbar w-full tablet:w-navbar h-navbar-m tablet:h-full fixed inset-x-0 tablet:top-14 bottom-0 tablet:left-0' />
+                    
+                </PlayerContext.Provider>
+            </ToastContext.Provider>
             
+            <ToastContainer />
         </>
     );
 }
