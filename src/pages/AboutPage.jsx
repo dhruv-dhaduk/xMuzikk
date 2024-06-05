@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { authService } from "../dataManager/AppwriteService.js";
 import { useEffect, useState } from "react";
 
+import AuthLinks from "../components/AuthLinks.jsx";
+
 function AboutPage() {
 
     const [user, setUser] = useState(null);
@@ -18,6 +20,8 @@ function AboutPage() {
 
     return (
         <div className='w-full'>
+
+            <AuthLinks message='Please login or signup to enable more features' />
 
             <div className='p-4'>
                 <p>Your Name : { user?.name }</p>
