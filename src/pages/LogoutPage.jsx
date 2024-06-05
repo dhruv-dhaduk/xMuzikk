@@ -8,6 +8,7 @@ import siteIcon from '/logos/wave.png';
 import { authService } from "../dataManager/AppwriteService.js";
 
 import { ToastContext } from "../contexts/ToastContext.js";
+import Spinner from "../components/ui/Spinner.jsx";
 
 function LogoutPage() {
     const [logoutPopupShowing, setLogoutPopupShowing] = useState(true);
@@ -74,9 +75,15 @@ function LogoutPage() {
                 <button
                     onClick={handleLogout}
                     disabled={disabled}
-                    className='w-full h-9 my-1.5 text-[17px] font-semibold bg-red-600 rounded-full active:bg-opacity-80 disabled:opacity-50'
+                    className='flex justify-center items-center w-full h-9 my-1.5 text-[17px] font-semibold bg-red-600 rounded-full active:bg-opacity-80 disabled:bg-opacity-50'
                 >
-                    Logout
+                    {
+                        disabled ? (
+                            <Spinner size={30} />
+                        ) : (
+                            'Logout'
+                        )
+                    }
                 </button>
 
                 <button

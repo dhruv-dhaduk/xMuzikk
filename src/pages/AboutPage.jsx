@@ -2,15 +2,22 @@ import { Link } from "react-router-dom";
 import { authService } from "../dataManager/AppwriteService.js";
 import { useEffect, useState } from "react";
 
+import AuthLinks from "../components/AuthLinks.jsx";
+import Spinner from "../components/ui/Spinner.jsx";
 function AboutPage() {
 
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(undefined);
 
     useEffect(() => {
         const fetchUser = async () => {
             const { response } = await authService.getAccountDetails();
 
-            setUser(response);
+            if (!response) {
+                setUser(null);
+            }
+            else {
+                setUser(response);
+            }
         }
 
         fetchUser();
@@ -19,28 +26,44 @@ function AboutPage() {
     return (
         <div className='w-full'>
 
-            <div className='p-4'>
-                <p>Your Name : { user?.name }</p>
-                <p>Your Email : { user?.email }</p>
-            </div>
+            { 
+                user === null && <AuthLinks message='Please login or signup to enable more features' />
+            }
 
-            <div className='p-4'>
-                <Link to='/signup'>
-                    Sign Up
-                </Link>
+            {
+                user && (
+                    <div className='flex flex-col justify-start items-center p-4'>
+                        <p className='text-2xl tablet:text-3xl font-bold select-none line-clamp-1'>
+                            Hello, { user.name } ! 
+                        </p>
 
-                <br />
-                
-                <Link to='/login'>
-                    Login
-                </Link>
+                        <p className='py-2'>
+                            <span className='select-none'>
+                                You are logged in with
+                                &nbsp;
+                            </span>
+                            { user.email }
+                        </p>
 
-                <br />
-                
-                <Link to='/logout'>
-                    Logout
-                </Link>
-            </div>
+                        <div>
+                            <Link
+                                to='/logout'
+                                className='w-32 h-9 flex justify-center items-center text-center bg-black text-white border border-white font-bold rounded-full cursor-pointer active:bg-white active:text-black'
+                            >
+                                Logout
+                            </Link>
+                        </div>
+                    </div>
+                )
+            }
+
+            {
+                user === undefined && (
+                    <div className='flex justify-center p-4'>
+                        <Spinner />
+                    </div>
+                )
+            }
         </div>
     );
 }
