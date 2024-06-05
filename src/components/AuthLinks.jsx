@@ -26,7 +26,7 @@ function LinkBtn({ children, to, className }) {
     return (
         <Link
             to={to}
-            className={`flex-1 flex justify-center items-center text-center bg-white text-black font-bold rounded-full cursor-pointer active:bg-opacity-80 ${className}`}
+            className={`flex-1 flex justify-center items-center text-center bg-white text-black font-bold rounded-full cursor-pointer select-none active:bg-opacity-80 ${className}`}
         >
             { children }
         </Link>

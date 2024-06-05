@@ -1,3 +1,6 @@
+import { authService } from '../dataManager/AppwriteService.js';
+import AuthLinks from '../components/AuthLinks.jsx';
+
 import { useState, useEffect } from 'react';
 import Feed from '../components/Feed';
 import LoadingFeed from '../components/Loading.jsx';
@@ -12,6 +15,8 @@ function HomePage() {
 
     const [musicList, setMusicList] = useState([]);
     const [isMoreMusic, setIsMoreMusic] = useState(true);
+
+    const [user, setUser] = useState(undefined);
 
     const getMoreData = async () => {
         recmnd.resetFetchingIndex(musicList.length);
@@ -59,8 +64,26 @@ function HomePage() {
         };
     });
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            const { response } = await authService.getAccountDetails();
+
+            if (!response) {
+                setUser(null);
+            }
+            else {
+                setUser(response);
+            }
+        }
+
+        fetchUser();
+    }, []);
+
     return (
         <div>
+            {
+                user === null && <AuthLinks message='Please login or signup to enable more features' />
+            }
 
             {
                 !musicList || !musicList.length ? <LoadingFeed count={12} /> : <Feed musicList={musicList} />
