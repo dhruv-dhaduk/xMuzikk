@@ -5,6 +5,7 @@ import Slider from '../ui/Slider.jsx';
 import youtubeIcon from '/icons/youtube.svg';
 import shareIcon from '/icons/share.svg';
 import closeIcon from '/icons/close.svg';
+import refreshIcon from '/icons/refresh.svg';
 
 function OtherButtonsLg({ id, title, hidePlayer }) {
 
@@ -25,6 +26,11 @@ function OtherButtonsLg({ id, title, hidePlayer }) {
     
     return (
         <div className='w-full hidden tablet:flex justify-start items-center gap-2'>
+            <Icon
+                imgSrc={refreshIcon} 
+                className='w-16 p-4 rounded-full'
+            />
+
             <Icon
                 onClick={openInYouTube}
                 imgSrc={youtubeIcon}
@@ -87,10 +93,16 @@ function OtherButtonsSm({ id, title, hidePlayer, showVideoToggle, setShowVideoTo
                 />
                 <p className='text-xs line-clamp-1'>Play Video</p>
             </div>
+
+            <Icon
+                imgSrc={refreshIcon} 
+                className='w-12 p-3 ml-auto rounded-full'
+            />
+
             <Icon
                 onClick={openInYouTube}
                 imgSrc={youtubeIcon}
-                className='w-12 p-3 ml-auto rounded-full'
+                className='w-12 p-3 rounded-full'
             />
             <Icon
                 onClick={shareMusic}
