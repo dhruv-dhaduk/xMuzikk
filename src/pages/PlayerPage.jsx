@@ -14,7 +14,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
     const containerRef = useRef(null);
     const isFirstRender = useRef(true);
 
-    const { isYtApiLoaded, playerState, playerRef, playingMusic, queue, playManager, looping, nextLoopingOption } = useContext(PlayerContext) || {};
+    const { isYtApiLoaded, playerState, playerRef, playingMusic, queue, playManager, looping, nextLoopingOption, refreshPlayer } = useContext(PlayerContext) || {};
 
     const { id, title, thumbnail, duration, uploadTime, channelTitle } = playingMusic || {};
 
@@ -72,6 +72,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                             id={id}
                             title={title}
                             hidePlayer={hidePlayer}
+                            refreshPlayer={refreshPlayer}
                         />
 
                         <TitlesAndLike
@@ -121,6 +122,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                             hidePlayer={hidePlayer}
                             showVideoToggle={showVideoToggle}
                             setShowVideoToggle={setShowVideoToggle}
+                            refreshPlayer={refreshPlayer}
                         />
 
                         <Queue 

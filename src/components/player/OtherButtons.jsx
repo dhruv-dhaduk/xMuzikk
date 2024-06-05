@@ -7,7 +7,7 @@ import shareIcon from '/icons/share.svg';
 import closeIcon from '/icons/close.svg';
 import refreshIcon from '/icons/refresh.svg';
 
-function OtherButtonsLg({ id, title, hidePlayer }) {
+function OtherButtonsLg({ id, title, hidePlayer, refreshPlayer }) {
 
     const shareMusic = () => {
         if (!navigator.share) return;
@@ -27,6 +27,7 @@ function OtherButtonsLg({ id, title, hidePlayer }) {
     return (
         <div className='w-full hidden tablet:flex justify-start items-center gap-2'>
             <Icon
+                onClick={refreshPlayer}
                 imgSrc={refreshIcon} 
                 className='w-16 p-4 rounded-full'
             />
@@ -67,7 +68,7 @@ function ShowVideoToggleAndVolumeBarLg({ showVideoToggle, setShowVideoToggle }) 
     );
 }
 
-function OtherButtonsSm({ id, title, hidePlayer, showVideoToggle, setShowVideoToggle }) {
+function OtherButtonsSm({ id, title, hidePlayer, showVideoToggle, setShowVideoToggle, refreshPlayer }) {
 
     const shareMusic = () => {
         if (!navigator.share) return;
@@ -95,6 +96,7 @@ function OtherButtonsSm({ id, title, hidePlayer, showVideoToggle, setShowVideoTo
             </div>
 
             <Icon
+                onClick={refreshPlayer}
                 imgSrc={refreshIcon} 
                 className='w-12 p-3 ml-auto rounded-full'
             />

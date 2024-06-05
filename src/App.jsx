@@ -27,7 +27,8 @@ function App() {
         queue,
         playManager,
         looping,
-        nextLoopingOption
+        nextLoopingOption,
+        refreshPlayer
     } = useYT(playerElementID);
 
     const showToast = {
@@ -42,7 +43,7 @@ function App() {
         <>  
 
             <ToastContext.Provider value={{ showToast }}>
-                <PlayerContext.Provider value={{isPlayerShowing, showPlayer, isYtApiLoaded, playerState, playerRef, playingMusic, queue, playManager, looping, nextLoopingOption}}>
+                <PlayerContext.Provider value={{isPlayerShowing, showPlayer, isYtApiLoaded, playerState, playerRef, playingMusic, queue, playManager, looping, nextLoopingOption, refreshPlayer}}>
 
                     <Header className='z-header w-full h-header-m tablet:h-header fixed inset-x-0 top-0'/>
                     

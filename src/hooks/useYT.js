@@ -13,6 +13,8 @@ function useYT(playerElementID) {
     const [queue, setQueue] = useStoredState([], localStorageKeys.queue);
     const playerRef = useRef({});
 
+    const [refreshVar, setRefreshVar] = useState(false);
+
     const playMusic = useCallback((item) => {
         setPlayingMusic(item);
         setQueue([item.id]);
@@ -73,6 +75,10 @@ function useYT(playerElementID) {
         else if (looping === loopingOptions.SHUFFLE)
             setLooping(loopingOptions.LOOP);
     }, [looping, setLooping]);
+
+    const refreshPlayer = useCallback(() => {
+        setRefreshVar(!refreshVar);
+    }, [setRefreshVar, refreshVar]);
 
     useEffect(() => {
         if (playerState === YTstates.ENDED) {
@@ -151,7 +157,7 @@ function useYT(playerElementID) {
                 playerRef.current.destroy();
         }
 
-    }, [isYtApiLoaded, playerElementID, playingMusic]);
+    }, [isYtApiLoaded, playerElementID, playingMusic, refreshVar]);
 
     const playManager = {
         playMusic,
@@ -162,7 +168,7 @@ function useYT(playerElementID) {
         removeFromQueue
     }
 
-    return {isYtApiLoaded, playerState, playerRef, playingMusic, playManager, queue, looping, nextLoopingOption};
+    return {isYtApiLoaded, playerState, playerRef, playingMusic, playManager, queue, looping, nextLoopingOption, refreshPlayer};
 }
 
 function useYtApiLoadedStatus() {
