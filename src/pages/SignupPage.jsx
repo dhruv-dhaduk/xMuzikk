@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { authService } from '../dataManager/AppwriteService.js';
 
 import { ToastContext } from '../contexts/ToastContext.js';
+import Spinner from '../components/ui/Spinner.jsx';
 
 function SignupPage() {
     const [name, setName] = useState('');
@@ -141,12 +142,21 @@ function SignupPage() {
                     </div>
 
                     <div className='mt-4'>
-                        <input
-                            type='submit'
-                            value='Create Account'
-                            disabled={submitDisabled}
-                            className='w-full h-10 bg-white text-black font-bold rounded-full cursor-pointer active:bg-opacity-80 disabled:bg-opacity-50'
-                        />
+                        {
+                            submitDisabled ? (
+                                <div className='w-full h-10 flex justify-center items-center'>
+                                    <Spinner size={35} />
+                                </div>
+                            ) : (
+                                <input
+                                    type='submit'
+                                    value='Create Account'
+                                    disabled={submitDisabled}
+                                    className='w-full h-10 bg-white text-black font-bold rounded-full cursor-pointer active:bg-opacity-80 disabled:bg-opacity-50'
+                                />
+                            )
+                        }
+
                     </div>
 
                 </form>
