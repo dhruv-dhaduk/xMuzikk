@@ -1,4 +1,5 @@
 import { Client, Databases, Query, ID, Account } from 'appwrite';
+import { Functions } from 'appwrite';
 
 const client = new Client();
 
@@ -7,6 +8,7 @@ client
     .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID);
 
 const db = new Databases(client);
+const fn = new Functions(client);
 
 class AppwriteService {
     async fetchRecommendation() {
@@ -122,6 +124,26 @@ class AuthService {
     }
 }
 
+async function executeSearch(q) {
+    if (!q)
+        throw new Error('No query provided');
+
+    const response = await fn.createExecution(
+        import.meta.env.VITE_APPWRITE_SEARCH_FUNCTION_ID,
+        '',
+        false,
+        `/?password=${import.meta.env.VITE_APPWRITE_SEARCH_PASSWORD}&q=${encodeURIComponent(q)}`
+    );
+
+    const responseBody = JSON.parse(response.responseBody);
+    if (responseBody.error)
+        throw new Error(responseBody.error);
+
+    return responseBody.searchResultsDocumentID;
+}
+
+window.executeSearch = executeSearch;
+
 const authService = new AuthService();
 
-export { AppwriteService, AuthService, authService };
+export { AppwriteService, AuthService, authService, executeSearch };
