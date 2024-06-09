@@ -132,14 +132,20 @@ async function executeSearch(q) {
         import.meta.env.VITE_APPWRITE_SEARCH_FUNCTION_ID,
         '',
         false,
-        `/?password=${import.meta.env.VITE_APPWRITE_SEARCH_PASSWORD}&q=${encodeURIComponent(q)}`
+        `/?q=${encodeURIComponent(q)}`
     );
 
     const responseBody = JSON.parse(response.responseBody);
-    if (responseBody.error)
-        throw new Error(responseBody.error);
+    if (responseBody.error) {
+        const err = new Error(responseBody.error);
+        if (responseBody.limitExceeded) {
+            err.limitExceeded = true;
+        }
 
-    return responseBody.searchResultsDocumentID;
+        throw err;
+    }
+
+    return responseBody;
 }
 
 window.executeSearch = executeSearch;
