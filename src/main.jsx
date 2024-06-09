@@ -17,6 +17,7 @@ import NotFoundPage from "./pages/NotFoundPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
 import LogoutPage from "./pages/LogoutPage.jsx";
+import SearchResults from "./pages/SearchResults.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -28,6 +29,7 @@ const router = createBrowserRouter(
             <Route path='login' element={<LoginPage />} />
             <Route path='signup' element={<SignupPage />} />
             <Route path='logout' element={<LogoutPage />} />
+            <Route path='searchresults/:documentId' element={<SearchResults />} />
             <Route path='*' element={<NotFoundPage />} />
         </Route>
     )
