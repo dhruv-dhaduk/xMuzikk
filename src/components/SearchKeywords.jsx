@@ -27,6 +27,11 @@ function SearchKeywords({ searchInput, setSearchInput }) {
 
         if (queryInput.length === 0) {
             setKeywords([]);
+            setIsLoading(false);
+            return;
+        }
+
+        if (isLoading) {
             return;
         }
 
