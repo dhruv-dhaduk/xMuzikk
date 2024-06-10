@@ -14,7 +14,7 @@ function OtherButtonsLg({ id, title, hidePlayer, refreshPlayer }) {
 
         navigator.share({
             title,
-            url: `https://youtu.be/${id}`
+            url: `/music/${id}`
         });
     }
 
@@ -75,7 +75,7 @@ function OtherButtonsSm({ id, title, hidePlayer, showVideoToggle, setShowVideoTo
 
         navigator.share({
             title,
-            url: `https://youtu.be/${id}`
+            url: `/music/${id}`
         });
     }
 
