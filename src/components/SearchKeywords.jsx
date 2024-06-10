@@ -1,30 +1,64 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+
+import Spinner from './ui/Spinner.jsx';
 
 import upLeftArrowIcon from '/icons/up_left_arrow.svg';
 
-function SearchKeywords() {
-    const [keywords, setKeywords] = useState([
-        {
-            query: 'Hello, World 1',
-            '$id': 'abcd1'
-        },
-        {
-            query: 'Hello, World 2',
-            '$id': 'abcd2'
-        },
-        {
-            query: 'Hello, World 3',
-            '$id': 'abcd3'
-        },
-        {
-            query: 'Hello, World 4',
-            '$id': 'abcd4'
-        },
-    ]);
+import { searchService } from '../dataManager/AppwriteService.js';
+
+function SearchKeywords({ searchInput, setSearchInput }) {
+    const [queryInput, setQueryInput] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [keywords, setKeywords] = useState([]);
+
+    const timeoutID = useRef(-1);
+
+    useEffect(() => {
+        const inputKeywords = searchInput.split(' ').filter((item) => item.length > 0);
+
+        if (JSON.stringify(queryInput) !== JSON.stringify(inputKeywords)) {
+            setQueryInput(inputKeywords);
+        }
+    }, [searchInput]);
+
+    useEffect(() => {
+        clearTimeout(timeoutID.current);
+
+        if (queryInput.length === 0) {
+            setKeywords([]);
+            return;
+        }
+
+        timeoutID.current = setTimeout(() => {
+            setIsLoading(true);
+
+            searchService
+                .queryCache(queryInput.join(' '))
+                .then((response) => {
+                    setKeywords(response);
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
+        }, 350);
+    }, [queryInput]);
+
+    if (isLoading) {
+        return (
+            <div className='flex justify-center p-4 bg-[#181818]'>
+                <Spinner />
+            </div>
+        );
+    }
 
     if (!keywords?.length) {
         return null;
     }
+
 
     return (    
         <div>
@@ -34,12 +68,15 @@ function SearchKeywords() {
                         key={item.$id}
                         className='flex justify-between items-stretch h-9 bg-[#181818] border-b border-[#393939]'
                     >
-                        <p className='flex-1 line-clamp-1 flex justify-start items-center text-sm px-2 text-[#c4c4c4]'> 
+                        <Link
+                            to={`/searchresults/${item.$id}`}
+                            className='flex-1 line-clamp-1 flex justify-start items-center text-sm px-2 text-[#c4c4c4]'
+                        > 
                             {item.query}
-                        </p>
+                        </Link>
 
                         <div
-
+                            onClick={() => setSearchInput(item.query)}
                             className='flex-none flex justify-center items-center aspect-square cursor-pointer bg-[#454545] active:bg-black'
                         >
                             <img

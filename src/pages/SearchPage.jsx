@@ -65,7 +65,10 @@ function SearchPage() {
 
                 <div className='relative mt-1'>
                     <div className='absolute top-0 w-full h-fit max-h-[28rem] overflow-y-scroll bg-black'>
-                        <SearchKeywords />
+                        <SearchKeywords
+                            searchInput={searchInput}
+                            setSearchInput={setSearchInput}
+                        />
                     </div>
 
                     <div>
