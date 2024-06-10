@@ -38,8 +38,28 @@ function SearchPage() {
     }
 
     return (
-        <div>
-            Allright
+        <div className='flex justify-center p-4'>
+            <div className='w-full max-w-[40rem]'>
+                
+                <form
+                    onSubmit={e => {e.preventDefault(); alert('submit')}}
+                    className='flex justify-between items-center gap-1'
+                >
+                    <input
+                        type='text'
+                        placeholder='Search'
+                        className='search-box flex-1'
+                    />
+
+                    <input
+                        type='submit'
+                        value=''
+                        className='search-submit flex-none'
+                    />
+
+                </form>
+
+            </div>
         </div>
     );
 }

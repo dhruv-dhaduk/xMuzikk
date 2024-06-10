@@ -102,3 +102,33 @@ html, body {
 .input-text::placeholder {
     @apply text-placeholder;
 }
+
+.search-box {
+    background-image: url('/icons/search.svg');
+    background-repeat: no-repeat;
+    background-position-x: 12px;
+    background-position-y: center;
+    background-size: 23px;
+    @apply bg-input text-white h-10 pl-11 pr-2.5 rounded-full border border-[#5c5c5c];
+}
+
+.search-box::placeholder {
+    @apply text-placeholder;
+}
+
+.search-box:focus {
+    @apply outline-none border-[#949494];
+}
+
+.search-submit {
+    background-image: url('/icons/right_arrow.svg');
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+    background-size: 23px;
+    @apply bg-[#363636] w-10 h-10 rounded-full cursor-pointer;
+}
+
+.search-submit:active {
+    @apply bg-[#5c5c5c];
+}
