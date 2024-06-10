@@ -24,7 +24,7 @@ function FeedItem({ music, isPlaying, playMusic, showPlayer, handleAddTo }) {
             </div>
 
             <div className='flex-1 flex flex-col justify-between tablet:justify-evenly items-start relative tablet:p-0 py-1.5 pr-10'>
-                <p className='text-[16px]/[20px] tablet:text-[18px] line-clamp-2 tablet:line-clamp-3'>
+                <p className='text-[16px]/[20px] tablet:text-[18px] line-clamp-2 tablet:line-clamp-3 break-all'>
                     { music.title }
                 </p>
 
@@ -66,7 +66,7 @@ function FeedItem({ music, isPlaying, playMusic, showPlayer, handleAddTo }) {
 
 function SmallP({ children, className }) {
     return (
-        <p className={`text-[13px]/[13px] tablet:text-[15px]/[18px] text-stone-400 line-clamp-1 ${className}`}>
+        <p className={`text-[13px]/[13px] tablet:text-[15px]/[18px] text-stone-400 line-clamp-1 break-all ${className}`}>
             { children }
         </p>
     );
