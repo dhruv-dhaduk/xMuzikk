@@ -4,9 +4,11 @@ import { authService } from '../dataManager/AppwriteService.js';
 
 import Spinner from '../components/ui/Spinner.jsx';
 import AuthLinks from '../components/AuthLinks.jsx';
+import SearchKeywords from '../components/SearchKeywords.jsx';
 
 function SearchPage() {
     const [user, setUser] = useState(undefined);
+    const [searchInput, setSearchInput] = useState('');
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -42,11 +44,13 @@ function SearchPage() {
             <div className='w-full max-w-[40rem]'>
                 
                 <form
-                    onSubmit={e => {e.preventDefault(); alert('submit')}}
+                    onSubmit={e => {e.preventDefault(); alert(`submit : ${searchInput}`)}} 
                     className='flex justify-between items-center gap-1'
                 >
                     <input
                         type='text'
+                        value={searchInput}
+                        onChange={e => setSearchInput(e.target.value)}
                         placeholder='Search'
                         className='search-box flex-1'
                     />
@@ -59,6 +63,16 @@ function SearchPage() {
 
                 </form>
 
+                <div className='relative mt-1'>
+                    <div className='absolute top-0 w-full h-fit max-h-[28rem] overflow-y-scroll bg-black'>
+                        <SearchKeywords />
+                    </div>
+
+                    <div>
+                        
+                    </div>
+                </div>
+            
             </div>
         </div>
     );
