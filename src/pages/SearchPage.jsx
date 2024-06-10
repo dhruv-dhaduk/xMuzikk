@@ -118,7 +118,7 @@ function SearchPage() {
                                         We limit the number of searches you can execute per day due to high infrastructure costs.
                                     </p>
                                     <p className='text-xs text-center py-0.5'>
-                                        This limit only applies to only new searches you make, not on search results already cached on our database.    
+                                        This limit only applies to new searches you make, not on search results already cached on our database.    
                                     </p>
                                     <p className='text-xs text-center py-0.5'>
                                         Search limit will reset every day at 12:00 AM IST.    
