@@ -167,6 +167,25 @@ class SearchService {
         return responseBody;
     }
 
+    async uploadMusicDetails(ids) {
+        if (!ids)
+            throw new Error('No ids provided');
+
+        const response = await fn.createExecution(
+            import.meta.env.VITE_APPWRITE_UPLOADMUSICDETAILS_FUNCTINO_ID,
+            '',
+            false,
+            `/?ids=${ids.join(',')}`
+        );
+
+        const responseBody = JSON.parse(response.responseBody);
+        if (responseBody.error) {
+            throw new Error(responseBody.error);
+        }
+
+        return responseBody;
+    }
+
     async getSearchResults(documentId) {
 
         if (!documentId)

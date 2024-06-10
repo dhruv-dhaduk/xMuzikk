@@ -84,4 +84,28 @@ function time_relative_to(timediff, unitTime, label)
         return x + " " + label + " ago";
 }
 
-export { convertDurationFormat, convertUploadTimeFormat, getDurationFromISO };
+function convertIdFromYtLink(link) {
+    try {
+        const url = new URL(link);
+
+        if (url.host === 'youtu.be') {
+            return url.pathname.split('/')[1];
+        }
+        else if (url.host === 'www.youtube.com' || url.host === 'm.youtube.com') {
+            if (url.pathname === '/watch') {
+                return url.searchParams.get('v');
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+
+    } catch (err) {
+        return null;
+    }
+}
+
+export { convertDurationFormat, convertUploadTimeFormat, getDurationFromISO, convertIdFromYtLink };
