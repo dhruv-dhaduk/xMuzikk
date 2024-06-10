@@ -44,7 +44,7 @@ function SearchKeywords({ searchInput, setSearchInput }) {
                 .finally(() => {
                     setIsLoading(false);
                 });
-        }, 350);
+        }, 750);
     }, [queryInput]);
 
     if (isLoading) {
