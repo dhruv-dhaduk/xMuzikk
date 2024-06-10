@@ -18,6 +18,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
 import LogoutPage from "./pages/LogoutPage.jsx";
 import SearchResultsPage from "./pages/SearchResultsPage.jsx";
+import MusicItemPage from "./pages/MusicItemPage.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
             <Route path='signup' element={<SignupPage />} />
             <Route path='logout' element={<LogoutPage />} />
             <Route path='searchresults/:documentId' element={<SearchResultsPage />} />
+            <Route path='music/:id' element={<MusicItemPage />} />
             <Route path='*' element={<NotFoundPage />} />
         </Route>
     )

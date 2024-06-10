@@ -11,7 +11,7 @@ function FeedItem({ music, isPlaying, playMusic, showPlayer, handleAddTo }) {
                     playMusic();
                 showPlayer(); 
             }}
-            className={`flex gap-2 p-3 tablet:p-4 bg-transparent from-primary-light-35 to-primary-dark-35 rounded-xl cursor-pointer select-none ${isPlaying ? 'bg-gradient-to-r' : ''}`}
+            className={`flex tablet:max-w-[28rem] gap-2 p-3 tablet:p-4 bg-transparent from-primary-light-35 to-primary-dark-35 rounded-xl cursor-pointer select-none ${isPlaying ? 'bg-gradient-to-r' : ''}`}
         >
 
             <div className='flex-none w-[6.5rem] tablet:flex-1 aspect-square'>
