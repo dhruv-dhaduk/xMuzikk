@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { authService } from '../dataManager/AppwriteService.js';
+import { authService, searchService } from '../dataManager/AppwriteService.js';
 
 import Spinner from '../components/ui/Spinner.jsx';
 import AuthLinks from '../components/AuthLinks.jsx';
@@ -9,6 +9,7 @@ import SearchKeywords from '../components/SearchKeywords.jsx';
 function SearchPage() {
     const [user, setUser] = useState(undefined);
     const [searchInput, setSearchInput] = useState('');
+    const [searchLimit, setSearchLimit] = useState(undefined);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -24,6 +25,24 @@ function SearchPage() {
 
         fetchUser();
     }, []);
+
+    useEffect(() => {
+        if (!user)
+            return;
+
+        const fetchSearchLimit = async () => {
+            try {
+                const { limit, maxLimit } = await searchService.getSearchLimit(user.$id);
+
+                setSearchLimit({ limit, maxLimit });
+            } catch (err) {
+                setSearchLimit(null);
+            }
+        }
+
+        fetchSearchLimit();
+
+    }, [user]);
 
     if (user === undefined) {
         return (
@@ -64,15 +83,49 @@ function SearchPage() {
                 </form>
 
                 <div className='relative mt-1'>
-                    <div className='absolute top-0 w-full h-fit max-h-[28rem] overflow-y-scroll bg-black'>
-                        <SearchKeywords
-                            searchInput={searchInput}
-                            setSearchInput={setSearchInput}
-                        />
-                    </div>
+                    <SearchKeywords
+                        searchInput={searchInput}
+                        setSearchInput={setSearchInput}
+                    />
 
                     <div>
-                        
+                        {
+                            user
+                            &&
+                            searchLimit === undefined
+                            &&
+                            <div className='flex justify-center p-4'>
+                                <Spinner />
+                            </div>
+                        }
+
+                        {
+                            user
+                            &&
+                            searchLimit
+                            &&
+                            <div className='pt-10'>
+                                <p className='text-xl font-bold text-center'>
+                                    { searchLimit.limit } searches remaining for today
+                                </p>
+
+                                <p className='text-lg font-semibold text-center'>
+                                    (Total searches per day : { searchLimit.maxLimit })
+                                </p>
+
+                                <div className='mt-4'>
+                                    <p className='text-xs text-center py-0.5'>
+                                        We limit the number of searches you can execute per day due to high infrastructure costs.
+                                    </p>
+                                    <p className='text-xs text-center py-0.5'>
+                                        This limit only applies to only new searches you make, not on search results already cached on our database.    
+                                    </p>
+                                    <p className='text-xs text-center py-0.5'>
+                                        Search limit will reset every day at 12:00 AM IST.    
+                                    </p>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             

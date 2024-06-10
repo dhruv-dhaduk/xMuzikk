@@ -54,6 +54,8 @@ class AppwriteService {
     }
 };
 
+const appwriteService = new AppwriteService();
+
 class AuthService {
     account;
 
@@ -124,6 +126,8 @@ class AuthService {
     }
 }
 
+const authService = new AuthService();
+
 class SearchService {
     async queryCache(q) {
         const response = await db.listDocuments(
@@ -180,10 +184,45 @@ class SearchService {
         return response;
     }
 
+    async getSearchLimit(userId) {
+
+        let response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SEARCHLIMIT_COLLECTION_ID,
+            [
+                Query.select(['limit']),
+                Query.limit(1),
+                Query.equal('userId', 'maxlimit')
+            ]
+        );
+
+        if (response.documents.length === 0) {
+            throw new Error('No max search limit found');
+        }
+
+        const maxLimit = response.documents[0].limit;
+
+        response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SEARCHLIMIT_COLLECTION_ID,
+            [
+                Query.select(['limit']),
+                Query.limit(1),
+                Query.equal('userId', userId)
+            ]
+        );
+
+        if (response.documents.length === 0) {
+            return { limit: maxLimit, maxLimit };
+        }
+
+        const limit = response.documents[0].limit;
+
+        return { limit, maxLimit };
+    }
+
 }
 
-const appwriteService = new AppwriteService();
-const authService = new AuthService();
 const searchService = new SearchService();
 
 window.searchService = searchService;
