@@ -1,4 +1,5 @@
 import { Client, Databases, Query, ID, Account } from 'appwrite';
+import { Functions } from 'appwrite';
 
 const client = new Client();
 
@@ -7,6 +8,7 @@ client
     .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID);
 
 const db = new Databases(client);
+const fn = new Functions(client);
 
 class AppwriteService {
     async fetchRecommendation() {
@@ -51,6 +53,8 @@ class AppwriteService {
         return dataMap;
     }
 };
+
+const appwriteService = new AppwriteService();
 
 class AuthService {
     account;
@@ -124,4 +128,103 @@ class AuthService {
 
 const authService = new AuthService();
 
-export { AppwriteService, AuthService, authService };
+class SearchService {
+    async queryCache(q) {
+        const response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SEARCHRESULTS_COLLECTION_ID,
+            [
+                Query.select(['$id', 'query']),
+                Query.limit(20),
+                Query.search('query', q)
+            ]
+        );
+
+        return response.documents;
+    }
+
+    async executeSearch(q) {
+        if (!q)
+            throw new Error('No query provided');
+    
+        const response = await fn.createExecution(
+            import.meta.env.VITE_APPWRITE_SEARCH_FUNCTION_ID,
+            '',
+            false,
+            `/?q=${encodeURIComponent(q)}`
+        );
+    
+        const responseBody = JSON.parse(response.responseBody);
+        if (responseBody.error) {
+            const err = new Error(responseBody.error);
+            if (responseBody.limitExceeded) {
+                err.limitExceeded = true;
+            }
+    
+            throw err;
+        }
+    
+        return responseBody;
+    }
+
+    async getSearchResults(documentId) {
+
+        if (!documentId)
+            documentId = undefined;
+
+        const response = await db.getDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SEARCHRESULTS_COLLECTION_ID,
+            documentId,
+            [
+                Query.select(['query', 'ids'])
+            ]
+        );
+
+        return response;
+    }
+
+    async getSearchLimit(userId) {
+
+        let response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SEARCHLIMIT_COLLECTION_ID,
+            [
+                Query.select(['limit']),
+                Query.limit(1),
+                Query.equal('userId', 'maxlimit')
+            ]
+        );
+
+        if (response.documents.length === 0) {
+            throw new Error('No max search limit found');
+        }
+
+        const maxLimit = response.documents[0].limit;
+
+        response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SEARCHLIMIT_COLLECTION_ID,
+            [
+                Query.select(['limit']),
+                Query.limit(1),
+                Query.equal('userId', userId)
+            ]
+        );
+
+        if (response.documents.length === 0) {
+            return { limit: maxLimit, maxLimit };
+        }
+
+        const limit = response.documents[0].limit;
+
+        return { limit, maxLimit };
+    }
+
+}
+
+const searchService = new SearchService();
+
+window.searchService = searchService;
+
+export { AppwriteService, appwriteService, AuthService, authService, SearchService, searchService };
