@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { authService, searchService } from '../dataManager/AppwriteService.js';
 
@@ -6,10 +7,16 @@ import Spinner from '../components/ui/Spinner.jsx';
 import AuthLinks from '../components/AuthLinks.jsx';
 import SearchKeywords from '../components/SearchKeywords.jsx';
 
+import { ToastContext } from '../contexts/ToastContext.js';
+
 function SearchPage() {
     const [user, setUser] = useState(undefined);
     const [searchInput, setSearchInput] = useState('');
     const [searchLimit, setSearchLimit] = useState(undefined);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const { showToast } = useContext(ToastContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -44,6 +51,41 @@ function SearchPage() {
 
     }, [user]);
 
+    const handleSearch = async (e) => {
+        e.preventDefault();
+
+        if (!user) {
+            showToast.warn('Please login or signup.');
+            return;
+        }
+
+        if (!searchInput || searchInput.trim().length === 0) {
+            showToast.warn('Please enter a search query.');
+            return;
+        }
+
+        setIsLoading(true);
+
+        searchService
+            .executeSearch(searchInput)
+            .then((response) => {
+                showToast.success(response.message);
+                navigate(`/searchresults/${response.searchResultsDocumentID}`);
+            })
+            .catch((err) => {
+                console.error(err);
+                if (err.limitExceeded) {
+                    showToast.error('You have reached the search limit for today. Please try again tomorrow.');
+                }
+                else {
+                    showToast.error(err.message);
+                }
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }
+
     if (user === undefined) {
         return (
             <div className='flex justify-center p-4'>
@@ -58,12 +100,28 @@ function SearchPage() {
         );
     }
 
+    if (isLoading) {
+        return (
+            <div className='flex flex-col justify-start items-center p-4 pt-48'>
+                <Spinner size={50} />
+
+                <p className='text-lg font-semibold text-center'>
+                    Processing ... Please wait ...
+                </p>
+
+                <p className='text-sm'>
+                    It may take a while. Please do not switch tabs.
+                </p>
+            </div>
+        );
+    }
+
     return (
         <div className='flex justify-center p-4'>
             <div className='w-full max-w-[40rem]'>
                 
                 <form
-                    onSubmit={e => {e.preventDefault(); alert(`submit : ${searchInput}`)}} 
+                    onSubmit={handleSearch} 
                     className='flex justify-between items-center gap-1'
                 >
                     <input
