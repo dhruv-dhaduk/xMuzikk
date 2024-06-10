@@ -9,6 +9,8 @@ import SearchKeywords from '../components/SearchKeywords.jsx';
 
 import { ToastContext } from '../contexts/ToastContext.js';
 
+import { convertIdFromYtLink } from '../utils/converters.js';
+
 function SearchPage() {
     const [user, setUser] = useState(undefined);
     const [searchInput, setSearchInput] = useState('');
@@ -51,8 +53,7 @@ function SearchPage() {
 
     }, [user]);
 
-    const handleSearch = async (e) => {
-        e.preventDefault();
+    const handleSearch = async () => {
 
         if (!user) {
             showToast.warn('Please login or signup.');
@@ -86,6 +87,38 @@ function SearchPage() {
             });
     }
 
+    const handleLinkSearch = async (id) => {
+        setIsLoading(true);
+
+        searchService
+            .uploadMusicDetails([id])
+            .then((response) => {
+                showToast.success(response.message);
+                navigate(`/music/${id}`);
+            })
+            .catch((err) => {
+                console.error(err);
+                showToast.error(err.message);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const ytId = convertIdFromYtLink(searchInput);
+
+        if (ytId) {
+            handleLinkSearch(ytId);
+        }
+        else {
+            handleSearch();
+        }
+
+    }
+
     if (user === undefined) {
         return (
             <div className='flex justify-center p-4'>
@@ -110,7 +143,7 @@ function SearchPage() {
                 </p>
 
                 <p className='text-sm'>
-                    It may take a while. Please do not switch tabs.
+                    It may take a while. Please do not refresh the page.
                 </p>
             </div>
         );
@@ -121,14 +154,14 @@ function SearchPage() {
             <div className='w-full max-w-[40rem]'>
                 
                 <form
-                    onSubmit={handleSearch} 
+                    onSubmit={handleSubmit} 
                     className='flex justify-between items-center gap-1'
                 >
                     <input
                         type='text'
                         value={searchInput}
                         onChange={e => setSearchInput(e.target.value)}
-                        placeholder='Search'
+                        placeholder='Enter Search Query or YouTube link'
                         className='search-box flex-1'
                     />
 
@@ -172,13 +205,13 @@ function SearchPage() {
                                 </p>
 
                                 <div className='mt-4'>
-                                    <p className='text-xs text-center py-0.5'>
+                                    <p className='text-xs text-center py-1'>
                                         We limit the number of searches you can execute per day due to high infrastructure costs.
                                     </p>
-                                    <p className='text-xs text-center py-0.5'>
-                                        This limit only applies to new searches you make, not on search results already cached on our database.    
+                                    <p className='text-xs text-center py-1'>
+                                        This limit only applies to new searches you make, not on search results already cached on our database or to search directly from YouTube links.    
                                     </p>
-                                    <p className='text-xs text-center py-0.5'>
+                                    <p className='text-xs text-center py-1'>
                                         Search limit will reset every day at 12:00 AM IST.    
                                     </p>
                                 </div>
