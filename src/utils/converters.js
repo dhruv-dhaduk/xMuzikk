@@ -104,7 +104,7 @@ function convertIdFromYtLink(link) {
         }
 
     } catch (err) {
-        return null;
+        return undefined;
     }
 }
 

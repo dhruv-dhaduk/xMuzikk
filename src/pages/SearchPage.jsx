@@ -109,12 +109,15 @@ function SearchPage() {
         e.preventDefault();
 
         const ytId = convertIdFromYtLink(searchInput);
-
+        
         if (ytId) {
             handleLinkSearch(ytId);
         }
-        else {
+        else if (ytId === undefined) {
             handleSearch();
+        }
+        else {
+            showToast.warn("Link is not valid.");
         }
 
     }
