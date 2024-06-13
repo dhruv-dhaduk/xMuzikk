@@ -22,7 +22,7 @@ function PlaylistPage() {
             return;
         }
 
-        if (!playlist?.items?.length === playlistItems.length) {
+        if (playlist?.items?.length === playlistItems.length) {
             setHasMoreItems(false);
             return;
         }
@@ -34,6 +34,17 @@ function PlaylistPage() {
         setPlaylistItems([...playlistItems, ...nextItems]);
 
     }, [playlist, playlistItems, setPlaylistItems, hasMoreItems, setHasMoreItems]);
+
+    const handleScrollToEnd = useCallback(async () => {
+        const scrollRemaining = document.body.offsetHeight - window.scrollY - window.innerHeight;
+
+        if (scrollRemaining <= 0) {
+            const scrollY = window.scrollY;
+            window.removeEventListener('scrollend', handleScrollToEnd);
+            await fetchNextItems();
+            window.scrollTo(0, scrollY);
+        }
+    }, [fetchNextItems]);
 
     useEffect(() => {
         appwriteService.fetchPlaylist(documentId)
@@ -50,12 +61,24 @@ function PlaylistPage() {
     }, [documentId]);
 
     useEffect(() => {
-        if (!playlist || playlist.notFound) {
+        if (!playlist || !playlist?.items?.length || playlist.notFound) {
             return;
         }
 
         fetchNextItems();
     }, [playlist]);
+
+    useEffect(() => {
+        if (!playlistItems.length || !hasMoreItems) {
+            return;
+        }
+
+        window.addEventListener('scrollend', handleScrollToEnd);
+
+        return () => {
+            window.removeEventListener('scrollend', handleScrollToEnd);
+        }
+    }, [playlistItems, hasMoreItems]);
 
 
     if (isLoading) {
@@ -84,6 +107,15 @@ function PlaylistPage() {
 
             <div className='flex-1 laptop:max-w-[60rem] tablet:py-6'>
                 <PlaylistFeed playlistItems={playlistItems} />
+
+                {
+                    hasMoreItems && (
+                        <div className='flex justify-center pb-4'>
+                            <Spinner />
+                        </div>
+                    )
+                }
+                
             </div>
         </div>
     );
