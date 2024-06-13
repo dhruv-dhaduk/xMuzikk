@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import PlaylistMetaData from '../components/PlaylistMetaData';
+
 function PlaylistPage() {
     const { documentId } = useParams();
     const [playlist, setPlaylist] = useState({
@@ -8,7 +10,7 @@ function PlaylistPage() {
         ytId: 'PLsm6x0zLuEYKUyUSORRbETUlzJZrIwvrS',
         title: 'Top Gujarati Garba Songs for Navratri - 2022',
         channelTitle: 'AllEvents',
-        thumbnail: 'https://i.ytimg.com/vi/pGG_Zosn-qo/maxresdefault.jpg',
+        thumbnail: 'https://i.ytimg.com/vi/Jv8KRwF1zQs/maxresdefault.jpg',
         itemCount: 21,
         items: ["pGG_Zosn-qo","gBeBK9QQtv8","Jv8KRwF1zQs","Jh_VKJAEnUY","lfm-NIrZyV0","tTfF5klskmo","sDZA54sTqwQ","OPWik6jypxs","BmWkUAU1ktk","asYxxtiWUyw","dlz09a-pyPE","GZwvya3eFG0","ccqg6e2rfLU","YMrVf4O65Ss","Q_ZXz9Omq4k","P4OlI-ksWMM","46f6aPSXN7Y","vFORQ0vbadQ","C7u6rtswjCU","i4D2s21LboQ","KwUIzf3eM9I"]
     });
@@ -62,8 +64,8 @@ function PlaylistPage() {
     
     return (
         <div className='laptop:flex laptop:justify-center laptop:items-start'>
-            <div className='bg-slate-900 flex-1 laptop:max-w-[30rem] tablet:sticky top-header-height h-96'>
-
+            <div className='flex-1 laptop:max-w-[30rem] laptop:sticky top-header-height p-4 tablet:p-6'>
+                <PlaylistMetaData playlist={playlist} />
             </div>
 
             <div className='bg-slate-800 flex-1 laptop:max-w-[60rem] h-[200rem]'>
