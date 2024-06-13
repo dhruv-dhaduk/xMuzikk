@@ -72,7 +72,6 @@ function Queue({ musicIDs, queueVisible, setQueueVisible, playingMusic, playFrom
             <div
                 className='flex-1 w-full overflow-y-auto'
             >
-                {/* <p className='text-center'>(This is Dummy Data)</p> */}
                 { 
                     musicDetails.map((musicItem, i) => (
                         <QueueItem

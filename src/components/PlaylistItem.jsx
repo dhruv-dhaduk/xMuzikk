@@ -3,11 +3,16 @@ import { convertDurationFormat, convertUploadTimeFormat } from '../utils/convert
 import playIcon from '/icons/play.svg';
 import addToPlaylistIcon from '/icons/add_to_playlist.svg';
 
-function PlaylistItem({ item, index }) {
+function PlaylistItem({ item, index, isPlaying, playMusic, showPlayer, handleAddTo }) {
 
     return (
         <div
-            className={`flex gap-2 p-3 bg-transparent from-primary-light-35 to-primary-dark-35 rounded-xl cursor-pointer select-none`}
+            onClick={() => {
+                if (!isPlaying)
+                    playMusic();
+                showPlayer();
+            }}
+            className={`flex gap-2 p-3 bg-transparent from-primary-light-35 to-primary-dark-35 rounded-xl cursor-pointer select-none ${isPlaying ? 'bg-gradient-to-r' : ''}`}
         >   
 
             <p className='flex-none flex justify-center items-center w-[3ch] text-stone-300 font-semibold'>
@@ -51,10 +56,12 @@ function PlaylistItem({ item, index }) {
                 <Icon
                     iconSrc={addToPlaylistIcon}
                     className='p-1'
+                    onClick={handleAddTo}
                 />
                 <Icon
                     iconSrc={playIcon}
                     className='p-2'
+                    onClick={!isPlaying ? playMusic : null}
                 />
             </div>
 
