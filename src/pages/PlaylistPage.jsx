@@ -61,8 +61,14 @@ function PlaylistPage() {
     ]);
     
     return (
-        <div className=''>
-            
+        <div className='laptop:flex laptop:justify-center laptop:items-start'>
+            <div className='bg-slate-900 flex-1 laptop:max-w-[30rem] tablet:sticky top-header-height h-96'>
+
+            </div>
+
+            <div className='bg-slate-800 flex-1 laptop:max-w-[60rem] h-[200rem]'>
+
+            </div>
         </div>
     );
 }
