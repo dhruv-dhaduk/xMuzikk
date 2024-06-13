@@ -52,6 +52,19 @@ class AppwriteService {
 
         return dataMap;
     }
+
+    async fetchPlaylist(documentId) {
+        const response = await db.getDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
+            documentId,
+            [
+                Query.select(['$id', 'owner', 'ytId', 'title', 'channelTitle', 'thumbnail', 'itemCount', 'items'])
+            ]
+        );
+
+        return response;
+    }
 };
 
 const appwriteService = new AppwriteService();

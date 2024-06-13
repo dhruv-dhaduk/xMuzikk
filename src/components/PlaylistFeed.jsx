@@ -11,8 +11,8 @@ function PlaylistFeed({ playlistItems }) {
     return (
         <div>
             {
-                [...playlistItems, ...playlistItems, ...playlistItems].map((item, index) => (
-                    <PlaylistItem key={index} item={item} index={index + 1} />
+                playlistItems.map((item, index) => (
+                    <PlaylistItem key={item.id} item={item} index={index + 1} />
                 ))  
             }
         </div>
