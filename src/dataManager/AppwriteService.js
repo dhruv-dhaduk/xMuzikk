@@ -199,6 +199,26 @@ class SearchService {
         return responseBody;
     }
 
+    async uploadPlaylist(playlistId) {
+        if (!playlistId)
+            throw new Error('No playlistId provided');
+
+        const response = await fn.createExecution(
+            import.meta.env.VITE_APPWRITE_UPLOADMUSICDETAILS_FUNCTINO_ID,
+            '',
+            false,
+            `/?playlistId=${playlistId}`
+        );
+
+        const responseBody = JSON.parse(response.responseBody);
+        if (responseBody.error) {
+            console.log(responseBody);
+            throw new Error(responseBody.error);
+        }
+
+        return responseBody;
+    }
+
     async getSearchResults(documentId) {
 
         if (!documentId)

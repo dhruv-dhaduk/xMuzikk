@@ -129,6 +129,4 @@ function convertIdFromYtPlaylistLink(link) {
     }
 }
 
-window.convertIdFromYtPlaylistLink = convertIdFromYtPlaylistLink;
-
 export { convertDurationFormat, convertUploadTimeFormat, getDurationFromISO, convertIdFromYtLink, convertIdFromYtPlaylistLink };
