@@ -9,7 +9,7 @@ import SearchKeywords from '../components/SearchKeywords.jsx';
 
 import { ToastContext } from '../contexts/ToastContext.js';
 
-import { convertIdFromYtLink } from '../utils/converters.js';
+import { convertIdFromYtLink, convertIdFromYtPlaylistLink } from '../utils/converters.js';
 
 function SearchPage() {
     const [user, setUser] = useState(undefined);
@@ -105,6 +105,24 @@ function SearchPage() {
             });
     }
 
+    const handlePlaylistLinkSearch = async (playlistId) => {
+        setIsLoading(true);
+
+        searchService
+            .uploadPlaylist(playlistId)
+            .then((response) => {
+                showToast.success(response.message);
+                navigate(`/playlist/${response.playlistDocumentId}`);
+            })
+            .catch((err) => {
+                console.error(err);
+                showToast.error(err.message);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -112,14 +130,22 @@ function SearchPage() {
         
         if (ytId) {
             handleLinkSearch(ytId);
+            return;
         }
-        else if (ytId === undefined) {
+        
+        const playlistId = convertIdFromYtPlaylistLink(searchInput);
+
+        if (playlistId) {
+            handlePlaylistLinkSearch(playlistId);
+            return;
+        }
+
+        if (playlistId === undefined) {
             handleSearch();
         }
         else {
             showToast.warn("Link is not valid.");
         }
-
     }
 
     if (user === undefined) {

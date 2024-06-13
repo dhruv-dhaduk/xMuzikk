@@ -19,6 +19,7 @@ import SignupPage from "./pages/SignupPage.jsx";
 import LogoutPage from "./pages/LogoutPage.jsx";
 import SearchResultsPage from "./pages/SearchResultsPage.jsx";
 import MusicItemPage from "./pages/MusicItemPage.jsx";
+import PlaylistPage from "./pages/PlaylistPage.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
             <Route path='logout' element={<LogoutPage />} />
             <Route path='searchresults/:documentId' element={<SearchResultsPage />} />
             <Route path='music/:id' element={<MusicItemPage />} />
+            <Route path='playlist/:documentId' element={<PlaylistPage />} />
             <Route path='*' element={<NotFoundPage />} />
         </Route>
     )

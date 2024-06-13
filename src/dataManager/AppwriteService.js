@@ -52,6 +52,19 @@ class AppwriteService {
 
         return dataMap;
     }
+
+    async fetchPlaylist(documentId) {
+        const response = await db.getDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
+            documentId,
+            [
+                Query.select(['$id', 'owner', 'ytId', 'title', 'channelTitle', 'thumbnail', 'itemCount', 'items'])
+            ]
+        );
+
+        return response;
+    }
 };
 
 const appwriteService = new AppwriteService();
@@ -186,6 +199,26 @@ class SearchService {
         return responseBody;
     }
 
+    async uploadPlaylist(playlistId) {
+        if (!playlistId)
+            throw new Error('No playlistId provided');
+
+        const response = await fn.createExecution(
+            import.meta.env.VITE_APPWRITE_UPLOADMUSICDETAILS_FUNCTINO_ID,
+            '',
+            false,
+            `/?playlistId=${playlistId}`
+        );
+
+        const responseBody = JSON.parse(response.responseBody);
+        if (responseBody.error) {
+            console.log(responseBody);
+            throw new Error(responseBody.error);
+        }
+
+        return responseBody;
+    }
+
     async getSearchResults(documentId) {
 
         if (!documentId)
@@ -243,7 +276,5 @@ class SearchService {
 }
 
 const searchService = new SearchService();
-
-window.searchService = searchService;
 
 export { AppwriteService, appwriteService, AuthService, authService, SearchService, searchService };
