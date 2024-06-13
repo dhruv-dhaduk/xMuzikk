@@ -244,6 +244,4 @@ class SearchService {
 
 const searchService = new SearchService();
 
-window.searchService = searchService;
-
 export { AppwriteService, appwriteService, AuthService, authService, SearchService, searchService };
