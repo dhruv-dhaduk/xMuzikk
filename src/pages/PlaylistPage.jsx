@@ -91,9 +91,17 @@ function PlaylistPage() {
 
     if (playlist.notFound) {
         return (
-            <div className='flex justify-center p-4'>
-                <p>Playlist not found</p>
-            </div>
+            <div className='w-full pt-56'>
+            <p className='text-8xl text-center select-none'>
+                404
+            </p>
+            <p className='text-5xl text-center select-none'>
+                Not Found
+            </p>
+            <p className='mt-4 text-center select-none'>
+                (Or maybe your are not logged in)
+            </p>
+        </div>
         );
     }
 
