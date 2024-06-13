@@ -108,4 +108,27 @@ function convertIdFromYtLink(link) {
     }
 }
 
-export { convertDurationFormat, convertUploadTimeFormat, getDurationFromISO, convertIdFromYtLink };
+function convertIdFromYtPlaylistLink(link) {
+    try {
+        const url = new URL(link);
+
+        if (url.host === 'www.youtube.com' || url.host === 'm.youtube.com' || url.host === 'youtube.com') {
+            if (url.pathname === '/playlist') {
+                return url.searchParams.get('list');
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+
+    } catch (err) {
+        return undefined;
+    }
+}
+
+window.convertIdFromYtPlaylistLink = convertIdFromYtPlaylistLink;
+
+export { convertDurationFormat, convertUploadTimeFormat, getDurationFromISO, convertIdFromYtLink, convertIdFromYtPlaylistLink };
