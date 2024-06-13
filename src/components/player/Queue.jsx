@@ -12,7 +12,30 @@ function Queue({ musicIDs, queueVisible, setQueueVisible, playingMusic, playFrom
 
     useEffect(() => {
         const updateMusicDetails = async () => {
-            setMusicDetails(await getMusicDetails(musicIDs, true));
+            
+            const existingMusic = musicDetails.map(music => music.id);
+            const newMusicIDs = musicIDs.filter(id => !existingMusic.includes(id));
+
+            const response = await getMusicDetails(newMusicIDs);
+
+            const warehouse = new Map();
+
+            musicDetails.forEach(music => {
+                warehouse.set(music.id, music);
+            });
+            response.forEach(music => {
+                warehouse.set(music.id, music);
+            });
+
+            setMusicDetails(
+                musicIDs.map(id => {
+                    const music = warehouse.get(id);
+                    if (music) 
+                        return music;
+                    else
+                        return {id, notFound: true};
+                })
+            );
         }
 
         updateMusicDetails();
