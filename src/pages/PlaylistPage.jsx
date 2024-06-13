@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import PlaylistMetaData from '../components/PlaylistMetaData';
+import PlaylistMetaData from '../components/PlaylistMetaData.jsx';
+import PlaylistFeed from '../components/PlaylistFeed.jsx';
 
 function PlaylistPage() {
     const { documentId } = useParams();
@@ -68,8 +69,8 @@ function PlaylistPage() {
                 <PlaylistMetaData playlist={playlist} />
             </div>
 
-            <div className='bg-slate-800 flex-1 laptop:max-w-[60rem] h-[200rem]'>
-
+            <div className='flex-1 laptop:max-w-[60rem] tablet:py-6'>
+                <PlaylistFeed playlistItems={playlistItems} />
             </div>
         </div>
     );
