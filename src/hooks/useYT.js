@@ -20,6 +20,16 @@ function useYT(playerElementID) {
         setQueue([item.id]);
     }, [setPlayingMusic, setQueue]);
 
+    const loadPlaylist = useCallback(async (playlistItems) => {
+        if (!playlistItems?.length)
+            return;
+
+        const firstItem = (await getMusicDetails([playlistItems[0]], true))[0];
+        
+        setPlayingMusic(firstItem);
+        setQueue(playlistItems);
+    }, [setPlayingMusic, setQueue]);
+
     const playFromQueueAt = useCallback(async (index) => {
         const id = queue[index];
         if (!id) return;
@@ -165,7 +175,8 @@ function useYT(playerElementID) {
         playPreviousMusic,
         playNextMusic,
         addToQueue,
-        removeFromQueue
+        removeFromQueue,
+        loadPlaylist
     }
 
     return {isYtApiLoaded, playerState, playerRef, playingMusic, playManager, queue, looping, nextLoopingOption, refreshPlayer};

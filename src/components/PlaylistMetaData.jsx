@@ -3,7 +3,12 @@ import youtubeIcon from '/icons/youtube.svg';
 import saveHollowIcon from '/icons/save_hollow.svg';
 import saveFilledIcon from '/icons/save_filled.svg';
 
+import { useContext } from 'react';
+import { PlayerContext } from '../contexts/PlayerContext.js';
+
 function PlaylistMetaData({ playlist }) {
+    const { playManager } = useContext(PlayerContext);
+    
     return (
         <div className='select-none'>
             <div className='aspect-square rounded-2xl overflow-hidden'>
@@ -66,7 +71,12 @@ function PlaylistMetaData({ playlist }) {
                     }
                 </div>
 
-                <button className='bg-white text-black font-semibold h-10 px-4 rounded-full whitespace-nowrap active:bg-opacity-80'>
+                <button
+                    onClick={() => {
+                        playManager.loadPlaylist(playlist.items);
+                    }} 
+                    className='bg-white text-black font-semibold h-10 px-4 rounded-full whitespace-nowrap active:bg-opacity-80'
+                >
                     Play All
                 </button>
             </div>
