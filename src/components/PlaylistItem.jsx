@@ -1,4 +1,5 @@
 import { convertDurationFormat, convertUploadTimeFormat } from '../utils/converters.js';
+import isMobileDevice from '../utils/isMobileDevice.js';
 
 import playIcon from '/icons/play.svg';
 import addToPlaylistIcon from '/icons/add_to_playlist.svg';
@@ -12,7 +13,7 @@ function PlaylistItem({ item, index, isPlaying, playMusic, showPlayer, handleAdd
                     playMusic();
                 showPlayer();
             }}
-            className={`flex gap-2 p-3 bg-transparent from-primary-light-35 to-primary-dark-35 rounded-xl cursor-pointer select-none ${isPlaying ? 'bg-gradient-to-r' : ''}`}
+            className={`flex gap-2 p-3 bg-transparent from-primary-light-35 to-primary-dark-35 rounded-xl cursor-pointer select-none ${isPlaying ? 'bg-gradient-to-r' : ''} ${!isMobileDevice && !isPlaying ? 'hover:bg-white hover:bg-opacity-15' : ''}`}
         >   
 
             <p className='flex-none flex justify-center items-center w-[3ch] text-stone-300 font-semibold'>

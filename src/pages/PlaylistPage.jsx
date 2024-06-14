@@ -108,8 +108,8 @@ function PlaylistPage() {
     window.fetchNextItems = fetchNextItems;
     
     return (
-        <div className='laptop:flex laptop:justify-center laptop:items-start'>
-            <div className='flex-1 laptop:max-w-[30rem] laptop:sticky top-header-height p-4 tablet:p-6'>
+        <div className='laptop:flex laptop:justify-center laptop:items-start laptop:px-6'>
+            <div className='flex-1 laptop:max-w-[28rem] laptop:sticky top-header-height p-4 tablet:p-6'>
                 <PlaylistMetaData playlist={playlist} />
             </div>
 
