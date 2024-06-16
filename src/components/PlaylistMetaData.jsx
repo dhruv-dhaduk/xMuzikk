@@ -3,11 +3,73 @@ import youtubeIcon from '/icons/youtube.svg';
 import saveHollowIcon from '/icons/save_hollow.svg';
 import saveFilledIcon from '/icons/save_filled.svg';
 
-import { useContext } from 'react';
-import { PlayerContext } from '../contexts/PlayerContext.js';
+import Spinner from './ui/Spinner.jsx';
 
-function PlaylistMetaData({ playlist }) {
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { PlayerContext } from '../contexts/PlayerContext.js';
+import { ToastContext } from '../contexts/ToastContext.js';
+
+import { appwriteService } from '../dataManager/AppwriteService.js';
+
+function PlaylistMetaData({ playlist, user }) {
     const { playManager } = useContext(PlayerContext);
+    const { showToast } = useContext(ToastContext);
+    const [playlistSavedStatus, setPlaylistSavedStatus] = useState(undefined);
+
+    const savePlaylist = useCallback(() => {
+        if (!user)
+            return;
+
+        if (!playlist?.$id)
+            return;
+
+        setPlaylistSavedStatus(undefined);
+        
+        appwriteService
+            .savePlaylist(user.$id, playlist.$id)
+            .then((response) => {
+                setPlaylistSavedStatus(true);
+                showToast.success('Playlist saved successfully');
+            })
+            .catch((err) => {
+                console.error(err);
+                showToast.error(err.message);
+            });
+
+    }, [setPlaylistSavedStatus, playlist, user]);
+
+    const removeSavedPlaylist = useCallback(() => {
+        if (!user)
+            return;
+        
+        if (!playlist?.$id)
+            return;
+
+        setPlaylistSavedStatus(undefined);
+
+        appwriteService
+            .removeSavedPlaylist(user.$id, playlist.$id)
+            .then((response) => {
+                setPlaylistSavedStatus(false);
+                showToast.success('Playlist removed from saved playlists');
+            })
+            .catch((err) => {
+                console.error(err);
+                showToast.error(err.message);
+            });
+
+    }, [setPlaylistSavedStatus, playlist, user]);
+
+    useEffect(() => {
+        appwriteService
+            .isPlaylistSaved(user.$id, playlist.$id)
+            .then((isPlaylistSaved) => {
+                setPlaylistSavedStatus(isPlaylistSaved);
+            })
+            .catch((err) => {
+                setPlaylistSavedStatus(false);
+            });
+    }, [playlist, user]);
     
     return (
         <div className='select-none'>
@@ -46,7 +108,32 @@ function PlaylistMetaData({ playlist }) {
             <div className='flex justify-between items-center flex-wrap mt-2'>
                 <div className='flex justify-start items-center flex-wrap gap-1'>
 
-                    <Icon iconSrc={saveHollowIcon} />
+                    {
+                        (playlistSavedStatus === undefined || playlistSavedStatus === null) && (
+                            <div className='flex justify-center items-center aspect-square w-14 rounded-full bg-white bg-opacity-15'>
+                                <Spinner size={30} />
+                            </div>
+                        )
+                    }
+                    
+                    {
+                        playlistSavedStatus === true && (
+                            <Icon   
+                                iconSrc={saveFilledIcon}
+                                onClick={removeSavedPlaylist}
+                            />
+                        )
+                    }
+
+                    {
+                        playlistSavedStatus === false && (
+                            <Icon
+                                iconSrc={saveHollowIcon}
+                                onClick={savePlaylist}
+                            />
+                        )
+                    }
+
                     <Icon
                         iconSrc={shareIcon}
                         onClick={() => {
