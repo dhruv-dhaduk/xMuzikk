@@ -20,19 +20,21 @@ import LogoutPage from "./pages/LogoutPage.jsx";
 import SearchResultsPage from "./pages/SearchResultsPage.jsx";
 import MusicItemPage from "./pages/MusicItemPage.jsx";
 import PlaylistPage from "./pages/PlaylistPage.jsx";
+import SavedPlaylists from './components/playlist/SavedPlaylists.jsx';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path='/' element={<App />}>
             <Route path='/' element={<HomePage />} />
             <Route path='search' element={<SearchPage />} />
-            <Route path='playlists' element={<PlaylistsPage />} />
             <Route path='about' element={<AboutPage />} />
             <Route path='login' element={<LoginPage />} />
             <Route path='signup' element={<SignupPage />} />
             <Route path='logout' element={<LogoutPage />} />
             <Route path='searchresults/:documentId' element={<SearchResultsPage />} />
             <Route path='music/:id' element={<MusicItemPage />} />
+            <Route path='playlists' element={<PlaylistsPage />} />
+            <Route path='playlists/saved' element={<SavedPlaylists />} />
             <Route path='playlist/:documentId' element={<PlaylistPage />} />
             <Route path='*' element={<NotFoundPage />} />
         </Route>

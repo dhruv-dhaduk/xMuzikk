@@ -66,6 +66,37 @@ class AppwriteService {
         return response;
     }
 
+    async fetchPlaylists(documentIds) {
+
+        if (!documentIds?.length) {
+            throw new Error('No documentIds provided to fetch playlists');
+        }
+        
+        const response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
+            [
+                Query.select(['$id', 'owner', 'ytId', 'title', 'channelTitle', 'thumbnail', 'itemCount']),
+                Query.limit(documentIds.length),
+                Query.equal('$id', documentIds)
+            ]
+        );
+
+        const playlistsMap = new Map();
+
+        response.documents.forEach(item => {
+            playlistsMap.set(item.$id, item);
+        });
+
+        return documentIds.map(id => {
+            const item = playlistsMap.get(id);
+            if (item) 
+                return item;
+            else
+                return { id, notFound: true };
+        });
+    }
+
     async savePlaylist(userId, playlistDocumentId) {
         if (!userId)
             throw new Error('No userId provided');
