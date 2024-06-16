@@ -3,7 +3,7 @@ import threeDotsIcon from '/icons/three_dots.svg';
 
 import { useNavigate } from 'react-router-dom';
 
-function PlaylistFeedItem({ playlist }) {
+function PlaylistFeedItem({ playlist, showMoreOptions }) {
 
     const navigate = useNavigate();
 
@@ -57,7 +57,7 @@ function PlaylistFeedItem({ playlist }) {
                     <Icon
                         iconSrc={threeDotsIcon}
                         className='w-full h-full p-2'
-                        onClick={() => {}} 
+                        onClick={showMoreOptions} 
                     />
                 </div>
 

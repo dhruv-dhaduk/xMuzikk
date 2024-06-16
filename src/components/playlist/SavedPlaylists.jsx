@@ -8,6 +8,7 @@ import AuthLinks from '../AuthLinks.jsx';
 
 import PlaylistFeedItem from './PlaylistFeedItem.jsx';
 import LoadingFeed from '../Loading.jsx';
+import Popover from '../ui/Popover.jsx';
 
 const FETCH_AMOUNT = 10;
 
@@ -176,11 +177,7 @@ function SavedPlaylists({ context, children }) {
                         ) : (
                             <div>
                                 <div className='grid grid-cols-1 tablet:grid-cols-feed gap-2 tablet:gap-6 p-2 tablet:p-3'>
-                                    {
-                                        savedPlaylists?.map(item => (
-                                            <PlaylistFeedItem key={item.$id} playlist={item} />
-                                        ))
-                                    }
+                                    <SavedPlaylistsFeed savedPlaylists={savedPlaylists} />
                                 </div>
     
                                 {
@@ -201,6 +198,80 @@ function SavedPlaylists({ context, children }) {
             </div>
         </div>
     );
+}
+
+function SavedPlaylistsFeed({ savedPlaylists }) {
+    const [popoverShowing, setPopoverShowing] = useState(false);
+    const [popoverPlaylistDetails, setPopoverPlaylistDetails] = useState({});
+
+    return (
+        <>
+            {
+                savedPlaylists?.map(item => (
+                    <PlaylistFeedItem
+                        key={item.$id}
+                        playlist={item}
+                        showMoreOptions={() => { setPopoverShowing(true); setPopoverPlaylistDetails(item); }}
+                    />
+                ))
+            }
+
+            <Popover 
+                popoverShowing={popoverShowing}
+                setPopoverShowing={setPopoverShowing}
+                className='backdrop:bg-black backdrop:opacity-80 w-72 max-w-[90%] max-h-[90%] p-4 bg-black text-white border border-white border-opacity-30 rounded-2xl'
+            >
+                <p>
+                    { popoverPlaylistDetails.title }
+                </p>
+
+                <PopoverBtn
+                    onClick={() => { 
+                        navigator.share({
+                            title: popoverPlaylistDetails.title,
+                            text: `${window.location.origin}/playlist/${popoverPlaylistDetails.$id}`
+                        });
+
+                        setPopoverShowing(false);
+                    }}
+                >
+                    Share
+                </PopoverBtn>
+
+                {
+                    popoverPlaylistDetails.ytId && (
+                        <PopoverBtn
+                            onClick={() => {
+                                window.open(`https://www.youtube.com/playlist?list=${popoverPlaylistDetails.ytId}`, '_blank');
+                                setPopoverShowing(false);
+                            }}
+                        >
+                            Open in YouTube
+                        </PopoverBtn>
+                    )
+                }
+            
+                <button
+                    onClick={() => setPopoverShowing(false)}
+                    className='w-full h-9 mt-4 bg-white text-black text-[17px] font-bold rounded-full active:bg-opacity-80'
+                >
+                    Cancel
+                </button>
+
+            </Popover>
+        </>
+    )
+}
+
+function PopoverBtn({ onClick, className, children }) {
+    return (
+        <button
+            onClick={onClick}
+            className={`w-full h-9 mt-4 bg-[#101010] text-white text-[15px] font-semibold rounded-full border border-white border-opacity-20 active:scale-90 duration-200 ${className}`}
+        >
+            { children }
+        </button>
+    )
 }
 
 export default SavedPlaylists;
