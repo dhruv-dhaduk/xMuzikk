@@ -1,21 +1,16 @@
 import playlistIcon from '/icons/queue.svg';
 import threeDotsIcon from '/icons/three_dots.svg';
 
+import { useNavigate } from 'react-router-dom';
 
-function PlaylistFeedItem({ }) {
-    const playlist = {
-        owner: 'youtube',
-        ytId: 'OLAK5uy_kQgO_hLt4EXVjZ9dPDL1C4cNLamocS_Hc',
-        title: 'Maa Khodal No Tahukar',
-        channelTitle: 'YouTube',
-        thumbnail: 'https://img.youtube.com/vi/MoCuzUVaU-g/maxresdefault.jpg',
-        itemCount: 31
-    };
+function PlaylistFeedItem({ playlist }) {
 
+    const navigate = useNavigate();
 
     return (
         <div
-            className={`flex tablet:max-w-[28rem] gap-2 p-3 tablet:p-4 rounded-xl cursor-pointer select-none bg-white bg-opacity-5 border border-white border-opacity-10`}
+            onClick={() => navigate(`/playlist/${playlist.$id}`)}
+            className={`flex tablet:max-w-[28rem] gap-2 p-3 tablet:p-4 rounded-xl cursor-pointer select-none bg-white bg-opacity-5 border border-white border-opacity-10 active:bg-opacity-10`}
         >
 
             <div className='flex-none w-[6.5rem] tablet:flex-1 aspect-square relative'>
@@ -62,6 +57,7 @@ function PlaylistFeedItem({ }) {
                     <Icon
                         iconSrc={threeDotsIcon}
                         className='w-full h-full p-2'
+                        onClick={() => {}} 
                     />
                 </div>
 

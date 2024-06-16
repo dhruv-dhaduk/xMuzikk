@@ -6,9 +6,12 @@ import { authService, appwriteService } from '../../dataManager/AppwriteService.
 import Spinner from '../ui/Spinner.jsx';
 import AuthLinks from '../AuthLinks.jsx';
 
+import PlaylistFeedItem from './PlaylistFeedItem.jsx';
+import LoadingFeed from '../Loading.jsx';
+
 const FETCH_AMOUNT = 10;
 
-function SavedPlaylists({ context }) {
+function SavedPlaylists({ context, children }) {
 
     const [user, setUser] = useState(context?.user ? context.user : undefined);
     const [isLoading, setIsLoading] = useState(true);
@@ -46,9 +49,11 @@ function SavedPlaylists({ context }) {
 
         if (resetIndex) {
             setSavedPlaylists(fetchedItems);
+            setHasMoreItems(fetchNextItems.length === savedPlaylistDocumentIDs.length);
         }
         else {
             setSavedPlaylists([...savedPlaylists, ...fetchedItems]);
+            setHasMoreItems((savedPlaylists.length + fetchedItems.length) === savedPlaylistDocumentIDs.length);
         }
 
     }, [savedPlaylistDocumentIDs, savedPlaylists, setSavedPlaylists, hasMoreItems, setHasMoreItems]);
@@ -141,38 +146,59 @@ function SavedPlaylists({ context }) {
         return <AuthLinks message='Please Login or Signup to see your saved playlists' />;
     }
 
-    if (savedPlaylistDocumentIDs === null) {
-        return (
-            <div className='text-center p-4'>
-                An Error occured while fetching your saved playlists.
-            </div>
-        );
-    }
-
-    if (savedPlaylistDocumentIDs.length === 0) {
-        return (
-            <div className='text-center p-4'>
-                You have no saved playlists.
-            </div>
-        );
-    }
-
     return (
-        <div>
-            <p>
-                Playlists Saved IDs : { JSON.stringify(savedPlaylistDocumentIDs) }
-            </p>
-            <p>
-                Playlists Saved :
-            </p>
-            
-            {
-                savedPlaylists?.map(item => 
-                    <p key={item.$id} className='p-4'>
-                        { JSON.stringify(item) }
-                    </p>
-                )
-            }
+        <div className='p-3 tablet:p-6'>
+            <div className='rounded-xl bg-white bg-opacity-5 border border-white border-opacity-5'> 
+                <p className='p-4 text-xl tablet:text-2xl text-center tablet:text-left font-bold select-none'>
+                    Your Saved Playlists
+                </p>
+
+                {
+                    savedPlaylistDocumentIDs === null && (
+                        <div className='text-center p-8'>
+                            An Error occured while fetching your saved playlists.
+                        </div>
+                    )
+                }
+
+                {
+                    savedPlaylistDocumentIDs.length === 0 && (
+                        <div className='text-center p-8 text-sm'>
+                            You have no saved playlists.
+                        </div>
+                    )
+                }
+
+                {
+                    savedPlaylistDocumentIDs?.length > 0 && (
+                        !savedPlaylists?.length ? (
+                            <LoadingFeed count={context?.limit || 12} />
+                        ) : (
+                            <div>
+                                <div className='grid grid-cols-1 tablet:grid-cols-feed gap-2 tablet:gap-6 p-2 tablet:p-3'>
+                                    {
+                                        savedPlaylists?.map(item => (
+                                            <PlaylistFeedItem key={item.$id} playlist={item} />
+                                        ))
+                                    }
+                                </div>
+    
+                                {
+                                    hasMoreItems && (
+                                        <div className='flex justify-center p-4'>
+                                            <Spinner />
+                                        </div>
+                                    )
+                                }
+    
+                                { children }
+                            </div>
+                        )
+                    )
+                
+                }
+                
+            </div>
         </div>
     );
 }

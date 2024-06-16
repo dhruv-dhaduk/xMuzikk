@@ -1,61 +1,57 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { authService } from '../dataManager/AppwriteService.js';
 
 import Spinner from '../components/ui/Spinner.jsx';
 import AuthLinks from '../components/AuthLinks.jsx';
-
-import PlaylistFeedItem from '../components/playlist/PlaylistFeedItem.jsx';
+import SavedPlaylists from '../components/playlist/SavedPlaylists.jsx';
 
 function PlaylistsPage() {
 
-    // const [user, setUser] = useState(undefined);
-    // const [isLoading, setIsLoading] = useState(true);
+    const [user, setUser] = useState(undefined);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // useEffect(() => {
-    //     const fetchUser = async () => {
-    //         const { response } = await authService.getAccountDetails();
+    useEffect(() => {
+        const fetchUser = async () => {
+            const { response } = await authService.getAccountDetails();
 
-    //         if (!response) {
-    //             setUser(null);
-    //         }
-    //         else {
-    //             setUser(response);
-    //         }
-    //         setIsLoading(false);
-    //     }
+            if (!response) {
+                setUser(null);
+            }
+            else {
+                setUser(response);
+            }
+            setIsLoading(false);
+        }
 
-    //     fetchUser();
-    // }, []);
+        fetchUser();
+    }, []);
 
-    // if (isLoading) {
-    //     return (
-    //         <div className='flex justify-center p-4'>
-    //             <Spinner />
-    //         </div>
-    //     );
-    // }
+    if (isLoading) {
+        return (
+            <div className='flex justify-center p-4'>
+                <Spinner />
+            </div>
+        );
+    }
 
-    // if (user === null) {
-    //     return <AuthLinks message='Please Login or Signup to view playlists' />;
-    // }
-
-    // return (
-    //     <div className='w-full pt-56'>
-    //         <p className='text-5xl text-center select-none'>
-    //             Coming Soon
-    //         </p>
-    //     </div>
-    // );
+    if (user === null) {
+        return <AuthLinks message='Please Login or Signup to view playlists' />;
+    }
 
     return (
-        <div className='grid grid-cols-1 tablet:grid-cols-feed gap-2 tablet:gap-6 p-3 tablet:p-6'>
-            <PlaylistFeedItem />
-            <PlaylistFeedItem />
-            <PlaylistFeedItem />
-            <PlaylistFeedItem />
-            <PlaylistFeedItem />
-            <PlaylistFeedItem />
+        <div>
+            <SavedPlaylists context={{ user, limit: 3 }} >
+                <div className='flex justify-end p-3'>
+                    <Link
+                        to='/playlists/saved'
+                        className='px-3 py-1 rounded-md text-xs font-bold bg-white bg-opacity-90 text-black select-none'
+                    >
+                        Show all
+                    </Link>
+                </div>
+            </SavedPlaylists>
         </div>
     );
 }
