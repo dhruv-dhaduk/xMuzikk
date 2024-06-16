@@ -6,6 +6,7 @@ import { authService } from '../dataManager/AppwriteService.js';
 import Spinner from '../components/ui/Spinner.jsx';
 import AuthLinks from '../components/AuthLinks.jsx';
 import SavedPlaylists from '../components/playlist/SavedPlaylists.jsx';
+import CreatePlaylist from '../components/CreatePlaylist.jsx';
 
 function PlaylistsPage() {
 
@@ -42,6 +43,8 @@ function PlaylistsPage() {
 
     return (
         <div>
+            <CreatePlaylist />
+
             <SavedPlaylists context={{ user, limit: 3 }} >
                 <div className='flex justify-end p-3'>
                     <Link
