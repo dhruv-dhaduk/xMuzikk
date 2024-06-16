@@ -1,4 +1,4 @@
-import { Client, Databases, Query, ID, Account } from 'appwrite';
+import { Client, Databases, Query, ID, Account, Permission, Role } from 'appwrite';
 import { Functions } from 'appwrite';
 
 const client = new Client();
@@ -61,6 +61,81 @@ class AppwriteService {
             [
                 Query.select(['$id', 'owner', 'ytId', 'title', 'channelTitle', 'thumbnail', 'itemCount', 'items'])
             ]
+        );
+
+        return response;
+    }
+
+    async savePlaylist(userId, playlistDocumentId) {
+        if (!userId)
+            throw new Error('No userId provided');
+
+        if (!playlistDocumentId)
+            throw new Error('No playlistDocumentId provided');
+        
+        const response = await db.createDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
+            ID.unique(),
+            {
+                userId,
+                playlistDocumentId
+            },
+            [
+                Permission.read(Role.user(userId)),
+                Permission.update(Role.user(userId)),
+                Permission.delete(Role.user(userId))
+            ]
+        );
+
+        return response;
+    }
+
+    async getSavedPlaylists(userId, limit = Number.MAX_SAFE_INTEGER) {
+        if (!userId)
+            throw new Error('No userId provided');
+
+        const response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
+            [
+                Query.select(['playlistDocumentId']),
+                Query.limit(limit),
+                Query.equal('userId', userId)
+            ]
+        );
+
+        const playlistDocumentIds = response.documents.map(item => item.playlistDocumentId);
+
+        return playlistDocumentIds;
+    }
+
+    async removeSavedPlaylist(userId, playlistDocumentId) {
+        if (!userId)
+            throw new Error('No userId provided');
+
+        if (!playlistDocumentId)
+            throw new Error('No playlistDocumentId provided');
+
+        let response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
+            [
+                Query.select(['$id']),
+                Query.limit(1),
+                Query.equal('userId', userId),
+                Query.equal('playlistDocumentId', playlistDocumentId)
+            ]
+        );
+
+        if (!response?.documents?.length) {
+            throw new Error('Playlist not found in saved playlists');
+        }
+
+        response = await db.deleteDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
+            response.documents[0].$id
         );
 
         return response;
@@ -276,5 +351,7 @@ class SearchService {
 }
 
 const searchService = new SearchService();
+
+window.appwriteService = appwriteService;
 
 export { AppwriteService, appwriteService, AuthService, authService, SearchService, searchService };
