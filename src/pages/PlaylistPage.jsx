@@ -1,17 +1,20 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { appwriteService } from '../dataManager/AppwriteService.js';
+import { appwriteService, authService } from '../dataManager/AppwriteService.js';
 import { getMusicDetails } from '../dataManager/index.js';
 
 import PlaylistMetaData from '../components/PlaylistMetaData.jsx';
 import PlaylistFeed from '../components/PlaylistFeed.jsx';
 import Spinner from '../components/ui/Spinner.jsx';
+import AuthLinks from '../components/AuthLinks.jsx';
 
 const FETCH_AMOUNT = 10;
 
 function PlaylistPage() {
     const { documentId } = useParams();
+    const [user, setUser] = useState(undefined);
+    
     const [playlist, setPlaylist] = useState({});
     const [playlistItems, setPlaylistItems] = useState([]);
     const [hasMoreItems, setHasMoreItems] = useState(true);
@@ -47,6 +50,25 @@ function PlaylistPage() {
     }, [fetchNextItems]);
 
     useEffect(() => {
+        const fetchUser = async () => {
+            const { response } = await authService.getAccountDetails();
+
+            if (!response) {
+                setIsLoading(false);
+                setUser(null);
+            }
+            else {
+                setUser(response);
+            }
+        }
+
+        fetchUser();
+    }, [documentId]);
+
+    useEffect(() => {
+        if (!user)
+            return;
+
         appwriteService.fetchPlaylist(documentId)
             .then((response) => {
                 setPlaylist(response);
@@ -58,7 +80,7 @@ function PlaylistPage() {
             .finally(() => {
                 setIsLoading(false);
             })
-    }, [documentId]);
+    }, [user]);
 
     useEffect(() => {
         if (!playlist || !playlist?.items?.length || playlist.notFound) {
@@ -89,6 +111,10 @@ function PlaylistPage() {
         );
     }
 
+    if (user === null) {
+        return <AuthLinks message='Please Login or Signup to view playlists' />;
+    }
+
     if (playlist.notFound) {
         return (
             <div className='w-full pt-56'>
@@ -104,13 +130,11 @@ function PlaylistPage() {
         </div>
         );
     }
-
-    window.fetchNextItems = fetchNextItems;
     
     return (
         <div className='laptop:flex laptop:justify-center laptop:items-start laptop:px-6'>
             <div className='flex-1 laptop:max-w-[28rem] laptop:sticky top-header-height p-4 tablet:p-6'>
-                <PlaylistMetaData playlist={playlist} />
+                <PlaylistMetaData playlist={playlist} user={user} />
             </div>
 
             <div className='flex-1 laptop:max-w-[60rem] tablet:py-6'>
