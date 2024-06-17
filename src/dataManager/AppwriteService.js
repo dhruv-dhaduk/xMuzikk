@@ -305,7 +305,7 @@ class PlaylistService {
             if (item) 
                 return item;
             else
-                return { id, notFound: true };
+                return { $id: id, notFound: true };
         });
     }
 
