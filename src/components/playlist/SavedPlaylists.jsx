@@ -20,6 +20,35 @@ function SavedPlaylists({ context, children }) {
     const [savedPlaylists, setSavedPlaylists] = useState([]);
     const [hasMoreItems, setHasMoreItems] = useState(true);
 
+    const fetchSavedPlaylistDocumentIDs = useCallback(() => {
+        if (user === undefined) {
+            return;
+        }
+        else if (user === null) {
+            setIsLoading(false);
+            return;
+        }
+
+        setIsLoading(true);
+        setSavedPlaylistDocumentIDs(undefined);
+        setSavedPlaylists([]);
+        setHasMoreItems(true);
+
+        playlistService
+            .getSavedPlaylists(user.$id, context?.limit ? context.limit : undefined)
+            .then((response) => {
+                setSavedPlaylistDocumentIDs(response);
+
+            })
+            .catch((err) => {
+                console.error(err);
+                setSavedPlaylistDocumentIDs(null);
+            })
+            .finally(() => {                
+                setIsLoading(false);
+            });
+    }, [user, context, setSavedPlaylistDocumentIDs, setIsLoading, setSavedPlaylists, setHasMoreItems]);
+
     const fetchNextItems = useCallback(async (resetIndex = false) => {
 
         if (!savedPlaylistDocumentIDs?.length)
@@ -90,30 +119,7 @@ function SavedPlaylists({ context, children }) {
         fetchUser();
     }, [context]);
 
-    useEffect(() => {
-        if (user === undefined) {
-            return;
-        }
-        else if (user === null) {
-            setIsLoading(false);
-            return;
-        }
-
-        playlistService
-            .getSavedPlaylists(user.$id, context?.limit ? context.limit : undefined)
-            .then((response) => {
-                setSavedPlaylistDocumentIDs(response);
-
-            })
-            .catch((err) => {
-                console.error(err);
-                setSavedPlaylistDocumentIDs(null);
-            })
-            .finally(() => {                
-                setIsLoading(false);
-            });
-
-    }, [user, context]);
+    useEffect(fetchSavedPlaylistDocumentIDs, [user, context]);
 
     useEffect(() => {
         if (!savedPlaylistDocumentIDs?.length) {

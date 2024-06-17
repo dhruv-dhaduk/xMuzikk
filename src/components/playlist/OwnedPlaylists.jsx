@@ -22,7 +22,7 @@ function OwnedPlaylists({ context, children }) {
     const [ownedPlaylists, setOwnedPlaylists] = useState([]);
     const [hasMoreItems, setHasMoreItems] = useState(true);
 
-    const fetchOwnedDocumentIDs = useCallback(() => {
+    const fetchOwnedPlaylistDocumentId = useCallback(() => {
         if (user === undefined) {
             return;
         }
@@ -49,7 +49,7 @@ function OwnedPlaylists({ context, children }) {
                 setIsLoading(false);
             });
 
-    }, [setOwnedPlaylistDocumentIDs, user, context]);
+    }, [user, context, setOwnedPlaylistDocumentIDs, setIsLoading, setOwnedPlaylists, setHasMoreItems]);
 
     const fetchNextItems = useCallback(async (resetIndex = false) => {
 
@@ -121,7 +121,7 @@ function OwnedPlaylists({ context, children }) {
         fetchUser();
     }, [context]);
 
-    useEffect(fetchOwnedDocumentIDs, [user, context]);
+    useEffect(fetchOwnedPlaylistDocumentId, [user, context]);
 
     useEffect(() => {
         if (!ownedPlaylistDocumentIDs?.length) {
@@ -188,7 +188,7 @@ function OwnedPlaylists({ context, children }) {
                                     <OwnedPlaylistsFeed
                                         user={user}
                                         ownedPlaylists={ownedPlaylists}
-                                        fetchOwnedDocumentIDs={fetchOwnedDocumentIDs}
+                                        fetchOwnedPlaylistDocumentId={fetchOwnedPlaylistDocumentId}
                                     /> 
                                 </div>
     
@@ -212,7 +212,7 @@ function OwnedPlaylists({ context, children }) {
     );
 }
 
-function OwnedPlaylistsFeed({ user, ownedPlaylists, fetchOwnedDocumentIDs }) {
+function OwnedPlaylistsFeed({ user, ownedPlaylists, fetchOwnedPlaylistDocumentId }) {
     const [popoverShowing, setPopoverShowing] = useState(false);
     const [popoverPlaylistDetails, setPopoverPlaylistDetails] = useState({});
 
@@ -280,7 +280,7 @@ function OwnedPlaylistsFeed({ user, ownedPlaylists, fetchOwnedDocumentIDs }) {
 
                         setPopoverShowing(false);
 
-                        fetchOwnedDocumentIDs();
+                        fetchOwnedPlaylistDocumentId();
                     }}
                 >
                     Delete
