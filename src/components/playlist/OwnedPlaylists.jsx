@@ -252,19 +252,6 @@ function OwnedPlaylistsFeed({ user, ownedPlaylists, fetchOwnedPlaylistDocumentId
                     Share
                 </PopoverBtn>
 
-                {
-                    popoverPlaylistDetails.ytId && (
-                        <PopoverBtn
-                            onClick={() => {
-                                window.open(`https://www.youtube.com/playlist?list=${popoverPlaylistDetails.ytId}`, '_blank');
-                                setPopoverShowing(false);
-                            }}
-                        >
-                            Open in YouTube
-                        </PopoverBtn>
-                    )
-                }
-
                 <AsyncSubmitBtn
                     className='w-full h-9 mt-4 bg-red-700 text-white text-[15px] font-semibold rounded-full active:scale-90 duration-200'
                     loadingClassName='w-full h-9 mt-4 flex justify-center items-center bg-red-950  rounded-full'
