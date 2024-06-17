@@ -409,6 +409,48 @@ class PlaylistService {
 
         return true;
     }
+
+    async createNewPlaylist(userId, title) {
+        if (!userId)
+            throw new Error('No userId provided');
+
+        if (!title)
+            throw new Error('No title provided');
+
+        const response = await db.createDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
+            ID.unique(),
+            {
+                owner: 'user',
+                title,
+                itemCount: 0,
+            },
+            [
+                Permission.read(Role.users()),
+                Permission.read(Role.user(userId)),
+                Permission.update(Role.user(userId)),
+                Permission.delete(Role.user(userId)),
+            ]
+        );
+
+        await db.createDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_USERS_PLAYLISTS_COLLECTION_ID,
+            ID.unique(),
+            {
+                userId,
+                playlistDocumentId: response.$id
+            },
+            [
+                Permission.read(Role.user(userId)),
+                Permission.update(Role.user(userId)),
+                Permission.delete(Role.user(userId))
+            ]
+        );
+
+        return response.$id;
+    }
 }
 
 const playlistService = new PlaylistService();
