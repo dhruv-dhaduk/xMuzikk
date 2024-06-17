@@ -451,6 +451,25 @@ class PlaylistService {
 
         return response.$id;
     }
+
+    async getOwnedPlaylists(userId, limit = Number.MAX_SAFE_INTEGER) {
+        if (!userId)
+            throw new Error('No userId provided');
+
+        const response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_USERS_PLAYLISTS_COLLECTION_ID,
+            [
+                Query.select(['playlistDocumentId']),
+                Query.limit(limit),
+                Query.equal('userId', userId)
+            ]
+        );
+
+        const playlistDocumentIds = response.documents.map(item => item.playlistDocumentId);
+
+        return playlistDocumentIds;
+    }
 }
 
 const playlistService = new PlaylistService();
