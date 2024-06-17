@@ -2,6 +2,7 @@ import shareIcon from '/icons/share.svg';
 import youtubeIcon from '/icons/youtube.svg';
 import saveHollowIcon from '/icons/save_hollow.svg';
 import saveFilledIcon from '/icons/save_filled.svg';
+import defaultThumbnail from '/images/music_icon_neon_blue.jpeg';
 
 import Spinner from './ui/Spinner.jsx';
 
@@ -75,7 +76,7 @@ function PlaylistMetaData({ playlist, user }) {
         <div className='select-none'>
             <div className='aspect-square rounded-2xl overflow-hidden'>
                 <img
-                    src={playlist.thumbnail}
+                    src={playlist.thumbnail || defaultThumbnail}
                     draggable={false}
                     onContextMenu={e => e.preventDefault()}
                     className='w-full h-full object-cover'

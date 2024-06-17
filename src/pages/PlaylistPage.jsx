@@ -138,15 +138,27 @@ function PlaylistPage() {
             </div>
 
             <div className='flex-1 laptop:max-w-[60rem] tablet:py-6'>
-                <PlaylistFeed playlistItems={playlistItems} />
-
                 {
-                    hasMoreItems && (
-                        <div className='flex justify-center pb-4'>
-                            <Spinner />
-                        </div>
+                    !playlist?.items?.length ? (
+                        <p className='font-bold text-2xl text-center p-4'>
+                            This playlist is empty
+                        </p>
+                    ) : (
+                        <>
+                            <PlaylistFeed playlistItems={playlistItems} />
+            
+                            {
+                                hasMoreItems && (
+                                    <div className='flex justify-center pb-4'>
+                                        <Spinner />
+                                    </div>
+                                )
+                            }
+
+                        </>
                     )
                 }
+
                 
             </div>
         </div>
