@@ -44,7 +44,7 @@ function PlaylistsPage() {
 
     return (
         <div>
-            <CreatePlaylist />
+            <CreatePlaylist user={user} />
 
             <OwnedPlaylists context={{ user, limit: 3 }} >
                 <div className='flex justify-end p-3'>

@@ -1,10 +1,53 @@
-import { useState } from 'react';
-import Popover from './ui/Popover.jsx';
+import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function CreatePlaylist() {
+import Popover from './ui/Popover.jsx';
+import Spinner from './ui/Spinner.jsx';
+
+import { playlistService } from '../dataManager/AppwriteService.js';
+import { ToastContext } from '../contexts/ToastContext.js';
+
+function CreatePlaylist({ user }) {
     const [showForm, setShowForm] = useState(false);
     const [playlistName, setPlaylistName] = useState('');
-    
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const { showToast } = useContext(ToastContext);
+    const navigate = useNavigate();
+
+    const handleSubmit = (e) => {        
+        e.preventDefault();
+
+        if (!user) {
+            showToast.error('Please log in or sign up to create a playlist');
+            setShowForm(false);
+            return;
+        }
+
+        if (!playlistName) {
+            showToast.warn('Please enter a playlist name');
+            setShowForm(false);
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        playlistService
+            .createNewPlaylist(user.$id, playlistName)
+            .then((playlistDocumentId) => {
+                showToast.success('Playlist created successfully');
+                navigate(`/playlist/${playlistDocumentId}`);
+            })
+            .catch((err) => {
+                console.error(err);
+                showToast.error(err.message);
+            })
+            .finally(() => {
+                setIsSubmitting(false);
+                setShowForm(false);
+            });
+    }
+
     return (
         <div className='flex justify-center items-center py-6'>
             <button
@@ -24,7 +67,7 @@ function CreatePlaylist() {
                 </p>
 
                 <form
-                    onSubmit={e => {e.preventDefault(); alert(playlistName)}}
+                    onSubmit={handleSubmit}
                     className='pt-6'
                 >
                     <div>
@@ -48,11 +91,19 @@ function CreatePlaylist() {
                             Cancel
                         </button>
 
-                        <input
-                            type='submit'
-                            value='Create'
-                            className='flex-1 py-2 bg-white text-black font-bold rounded-full cursor-pointer active:bg-opacity-80 disabled:bg-opacity-50'
-                        />
+                        {
+                            isSubmitting ? (
+                                <div className='flex-1 flex justify-center'>
+                                    <Spinner size={30} />
+                                </div>
+                            ) : (
+                                <input
+                                    type='submit'
+                                    value='Create'
+                                    className='flex-1 py-2 bg-white text-black font-bold rounded-full cursor-pointer active:bg-opacity-80 disabled:bg-opacity-50'
+                                />
+                            )
+                        }
                     </div>
 
                 </form>
