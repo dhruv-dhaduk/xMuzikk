@@ -2,6 +2,7 @@ import shareIcon from '/icons/share.svg';
 import youtubeIcon from '/icons/youtube.svg';
 import saveHollowIcon from '/icons/save_hollow.svg';
 import saveFilledIcon from '/icons/save_filled.svg';
+import defaultThumbnail from '/images/music_icon_neon_blue.jpeg';
 
 import Spinner from './ui/Spinner.jsx';
 
@@ -9,7 +10,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import { PlayerContext } from '../contexts/PlayerContext.js';
 import { ToastContext } from '../contexts/ToastContext.js';
 
-import { appwriteService } from '../dataManager/AppwriteService.js';
+import { playlistService } from '../dataManager/AppwriteService.js';
 
 function PlaylistMetaData({ playlist, user }) {
     const { playManager } = useContext(PlayerContext);
@@ -25,7 +26,7 @@ function PlaylistMetaData({ playlist, user }) {
 
         setPlaylistSavedStatus(undefined);
         
-        appwriteService
+        playlistService
             .savePlaylist(user.$id, playlist.$id)
             .then((response) => {
                 setPlaylistSavedStatus(true);
@@ -47,7 +48,7 @@ function PlaylistMetaData({ playlist, user }) {
 
         setPlaylistSavedStatus(undefined);
 
-        appwriteService
+        playlistService
             .removeSavedPlaylist(user.$id, playlist.$id)
             .then((response) => {
                 setPlaylistSavedStatus(false);
@@ -61,7 +62,7 @@ function PlaylistMetaData({ playlist, user }) {
     }, [setPlaylistSavedStatus, playlist, user]);
 
     useEffect(() => {
-        appwriteService
+        playlistService
             .isPlaylistSaved(user.$id, playlist.$id)
             .then((isPlaylistSaved) => {
                 setPlaylistSavedStatus(isPlaylistSaved);
@@ -75,7 +76,7 @@ function PlaylistMetaData({ playlist, user }) {
         <div className='select-none'>
             <div className='aspect-square rounded-2xl overflow-hidden'>
                 <img
-                    src={playlist.thumbnail}
+                    src={playlist.thumbnail || defaultThumbnail}
                     draggable={false}
                     onContextMenu={e => e.preventDefault()}
                     className='w-full h-full object-cover'

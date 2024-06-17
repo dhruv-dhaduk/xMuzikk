@@ -52,151 +52,6 @@ class AppwriteService {
 
         return dataMap;
     }
-
-    async fetchPlaylist(documentId) {
-        const response = await db.getDocument(
-            import.meta.env.VITE_APPWRITE_DB_ID,
-            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
-            documentId,
-            [
-                Query.select(['$id', 'owner', 'ytId', 'title', 'channelTitle', 'thumbnail', 'itemCount', 'items'])
-            ]
-        );
-
-        return response;
-    }
-
-    async fetchPlaylists(documentIds) {
-
-        if (!documentIds?.length) {
-            throw new Error('No documentIds provided to fetch playlists');
-        }
-        
-        const response = await db.listDocuments(
-            import.meta.env.VITE_APPWRITE_DB_ID,
-            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
-            [
-                Query.select(['$id', 'owner', 'ytId', 'title', 'channelTitle', 'thumbnail', 'itemCount']),
-                Query.limit(documentIds.length),
-                Query.equal('$id', documentIds)
-            ]
-        );
-
-        const playlistsMap = new Map();
-
-        response.documents.forEach(item => {
-            playlistsMap.set(item.$id, item);
-        });
-
-        return documentIds.map(id => {
-            const item = playlistsMap.get(id);
-            if (item) 
-                return item;
-            else
-                return { id, notFound: true };
-        });
-    }
-
-    async savePlaylist(userId, playlistDocumentId) {
-        if (!userId)
-            throw new Error('No userId provided');
-
-        if (!playlistDocumentId)
-            throw new Error('No playlistDocumentId provided');
-        
-        const response = await db.createDocument(
-            import.meta.env.VITE_APPWRITE_DB_ID,
-            import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
-            ID.unique(),
-            {
-                userId,
-                playlistDocumentId
-            },
-            [
-                Permission.read(Role.user(userId)),
-                Permission.update(Role.user(userId)),
-                Permission.delete(Role.user(userId))
-            ]
-        );
-
-        return response;
-    }
-
-    async getSavedPlaylists(userId, limit = Number.MAX_SAFE_INTEGER) {
-        if (!userId)
-            throw new Error('No userId provided');
-
-        const response = await db.listDocuments(
-            import.meta.env.VITE_APPWRITE_DB_ID,
-            import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
-            [
-                Query.select(['playlistDocumentId']),
-                Query.limit(limit),
-                Query.equal('userId', userId)
-            ]
-        );
-
-        const playlistDocumentIds = response.documents.map(item => item.playlistDocumentId);
-
-        return playlistDocumentIds;
-    }
-
-    async removeSavedPlaylist(userId, playlistDocumentId) {
-        if (!userId)
-            throw new Error('No userId provided');
-
-        if (!playlistDocumentId)
-            throw new Error('No playlistDocumentId provided');
-
-        let response = await db.listDocuments(
-            import.meta.env.VITE_APPWRITE_DB_ID,
-            import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
-            [
-                Query.select(['$id']),
-                Query.limit(1),
-                Query.equal('userId', userId),
-                Query.equal('playlistDocumentId', playlistDocumentId)
-            ]
-        );
-
-        if (!response?.documents?.length) {
-            throw new Error('Playlist not found in saved playlists');
-        }
-
-        response = await db.deleteDocument(
-            import.meta.env.VITE_APPWRITE_DB_ID,
-            import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
-            response.documents[0].$id
-        );
-
-        return response;
-    }
-
-    async isPlaylistSaved(userId, playlistDocumentId) {
-        if (!userId || !playlistDocumentId)
-            return false;
-
-        try {
-            const response = await db.listDocuments(
-                import.meta.env.VITE_APPWRITE_DB_ID,
-                import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
-                [
-                    Query.select(['$id']),
-                    Query.limit(1),
-                    Query.equal('userId', userId),
-                    Query.equal('playlistDocumentId', playlistDocumentId)
-                ]
-            );
-
-            if (!response?.documents?.length) {
-                return false;
-            }
-        } catch (err) {
-            return false;
-        }
-
-        return true;
-    }
 };
 
 const appwriteService = new AppwriteService();
@@ -409,6 +264,225 @@ class SearchService {
 
 const searchService = new SearchService();
 
-window.appwriteService = appwriteService;
+class PlaylistService {
+    async fetchPlaylist(documentId) {
+        const response = await db.getDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
+            documentId,
+            [
+                Query.select(['$id', 'owner', 'ytId', 'title', 'channelTitle', 'thumbnail', 'itemCount', 'items'])
+            ]
+        );
 
-export { AppwriteService, appwriteService, AuthService, authService, SearchService, searchService };
+        return response;
+    }
+
+    async fetchPlaylists(documentIds) {
+
+        if (!documentIds?.length) {
+            throw new Error('No documentIds provided to fetch playlists');
+        }
+        
+        const response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
+            [
+                Query.select(['$id', 'owner', 'ytId', 'title', 'channelTitle', 'thumbnail', 'itemCount']),
+                Query.limit(documentIds.length),
+                Query.equal('$id', documentIds)
+            ]
+        );
+
+        const playlistsMap = new Map();
+
+        response.documents.forEach(item => {
+            playlistsMap.set(item.$id, item);
+        });
+
+        return documentIds.map(id => {
+            const item = playlistsMap.get(id);
+            if (item) 
+                return item;
+            else
+                return { id, notFound: true };
+        });
+    }
+
+    async savePlaylist(userId, playlistDocumentId) {
+        if (!userId)
+            throw new Error('No userId provided');
+
+        if (!playlistDocumentId)
+            throw new Error('No playlistDocumentId provided');
+        
+        const response = await db.createDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
+            ID.unique(),
+            {
+                userId,
+                playlistDocumentId
+            },
+            [
+                Permission.read(Role.user(userId)),
+                Permission.update(Role.user(userId)),
+                Permission.delete(Role.user(userId))
+            ]
+        );
+
+        return response;
+    }
+
+    async getSavedPlaylists(userId, limit = Number.MAX_SAFE_INTEGER) {
+        if (!userId)
+            throw new Error('No userId provided');
+
+        const response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
+            [
+                Query.select(['playlistDocumentId']),
+                Query.limit(limit),
+                Query.equal('userId', userId),
+                Query.orderDesc('$createdAt')
+            ]
+        );
+
+        const playlistDocumentIds = response.documents.map(item => item.playlistDocumentId);
+
+        return playlistDocumentIds;
+    }
+
+    async removeSavedPlaylist(userId, playlistDocumentId) {
+        if (!userId)
+            throw new Error('No userId provided');
+
+        if (!playlistDocumentId)
+            throw new Error('No playlistDocumentId provided');
+
+        let response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
+            [
+                Query.select(['$id']),
+                Query.limit(1),
+                Query.equal('userId', userId),
+                Query.equal('playlistDocumentId', playlistDocumentId)
+            ]
+        );
+
+        if (!response?.documents?.length) {
+            throw new Error('Playlist not found in saved playlists');
+        }
+
+        response = await db.deleteDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
+            response.documents[0].$id
+        );
+
+        return response;
+    }
+
+    async isPlaylistSaved(userId, playlistDocumentId) {
+        if (!userId || !playlistDocumentId)
+            return false;
+
+        try {
+            const response = await db.listDocuments(
+                import.meta.env.VITE_APPWRITE_DB_ID,
+                import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
+                [
+                    Query.select(['$id']),
+                    Query.limit(1),
+                    Query.equal('userId', userId),
+                    Query.equal('playlistDocumentId', playlistDocumentId)
+                ]
+            );
+
+            if (!response?.documents?.length) {
+                return false;
+            }
+        } catch (err) {
+            return false;
+        }
+
+        return true;
+    }
+
+    async createNewPlaylist(userId, title) {
+        if (!userId)
+            throw new Error('No userId provided');
+
+        if (!title)
+            throw new Error('No title provided');
+
+        const response = await db.createDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
+            ID.unique(),
+            {
+                owner: 'user',
+                title,
+                itemCount: 0,
+            },
+            [
+                Permission.read(Role.users()),
+                Permission.read(Role.user(userId)),
+                Permission.update(Role.user(userId)),
+                Permission.delete(Role.user(userId)),
+            ]
+        );
+
+        await db.createDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_USERS_PLAYLISTS_COLLECTION_ID,
+            ID.unique(),
+            {
+                userId,
+                playlistDocumentId: response.$id
+            },
+            [
+                Permission.read(Role.user(userId)),
+                Permission.update(Role.user(userId)),
+                Permission.delete(Role.user(userId))
+            ]
+        );
+
+        return response.$id;
+    }
+
+    async getOwnedPlaylists(userId, limit = Number.MAX_SAFE_INTEGER) {
+        if (!userId)
+            throw new Error('No userId provided');
+
+        const response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_USERS_PLAYLISTS_COLLECTION_ID,
+            [
+                Query.select(['playlistDocumentId']),
+                Query.limit(limit),
+                Query.equal('userId', userId),
+                Query.orderDesc('$createdAt')
+            ]
+        );
+
+        const playlistDocumentIds = response.documents.map(item => item.playlistDocumentId);
+
+        return playlistDocumentIds;
+    }
+}
+
+const playlistService = new PlaylistService();
+
+export {
+    AppwriteService,
+    appwriteService,
+    AuthService,
+    authService,
+    SearchService,
+    searchService,
+    PlaylistService,
+    playlistService
+};

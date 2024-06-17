@@ -21,6 +21,7 @@ import SearchResultsPage from "./pages/SearchResultsPage.jsx";
 import MusicItemPage from "./pages/MusicItemPage.jsx";
 import PlaylistPage from "./pages/PlaylistPage.jsx";
 import SavedPlaylists from './components/playlist/SavedPlaylists.jsx';
+import OwnedPlaylists from './components/playlist/OwnedPlaylists.jsx';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -35,6 +36,7 @@ const router = createBrowserRouter(
             <Route path='music/:id' element={<MusicItemPage />} />
             <Route path='playlists' element={<PlaylistsPage />} />
             <Route path='playlists/saved' element={<SavedPlaylists />} />
+            <Route path='playlists/me' element={<OwnedPlaylists />} />
             <Route path='playlist/:documentId' element={<PlaylistPage />} />
             <Route path='*' element={<NotFoundPage />} />
         </Route>

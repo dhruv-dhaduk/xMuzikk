@@ -103,6 +103,10 @@ html, body {
     @apply text-placeholder;
 }
 
+.input-text:focus {
+    @apply outline-none border-[#949494];
+}
+
 .search-box {
     background-image: url('/icons/search.svg');
     background-repeat: no-repeat;

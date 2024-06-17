@@ -1,5 +1,6 @@
 import playlistIcon from '/icons/queue.svg';
 import threeDotsIcon from '/icons/three_dots.svg';
+import defaultThumbnail from '/images/music_icon_neon_blue.jpeg';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -15,7 +16,7 @@ function PlaylistFeedItem({ playlist, showMoreOptions }) {
 
             <div className='flex-none w-[6.5rem] tablet:flex-1 aspect-square relative'>
                 <img 
-                    src={playlist.thumbnail} 
+                    src={playlist.thumbnail || defaultThumbnail}
                     draggable={false}
                     onContextMenu={e => e.preventDefault()}
                     className='w-full h-full object-cover rounded-xl'

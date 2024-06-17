@@ -1,3 +1,7 @@
+
+
+import PlaylistFeedItem from './PlaylistFeedItem.jsx';
+import Popover from '../ui/Popover.jsx';
 import { useCallback, useEffect } from "react";
 import { useState } from "react";
 
@@ -6,58 +10,56 @@ import { authService, playlistService } from '../../dataManager/AppwriteService.
 import Spinner from '../ui/Spinner.jsx';
 import AuthLinks from '../AuthLinks.jsx';
 
-import PlaylistFeedItem from './PlaylistFeedItem.jsx';
 import LoadingFeed from '../Loading.jsx';
-import Popover from '../ui/Popover.jsx';
 
 const FETCH_AMOUNT = 10;
 
-function SavedPlaylists({ context, children }) {
+function OwnedPlaylists({ context, children }) {
 
     const [user, setUser] = useState(context?.user ? context.user : undefined);
     const [isLoading, setIsLoading] = useState(true);
-    const [savedPlaylistDocumentIDs, setSavedPlaylistDocumentIDs] = useState(undefined);
-    const [savedPlaylists, setSavedPlaylists] = useState([]);
+    const [ownedPlaylistDocumentIDs, setOwnedPlaylistDocumentIDs] = useState(undefined);
+    const [ownedPlaylists, setOwnedPlaylists] = useState([]);
     const [hasMoreItems, setHasMoreItems] = useState(true);
 
     const fetchNextItems = useCallback(async (resetIndex = false) => {
 
-        if (!savedPlaylistDocumentIDs?.length)
+        if (!ownedPlaylistDocumentIDs?.length)
             return;
 
         if (!resetIndex && !hasMoreItems)   
             return;
 
-        if (!resetIndex && savedPlaylistDocumentIDs?.length === savedPlaylists?.length) {
+        if (!resetIndex && ownedPlaylistDocumentIDs?.length === ownedPlaylists?.length) {
             setHasMoreItems(false);
             return;
         }
 
         let itemsToFetch = [];
         if (context?.limit) {
-            itemsToFetch = savedPlaylistDocumentIDs.slice(0, context.limit);
+            itemsToFetch = ownedPlaylistDocumentIDs.slice(0, context.limit);
         }
         else {
             if (resetIndex) {
-                itemsToFetch = savedPlaylistDocumentIDs.slice(0, FETCH_AMOUNT);
+                itemsToFetch = ownedPlaylistDocumentIDs.slice(0, FETCH_AMOUNT);
             }
             else {
-                itemsToFetch = savedPlaylistDocumentIDs.slice(savedPlaylists.length, savedPlaylists.length + FETCH_AMOUNT);
+                itemsToFetch = ownedPlaylistDocumentIDs.slice(ownedPlaylists.length, ownedPlaylists.length + FETCH_AMOUNT);
             }
         }
 
         const fetchedItems = await playlistService.fetchPlaylists(itemsToFetch);
 
         if (resetIndex) {
-            setSavedPlaylists(fetchedItems);
-            setHasMoreItems(fetchNextItems.length === savedPlaylistDocumentIDs.length);
+            setOwnedPlaylists(fetchedItems);
+            setHasMoreItems(fetchNextItems.length === ownedPlaylistDocumentIDs.length);
         }
         else {
-            setSavedPlaylists([...savedPlaylists, ...fetchedItems]);
-            setHasMoreItems((savedPlaylists.length + fetchedItems.length) === savedPlaylistDocumentIDs.length);
+            setOwnedPlaylists([...ownedPlaylists, ...fetchedItems]);
+            setHasMoreItems((ownedPlaylists.length + fetchedItems.length) === ownedPlaylistDocumentIDs.length);
         }
 
-    }, [savedPlaylistDocumentIDs, savedPlaylists, setSavedPlaylists, hasMoreItems, setHasMoreItems]);
+    }, [ownedPlaylistDocumentIDs, ownedPlaylists, setOwnedPlaylists, hasMoreItems, setHasMoreItems]);
 
     const handleScrollToEnd = useCallback(async () => {
 
@@ -100,14 +102,14 @@ function SavedPlaylists({ context, children }) {
         }
 
         playlistService
-            .getSavedPlaylists(user.$id, context?.limit ? context.limit : undefined)
+            .getOwnedPlaylists(user.$id, context?.limit ? context.limit : undefined)
             .then((response) => {
-                setSavedPlaylistDocumentIDs(response);
+                setOwnedPlaylistDocumentIDs(response);
 
             })
             .catch((err) => {
                 console.error(err);
-                setSavedPlaylistDocumentIDs(null);
+                setOwnedPlaylistDocumentIDs(null);
             })
             .finally(() => {                
                 setIsLoading(false);
@@ -116,15 +118,15 @@ function SavedPlaylists({ context, children }) {
     }, [user, context]);
 
     useEffect(() => {
-        if (!savedPlaylistDocumentIDs?.length) {
+        if (!ownedPlaylistDocumentIDs?.length) {
             return;
         }
 
         fetchNextItems(true);
-    }, [savedPlaylistDocumentIDs, context]);
+    }, [ownedPlaylistDocumentIDs, context]);
 
     useEffect(() => {
-        if (!savedPlaylists?.length || !hasMoreItems) {
+        if (!ownedPlaylists?.length || !hasMoreItems) {
             return;
         }
 
@@ -133,7 +135,7 @@ function SavedPlaylists({ context, children }) {
         return () => {
             window.removeEventListener('scrollend', handleScrollToEnd);
         }
-    }, [savedPlaylists, hasMoreItems, context]);
+    }, [ownedPlaylists, hasMoreItems, context]);
 
     if (isLoading) {
         return (
@@ -144,40 +146,40 @@ function SavedPlaylists({ context, children }) {
     }
 
     if (user === null) {
-        return <AuthLinks message='Please Login or Signup to see your saved playlists' />;
+        return <AuthLinks message='Please Login or Signup to see your playlists' />;
     }
 
     return (
         <div className='p-3 tablet:p-6'>
             <div className='rounded-xl bg-white bg-opacity-5 border border-white border-opacity-5'> 
                 <p className='p-4 text-xl tablet:text-2xl text-center tablet:text-left font-bold select-none'>
-                    Your Saved Playlists
+                    Your Playlists
                 </p>
 
                 {
-                    savedPlaylistDocumentIDs === null && (
+                    ownedPlaylistDocumentIDs === null && (
                         <div className='text-center p-8'>
-                            An Error occured while fetching your saved playlists.
+                            An Error occured while fetching your playlists.
                         </div>
                     )
                 }
 
                 {
-                    savedPlaylistDocumentIDs.length === 0 && (
+                    ownedPlaylistDocumentIDs.length === 0 && (
                         <div className='text-center p-8 text-sm'>
-                            You have no saved playlists.
+                            You don't have any playlists.
                         </div>
                     )
                 }
 
                 {
-                    savedPlaylistDocumentIDs?.length > 0 && (
-                        !savedPlaylists?.length ? (
+                    ownedPlaylistDocumentIDs?.length > 0 && (
+                        !ownedPlaylists?.length ? (
                             <LoadingFeed count={context?.limit || 12} />
                         ) : (
                             <div>
                                 <div className='grid grid-cols-1 tablet:grid-cols-feed gap-2 tablet:gap-6 p-2 tablet:p-3'>
-                                    <SavedPlaylistsFeed savedPlaylists={savedPlaylists} />
+                                    <OwnedPlaylistsFeed ownedPlaylists={ownedPlaylists} /> 
                                 </div>
     
                                 {
@@ -200,14 +202,14 @@ function SavedPlaylists({ context, children }) {
     );
 }
 
-function SavedPlaylistsFeed({ savedPlaylists }) {
+function OwnedPlaylistsFeed({ ownedPlaylists }) {
     const [popoverShowing, setPopoverShowing] = useState(false);
     const [popoverPlaylistDetails, setPopoverPlaylistDetails] = useState({});
 
     return (
         <>
             {
-                savedPlaylists?.map(item => (
+                ownedPlaylists?.map(item => (
                     <PlaylistFeedItem
                         key={item.$id}
                         playlist={item}
@@ -274,4 +276,4 @@ function PopoverBtn({ onClick, className, children }) {
     )
 }
 
-export default SavedPlaylists;
+export default OwnedPlaylists;

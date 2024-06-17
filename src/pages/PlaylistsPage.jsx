@@ -6,6 +6,8 @@ import { authService } from '../dataManager/AppwriteService.js';
 import Spinner from '../components/ui/Spinner.jsx';
 import AuthLinks from '../components/AuthLinks.jsx';
 import SavedPlaylists from '../components/playlist/SavedPlaylists.jsx';
+import CreatePlaylist from '../components/CreatePlaylist.jsx';
+import OwnedPlaylists from '../components/playlist/OwnedPlaylists.jsx';
 
 function PlaylistsPage() {
 
@@ -42,6 +44,19 @@ function PlaylistsPage() {
 
     return (
         <div>
+            <CreatePlaylist user={user} />
+
+            <OwnedPlaylists context={{ user, limit: 3 }} >
+                <div className='flex justify-end p-3'>
+                    <Link
+                        to='/playlists/me'
+                        className='px-3 py-1 rounded-md text-xs font-bold bg-white bg-opacity-90 text-black select-none'
+                    >
+                        Show all
+                    </Link>
+                </div>
+            </OwnedPlaylists>
+
             <SavedPlaylists context={{ user, limit: 3 }} >
                 <div className='flex justify-end p-3'>
                     <Link
