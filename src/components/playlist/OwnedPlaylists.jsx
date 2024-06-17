@@ -22,6 +22,35 @@ function OwnedPlaylists({ context, children }) {
     const [ownedPlaylists, setOwnedPlaylists] = useState([]);
     const [hasMoreItems, setHasMoreItems] = useState(true);
 
+    const fetchOwnedDocumentIDs = useCallback(() => {
+        if (user === undefined) {
+            return;
+        }
+        else if (user === null) {
+            setIsLoading(false);
+            return;
+        }
+
+        setIsLoading(true);
+        setOwnedPlaylistDocumentIDs(undefined);
+        setOwnedPlaylists([]);
+        setHasMoreItems(true);
+
+        playlistService
+            .getOwnedPlaylists(user.$id, context?.limit ? context.limit : undefined)
+            .then((response) => {
+                setOwnedPlaylistDocumentIDs(response);
+            })
+            .catch((err) => {
+                console.error(err);
+                setOwnedPlaylistDocumentIDs(null);
+            })
+            .finally(() => {                
+                setIsLoading(false);
+            });
+
+    }, [setOwnedPlaylistDocumentIDs, user, context]);
+
     const fetchNextItems = useCallback(async (resetIndex = false) => {
 
         if (!ownedPlaylistDocumentIDs?.length)
@@ -92,30 +121,7 @@ function OwnedPlaylists({ context, children }) {
         fetchUser();
     }, [context]);
 
-    useEffect(() => {
-        if (user === undefined) {
-            return;
-        }
-        else if (user === null) {
-            setIsLoading(false);
-            return;
-        }
-
-        playlistService
-            .getOwnedPlaylists(user.$id, context?.limit ? context.limit : undefined)
-            .then((response) => {
-                setOwnedPlaylistDocumentIDs(response);
-
-            })
-            .catch((err) => {
-                console.error(err);
-                setOwnedPlaylistDocumentIDs(null);
-            })
-            .finally(() => {                
-                setIsLoading(false);
-            });
-
-    }, [user, context]);
+    useEffect(fetchOwnedDocumentIDs, [user, context]);
 
     useEffect(() => {
         if (!ownedPlaylistDocumentIDs?.length) {
@@ -179,7 +185,11 @@ function OwnedPlaylists({ context, children }) {
                         ) : (
                             <div>
                                 <div className='grid grid-cols-1 tablet:grid-cols-feed gap-2 tablet:gap-6 p-2 tablet:p-3'>
-                                    <OwnedPlaylistsFeed user={user} ownedPlaylists={ownedPlaylists} /> 
+                                    <OwnedPlaylistsFeed
+                                        user={user}
+                                        ownedPlaylists={ownedPlaylists}
+                                        fetchOwnedDocumentIDs={fetchOwnedDocumentIDs}
+                                    /> 
                                 </div>
     
                                 {
@@ -202,7 +212,7 @@ function OwnedPlaylists({ context, children }) {
     );
 }
 
-function OwnedPlaylistsFeed({ user, ownedPlaylists }) {
+function OwnedPlaylistsFeed({ user, ownedPlaylists, fetchOwnedDocumentIDs }) {
     const [popoverShowing, setPopoverShowing] = useState(false);
     const [popoverPlaylistDetails, setPopoverPlaylistDetails] = useState({});
 
@@ -269,6 +279,8 @@ function OwnedPlaylistsFeed({ user, ownedPlaylists }) {
                         }
 
                         setPopoverShowing(false);
+
+                        fetchOwnedDocumentIDs();
                     }}
                 >
                     Delete
