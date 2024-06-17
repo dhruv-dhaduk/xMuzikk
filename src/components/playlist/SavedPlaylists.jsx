@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { ToastContext } from '../../contexts/ToastContext.js';
 
 import { authService, playlistService } from '../../dataManager/AppwriteService.js';
 
@@ -9,6 +10,7 @@ import AuthLinks from '../AuthLinks.jsx';
 import PlaylistFeedItem from './PlaylistFeedItem.jsx';
 import LoadingFeed from '../Loading.jsx';
 import Popover from '../ui/Popover.jsx';
+import AsyncSubmitBtn from '../AsyncSubmitBtn.jsx';
 
 const FETCH_AMOUNT = 10;
 
@@ -183,7 +185,11 @@ function SavedPlaylists({ context, children }) {
                         ) : (
                             <div>
                                 <div className='grid grid-cols-1 tablet:grid-cols-feed gap-2 tablet:gap-6 p-2 tablet:p-3'>
-                                    <SavedPlaylistsFeed savedPlaylists={savedPlaylists} />
+                                    <SavedPlaylistsFeed
+                                        savedPlaylists={savedPlaylists}
+                                        user={user}
+                                        fetchSavedPlaylistDocumentIDs={fetchSavedPlaylistDocumentIDs}
+                                    />
                                 </div>
     
                                 {
@@ -206,9 +212,11 @@ function SavedPlaylists({ context, children }) {
     );
 }
 
-function SavedPlaylistsFeed({ savedPlaylists }) {
+function SavedPlaylistsFeed({ savedPlaylists, user, fetchSavedPlaylistDocumentIDs }) {
     const [popoverShowing, setPopoverShowing] = useState(false);
     const [popoverPlaylistDetails, setPopoverPlaylistDetails] = useState({});
+
+    const { showToast } = useContext(ToastContext);
 
     return (
         <>
@@ -256,6 +264,27 @@ function SavedPlaylistsFeed({ savedPlaylists }) {
                         </PopoverBtn>
                     )
                 }
+
+                <AsyncSubmitBtn
+                    className='w-full h-9 mt-4 bg-red-700 text-white text-[15px] font-semibold rounded-full active:scale-90 duration-200'
+                    loadingClassName='w-full h-9 mt-4 flex justify-center items-center bg-red-950  rounded-full'
+                    spinnerSize={20}
+                    asyncClickHandler={async () => {
+                        try {
+                            await playlistService.removeSavedPlaylist(user.$id, popoverPlaylistDetails.$id);
+                            showToast.success('Playlist removed from saved playlists');
+                        } catch (err) {
+                            console.error(err);
+                            showToast.error(err.message);
+                        }
+
+                        setPopoverShowing(false);
+
+                        fetchSavedPlaylistDocumentIDs();
+                    }}
+                >
+                    Unsave
+                </AsyncSubmitBtn>
             
                 <button
                     onClick={() => setPopoverShowing(false)}
