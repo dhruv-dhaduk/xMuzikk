@@ -472,6 +472,53 @@ class PlaylistService {
 
         return playlistDocumentIds;
     }
+
+    async deletePlaylist(userId, playlistDocumentId) {
+        if (!userId)
+            throw new Error('No userId provided');
+
+        if (!playlistDocumentId)
+            throw new Error('No playlistDocumentId provided');
+
+        const response = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_USERS_PLAYLISTS_COLLECTION_ID,
+            [
+                Query.select(['$id']),
+                Query.limit(1),
+                Query.equal('userId', userId),
+                Query.equal('playlistDocumentId', playlistDocumentId)
+            ]
+        );
+
+        if (!response?.documents?.length)
+            throw new Error('Playlist not found in users playlists');
+
+        try {
+            await db.deleteDocument(
+                import.meta.env.VITE_APPWRITE_DB_ID,
+                import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
+                playlistDocumentId
+            );
+        } catch (err) {
+            if (err.type !== 'document_not_found' && err.code !== 404) {
+                throw err;
+            }
+        }
+        
+        try {
+            await db.deleteDocument(
+                import.meta.env.VITE_APPWRITE_DB_ID,
+                import.meta.env.VITE_APPWRITE_USERS_PLAYLISTS_COLLECTION_ID,
+                response.documents[0].$id
+            );
+        } catch (err) {
+            if (err.type !== 'document_not_found' && err.code !== 404) {
+                throw err;
+            }
+        }
+
+    }
 }
 
 const playlistService = new PlaylistService();

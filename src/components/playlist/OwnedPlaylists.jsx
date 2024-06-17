@@ -1,9 +1,8 @@
-
-
 import PlaylistFeedItem from './PlaylistFeedItem.jsx';
 import Popover from '../ui/Popover.jsx';
 import { useCallback, useEffect } from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { ToastContext } from '../../contexts/ToastContext.js';
 
 import { authService, playlistService } from '../../dataManager/AppwriteService.js';
 
@@ -11,6 +10,7 @@ import Spinner from '../ui/Spinner.jsx';
 import AuthLinks from '../AuthLinks.jsx';
 
 import LoadingFeed from '../Loading.jsx';
+import AsyncSubmitBtn from '../AsyncSubmitBtn.jsx';
 
 const FETCH_AMOUNT = 10;
 
@@ -21,6 +21,35 @@ function OwnedPlaylists({ context, children }) {
     const [ownedPlaylistDocumentIDs, setOwnedPlaylistDocumentIDs] = useState(undefined);
     const [ownedPlaylists, setOwnedPlaylists] = useState([]);
     const [hasMoreItems, setHasMoreItems] = useState(true);
+
+    const fetchOwnedPlaylistDocumentId = useCallback(() => {
+        if (user === undefined) {
+            return;
+        }
+        else if (user === null) {
+            setIsLoading(false);
+            return;
+        }
+
+        setIsLoading(true);
+        setOwnedPlaylistDocumentIDs(undefined);
+        setOwnedPlaylists([]);
+        setHasMoreItems(true);
+
+        playlistService
+            .getOwnedPlaylists(user.$id, context?.limit ? context.limit : undefined)
+            .then((response) => {
+                setOwnedPlaylistDocumentIDs(response);
+            })
+            .catch((err) => {
+                console.error(err);
+                setOwnedPlaylistDocumentIDs(null);
+            })
+            .finally(() => {                
+                setIsLoading(false);
+            });
+
+    }, [user, context, setOwnedPlaylistDocumentIDs, setIsLoading, setOwnedPlaylists, setHasMoreItems]);
 
     const fetchNextItems = useCallback(async (resetIndex = false) => {
 
@@ -92,30 +121,7 @@ function OwnedPlaylists({ context, children }) {
         fetchUser();
     }, [context]);
 
-    useEffect(() => {
-        if (user === undefined) {
-            return;
-        }
-        else if (user === null) {
-            setIsLoading(false);
-            return;
-        }
-
-        playlistService
-            .getOwnedPlaylists(user.$id, context?.limit ? context.limit : undefined)
-            .then((response) => {
-                setOwnedPlaylistDocumentIDs(response);
-
-            })
-            .catch((err) => {
-                console.error(err);
-                setOwnedPlaylistDocumentIDs(null);
-            })
-            .finally(() => {                
-                setIsLoading(false);
-            });
-
-    }, [user, context]);
+    useEffect(fetchOwnedPlaylistDocumentId, [user, context]);
 
     useEffect(() => {
         if (!ownedPlaylistDocumentIDs?.length) {
@@ -179,7 +185,11 @@ function OwnedPlaylists({ context, children }) {
                         ) : (
                             <div>
                                 <div className='grid grid-cols-1 tablet:grid-cols-feed gap-2 tablet:gap-6 p-2 tablet:p-3'>
-                                    <OwnedPlaylistsFeed ownedPlaylists={ownedPlaylists} /> 
+                                    <OwnedPlaylistsFeed
+                                        user={user}
+                                        ownedPlaylists={ownedPlaylists}
+                                        fetchOwnedPlaylistDocumentId={fetchOwnedPlaylistDocumentId}
+                                    /> 
                                 </div>
     
                                 {
@@ -202,9 +212,11 @@ function OwnedPlaylists({ context, children }) {
     );
 }
 
-function OwnedPlaylistsFeed({ ownedPlaylists }) {
+function OwnedPlaylistsFeed({ user, ownedPlaylists, fetchOwnedPlaylistDocumentId }) {
     const [popoverShowing, setPopoverShowing] = useState(false);
     const [popoverPlaylistDetails, setPopoverPlaylistDetails] = useState({});
+
+    const { showToast } = useContext(ToastContext);
 
     return (
         <>
@@ -240,18 +252,26 @@ function OwnedPlaylistsFeed({ ownedPlaylists }) {
                     Share
                 </PopoverBtn>
 
-                {
-                    popoverPlaylistDetails.ytId && (
-                        <PopoverBtn
-                            onClick={() => {
-                                window.open(`https://www.youtube.com/playlist?list=${popoverPlaylistDetails.ytId}`, '_blank');
-                                setPopoverShowing(false);
-                            }}
-                        >
-                            Open in YouTube
-                        </PopoverBtn>
-                    )
-                }
+                <AsyncSubmitBtn
+                    className='w-full h-9 mt-4 bg-red-700 text-white text-[15px] font-semibold rounded-full active:scale-90 duration-200'
+                    loadingClassName='w-full h-9 mt-4 flex justify-center items-center bg-red-950  rounded-full'
+                    spinnerSize={20}
+                    asyncClickHandler={async () => {
+                        try {
+                            await playlistService.deletePlaylist(user.$id, popoverPlaylistDetails.$id);
+                            showToast.success('Playlist deleted successfully.');
+                        } catch (err) {
+                            console.error(err);
+                            showToast.error(err.message);
+                        }
+
+                        setPopoverShowing(false);
+
+                        fetchOwnedPlaylistDocumentId();
+                    }}
+                >
+                    Delete
+                </AsyncSubmitBtn>
             
                 <button
                     onClick={() => setPopoverShowing(false)}
