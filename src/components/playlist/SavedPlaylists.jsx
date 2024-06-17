@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useState } from "react";
 
-import { authService, appwriteService } from '../../dataManager/AppwriteService.js';
+import { authService, playlistService } from '../../dataManager/AppwriteService.js';
 
 import Spinner from '../ui/Spinner.jsx';
 import AuthLinks from '../AuthLinks.jsx';
@@ -46,7 +46,7 @@ function SavedPlaylists({ context, children }) {
             }
         }
 
-        const fetchedItems = await appwriteService.fetchPlaylists(itemsToFetch);
+        const fetchedItems = await playlistService.fetchPlaylists(itemsToFetch);
 
         if (resetIndex) {
             setSavedPlaylists(fetchedItems);
@@ -99,7 +99,7 @@ function SavedPlaylists({ context, children }) {
             return;
         }
 
-        appwriteService
+        playlistService
             .getSavedPlaylists(user.$id, context?.limit ? context.limit : undefined)
             .then((response) => {
                 setSavedPlaylistDocumentIDs(response);

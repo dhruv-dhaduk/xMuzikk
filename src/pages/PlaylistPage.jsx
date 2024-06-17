@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { appwriteService, authService } from '../dataManager/AppwriteService.js';
+import { playlistService, authService } from '../dataManager/AppwriteService.js';
 import { getMusicDetails } from '../dataManager/index.js';
 
 import PlaylistMetaData from '../components/PlaylistMetaData.jsx';
@@ -69,7 +69,7 @@ function PlaylistPage() {
         if (!user)
             return;
 
-        appwriteService.fetchPlaylist(documentId)
+        playlistService.fetchPlaylist(documentId)
             .then((response) => {
                 setPlaylist(response);
             })
