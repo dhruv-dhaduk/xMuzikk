@@ -344,7 +344,8 @@ class PlaylistService {
             [
                 Query.select(['playlistDocumentId']),
                 Query.limit(limit),
-                Query.equal('userId', userId)
+                Query.equal('userId', userId),
+                Query.orderDesc('$createdAt')
             ]
         );
 
@@ -462,7 +463,8 @@ class PlaylistService {
             [
                 Query.select(['playlistDocumentId']),
                 Query.limit(limit),
-                Query.equal('userId', userId)
+                Query.equal('userId', userId),
+                Query.orderDesc('$createdAt')
             ]
         );
 
