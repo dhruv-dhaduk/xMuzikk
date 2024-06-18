@@ -3,6 +3,8 @@ import Popover from './ui/Popover.jsx';
 import { PlayerContext } from '../contexts/PlayerContext.js';
 import { useContext, useEffect, useState } from 'react';
 
+import AddToPlaylist from './AddToPlaylist.jsx';
+
 function PlaylistFeed({ playlistItems }) {
     const playerContext = useContext(PlayerContext);
     const [popoverShowing, setPopoverShowing] = useState(false);
@@ -48,6 +50,11 @@ function PlaylistFeed({ playlistItems }) {
                 >
                     Add To Queue
                 </button>
+
+                <AddToPlaylist
+                    music={popoverMusicDetails}
+                    callback={() => setPopoverShowing(false)}
+                />
 
                 <button
                     onClick={() => setPopoverShowing(false)}
