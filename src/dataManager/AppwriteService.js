@@ -574,6 +574,71 @@ class PlaylistService {
 
         return response2;
     }
+
+    async removeFromPlaylist(playlistDocumentId, musicId) {
+        if (!playlistDocumentId)
+            throw new Error('No playlistDocumentId provided');
+
+        if (!musicId)
+            throw new Error('No musicId provided');
+
+        const playlist = await db.getDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
+            playlistDocumentId,
+            [
+                Query.select(['$id', 'itemCount', 'items', 'thumbnail'])
+            ]
+        );
+
+        if (!playlist?.$id)
+            throw new Error('Playlist not found');
+
+        if (!playlist.items.includes(musicId))
+            throw new Error(`Music item doesn't exist in playlist`);
+
+        const updatedPlaylistItems = playlist.items.filter(item => item !== musicId);
+
+        let updatedThumbnail = playlist.thumbnail;
+
+        if (updatedPlaylistItems.length === 0) {
+            updatedThumbnail = null;
+        }
+        else if (updatedPlaylistItems.length > 0 && updatedPlaylistItems[0] !== playlist.items[0]) {
+
+            try {
+                const response = await db.listDocuments(
+                    import.meta.env.VITE_APPWRITE_DB_ID,
+                    import.meta.env.VITE_APPWRITE_ALLMUSIC_COLLECTION_ID,
+                    [
+                        Query.select(['id', 'thumbnail']),
+                        Query.limit(1),
+                        Query.equal('id', updatedPlaylistItems[0])
+                    ]
+                );
+
+                if (!response?.documents?.length || response.documents[0].id !== updatedPlaylistItems[0]) {}
+                else {
+                    updatedThumbnail = response.documents[0].thumbnail;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        const response = await db.updateDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
+            playlistDocumentId,
+            {
+                items: updatedPlaylistItems,
+                itemCount: updatedPlaylistItems.length,
+                thumbnail: updatedThumbnail
+            }
+        );
+
+        return response;
+    }
 }
 
 const playlistService = new PlaylistService();
