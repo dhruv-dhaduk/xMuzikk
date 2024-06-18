@@ -2,13 +2,18 @@ import PlaylistItem from './PlaylistItem.jsx';
 import Popover from './ui/Popover.jsx';
 import { PlayerContext } from '../contexts/PlayerContext.js';
 import { useContext, useEffect, useState } from 'react';
+import { ToastContext } from '../contexts/ToastContext.js';
+import { playlistService } from '../dataManager/AppwriteService.js';
 
 import AddToPlaylist from './AddToPlaylist.jsx';
+import AsyncSubmitBtn from './AsyncSubmitBtn.jsx';
 
-function PlaylistFeed({ playlistItems }) {
+function PlaylistFeed({ playlist, playlistItems, isOwned, reloader }) {
     const playerContext = useContext(PlayerContext);
     const [popoverShowing, setPopoverShowing] = useState(false);
     const [popoverMusicDetails, setPopoverMusicDetails] = useState({});
+
+    const { showToast } = useContext(ToastContext);
 
     if (!playlistItems?.length) {
         return (
@@ -55,6 +60,31 @@ function PlaylistFeed({ playlistItems }) {
                     music={popoverMusicDetails}
                     callback={() => setPopoverShowing(false)}
                 />
+
+                {
+                    isOwned && (
+                        <AsyncSubmitBtn
+                            className='w-full h-9 mt-4 bg-red-700 text-white text-[14px] font-semibold rounded-full active:scale-90 duration-200'
+                            loadingClassName='w-full h-9 mt-4 flex justify-center items-center bg-red-950  rounded-full'
+                            spinnerSize={20}
+                            asyncClickHandler={async () => {
+                                try {
+                                    await playlistService.removeFromPlaylist(playlist?.$id, popoverMusicDetails?.id);
+                                    showToast.success('Item removed from playlist successfully');
+                                } catch (err) {
+                                    console.error(err);
+                                    showToast.error(err.message);
+                                }
+
+                                await reloader();
+                                setPopoverShowing(false);
+                            }}
+                        >
+                            Remove from playlist
+                        </AsyncSubmitBtn>
+                    )
+                }
+                
 
                 <button
                     onClick={() => setPopoverShowing(false)}

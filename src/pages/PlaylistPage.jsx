@@ -23,21 +23,55 @@ function PlaylistPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [isOwned, setIsOwned] = useState(false);
 
-    const fetchNextItems = useCallback(async () => {
+    const fetchCurrentPlaylist = useCallback(async (reload = false) => {
+        if (!user)
+            return;
+
+        if (reload) {
+            setIsLoading(true);
+            setPlaylist({});
+            setPlaylistItems([]);
+        }
+        setHasMoreItems(true);
+
+        playlistService.fetchPlaylist(documentId)
+            .then((response) => {
+                setPlaylist(response);
+            })
+            .catch((err) => {
+                setPlaylist({ notFound: true });
+                console.log(err);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            })
+    }, [user, setIsLoading, setPlaylist, setPlaylistItems, setHasMoreItems]);
+
+    const fetchNextItems = useCallback(async (reset = false, fetchAmount = FETCH_AMOUNT) => {
         if (!hasMoreItems) {
             return;
         }
 
-        if (playlist?.items?.length === playlistItems.length) {
-            setHasMoreItems(false);
-            return;
-        }
+        let itemsToFetch;
 
-        const itemsToFetch = playlist.items.slice(playlistItems.length, playlistItems.length + FETCH_AMOUNT);
+        if (reset) {
+            itemsToFetch = playlist.items.slice(0, fetchAmount);
+        }
+        else {
+            itemsToFetch = playlist.items.slice(playlistItems.length, playlistItems.length + fetchAmount);
+        }
+        
 
         const nextItems = await getMusicDetails(itemsToFetch);
 
-        setPlaylistItems([...playlistItems, ...nextItems]);
+        if (reset) {
+            setPlaylistItems(nextItems);
+            setHasMoreItems(nextItems.length !== playlist.items.length);
+        }
+        else {
+            setPlaylistItems([...playlistItems, ...nextItems]);
+            setHasMoreItems((playlistItems.length, nextItems.length) !== playlist.items.length);
+        }
 
     }, [playlist, playlistItems, setPlaylistItems, hasMoreItems, setHasMoreItems]);
 
@@ -74,7 +108,7 @@ function PlaylistPage() {
             return;
         }
 
-        fetchNextItems();
+        fetchNextItems(true, playlistItems?.length ? playlistItems.length : undefined);
     }, [playlist]);
 
     useEffect(() => {
@@ -140,7 +174,12 @@ function PlaylistPage() {
                         </p>
                     ) : (
                         <>
-                            <PlaylistFeed playlistItems={playlistItems} />
+                            <PlaylistFeed
+                                playlist={playlist}
+                                playlistItems={playlistItems}
+                                isOwned={isOwned}
+                                reloader={fetchCurrentPlaylist}
+                            />
             
                             {
                                 hasMoreItems && (
