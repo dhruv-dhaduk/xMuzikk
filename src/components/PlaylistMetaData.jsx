@@ -62,6 +62,9 @@ function PlaylistMetaData({ playlist, user }) {
     }, [setPlaylistSavedStatus, playlist, user]);
 
     useEffect(() => {
+        if (!user?.$id || !playlist?.$id)
+            return;
+
         playlistService
             .isPlaylistSaved(user.$id, playlist.$id)
             .then((isPlaylistSaved) => {

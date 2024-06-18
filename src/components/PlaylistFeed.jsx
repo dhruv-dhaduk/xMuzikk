@@ -2,11 +2,18 @@ import PlaylistItem from './PlaylistItem.jsx';
 import Popover from './ui/Popover.jsx';
 import { PlayerContext } from '../contexts/PlayerContext.js';
 import { useContext, useEffect, useState } from 'react';
+import { ToastContext } from '../contexts/ToastContext.js';
+import { playlistService } from '../dataManager/AppwriteService.js';
 
-function PlaylistFeed({ playlistItems }) {
+import AddToPlaylist from './AddToPlaylist.jsx';
+import AsyncSubmitBtn from './AsyncSubmitBtn.jsx';
+
+function PlaylistFeed({ playlist, playlistItems, isOwned, reloader }) {
     const playerContext = useContext(PlayerContext);
-    const [showAddToPopover, setShowAddToPopover] = useState(false);
+    const [popoverShowing, setPopoverShowing] = useState(false);
     const [popoverMusicDetails, setPopoverMusicDetails] = useState({});
+
+    const { showToast } = useContext(ToastContext);
 
     if (!playlistItems?.length) {
         return (
@@ -27,15 +34,15 @@ function PlaylistFeed({ playlistItems }) {
                             isPlaying={item.id === playerContext?.playingMusic?.id}
                             playMusic={() => playerContext.playManager.playMusic(item)}
                             showPlayer={playerContext.showPlayer}
-                            handleAddTo={() => { setPopoverMusicDetails(item); setShowAddToPopover(true); } }
+                            showMoreOptions={() => { setPopoverMusicDetails(item); setPopoverShowing(true); } }
                         />
                     ))  
                 }
             </div>
                         
             <Popover
-                popoverShowing={showAddToPopover}
-                setPopoverShowing={setShowAddToPopover}
+                popoverShowing={popoverShowing}
+                setPopoverShowing={setPopoverShowing}
                 className='backdrop:bg-black backdrop:opacity-80 w-72 max-w-[90%] max-h-[90%] p-4 bg-black text-white border border-white border-opacity-30 rounded-2xl'
             >
                 <p className='line-clamp-2'>
@@ -43,14 +50,44 @@ function PlaylistFeed({ playlistItems }) {
                 </p>
                 
                 <button
-                    onClick={() => { playerContext.playManager.addToQueue(popoverMusicDetails.id); setShowAddToPopover(false); }}
+                    onClick={() => { playerContext.playManager.addToQueue(popoverMusicDetails.id); setPopoverShowing(false); }}
                     className='w-full h-9 mt-4 bg-[#101010] text-white text-[14px] font-semibold rounded-full border border-white border-opacity-20 active:scale-90 duration-200'
                 >
                     Add To Queue
                 </button>
 
+                <AddToPlaylist
+                    music={popoverMusicDetails}
+                    callback={() => setPopoverShowing(false)}
+                />
+
+                {
+                    isOwned && (
+                        <AsyncSubmitBtn
+                            className='w-full h-9 mt-4 bg-red-700 text-white text-[14px] font-semibold rounded-full active:scale-90 duration-200'
+                            loadingClassName='w-full h-9 mt-4 flex justify-center items-center bg-red-950  rounded-full'
+                            spinnerSize={20}
+                            asyncClickHandler={async () => {
+                                try {
+                                    await playlistService.removeFromPlaylist(playlist?.$id, popoverMusicDetails?.id);
+                                    showToast.success('Item removed from playlist successfully');
+                                } catch (err) {
+                                    console.error(err);
+                                    showToast.error(err.message);
+                                }
+
+                                await reloader();
+                                setPopoverShowing(false);
+                            }}
+                        >
+                            Remove from playlist
+                        </AsyncSubmitBtn>
+                    )
+                }
+                
+
                 <button
-                    onClick={() => setShowAddToPopover(false)}
+                    onClick={() => setPopoverShowing(false)}
                     className='w-full h-9 mt-4 bg-white text-black text-[17px] font-bold rounded-full active:bg-opacity-80'
                 >
                     Cancel

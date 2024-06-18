@@ -8,10 +8,15 @@ function AsyncSubmitBtn({ children, className, asyncClickHandler, spinnerSize, l
     const handleClick = () => {
         setIsLoading(true);
 
-        asyncClickHandler()
-            .finally(() => {
-                setIsLoading(false);
-            })
+        try {
+            asyncClickHandler()
+                .finally(() => {
+                    setIsLoading(false);
+                })
+        } catch (err) {
+            setIsLoading(false);
+            console.error(err);
+        }
     }
 
     if (isLoading) {
