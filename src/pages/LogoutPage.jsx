@@ -8,6 +8,7 @@ import siteIcon from '/logos/wave.png';
 import { authService } from "../dataManager/AppwriteService.js";
 
 import { ToastContext } from "../contexts/ToastContext.js";
+import { UserContext } from '../contexts/UserContext.js';
 import Spinner from "../components/ui/Spinner.jsx";
 
 function LogoutPage() {
@@ -16,6 +17,7 @@ function LogoutPage() {
     const [disabled, setDisabled] = useState(false);
 
     const { showToast } = useContext(ToastContext);
+    const { reloadUser } = useContext(UserContext);
 
     useEffect(() => {
         if (!logoutPopupShowing) {
@@ -36,6 +38,7 @@ function LogoutPage() {
                 else {
                     console.log(response);
                     showToast.success('Logged out successfully');
+                    reloadUser();
                 }
             })
             .catch((err) => {

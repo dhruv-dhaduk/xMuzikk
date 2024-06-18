@@ -1,10 +1,11 @@
-import { authService } from '../dataManager/AppwriteService.js';
 import AuthLinks from '../components/AuthLinks.jsx';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Feed from '../components/Feed';
 import LoadingFeed from '../components/Loading.jsx';
 import Spinner from '../components/ui/Spinner.jsx';
+
+import { UserContext } from '../contexts/UserContext.js';
 
 import { Recommendation } from '../dataManager';
 const recmnd = new Recommendation();
@@ -16,7 +17,7 @@ function HomePage() {
     const [musicList, setMusicList] = useState([]);
     const [isMoreMusic, setIsMoreMusic] = useState(true);
 
-    const [user, setUser] = useState(undefined);
+    const { user } = useContext(UserContext);
 
     const getMoreData = async () => {
         recmnd.resetFetchingIndex(musicList.length);
@@ -63,21 +64,6 @@ function HomePage() {
             window.removeEventListener('scrollend', handleScrollToEnd);
         };
     });
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const { response } = await authService.getAccountDetails();
-
-            if (!response) {
-                setUser(null);
-            }
-            else {
-                setUser(response);
-            }
-        }
-
-        fetchUser();
-    }, []);
 
     return (
         <div>

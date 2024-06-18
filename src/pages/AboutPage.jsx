@@ -1,27 +1,14 @@
 import { Link } from "react-router-dom";
-import { authService } from "../dataManager/AppwriteService.js";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
+
+import { UserContext } from '../contexts/UserContext.js';
 
 import AuthLinks from "../components/AuthLinks.jsx";
 import Spinner from "../components/ui/Spinner.jsx";
+
 function AboutPage() {
 
-    const [user, setUser] = useState(undefined);
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const { response } = await authService.getAccountDetails();
-
-            if (!response) {
-                setUser(null);
-            }
-            else {
-                setUser(response);
-            }
-        }
-
-        fetchUser();
-    }, []);
+    const { user } = useContext(UserContext);
 
     return (
         <div className='w-full'>

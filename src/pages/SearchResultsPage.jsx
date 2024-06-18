@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Spinner from '../components/ui/Spinner.jsx';
@@ -8,30 +8,17 @@ import Feed from '../components/Feed.jsx';
 
 import NotFoundPage from './NotFoundPage.jsx';
 
-import { searchService, authService } from '../dataManager/AppwriteService.js';
+import { UserContext } from '../contexts/UserContext.js';
+
+import { searchService } from '../dataManager/AppwriteService.js';
 import { getMusicDetails } from '../dataManager/index.js';
 
 function SearchResults() {
+    
     const { documentId } = useParams();
-
-    const [user, setUser] = useState(undefined);
+    const { user } = useContext(UserContext);
     const [searchResults, setSearchResults] = useState(undefined);
     const [searchResultsDetails, setSearchResultsDetails] = useState([]);
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const { response } = await authService.getAccountDetails();
-
-            if (!response) {
-                setUser(null);
-            }
-            else {
-                setUser(response);
-            }
-        }
-
-        fetchUser();
-    }, []);
 
     useEffect(() => {
         if (!user) {

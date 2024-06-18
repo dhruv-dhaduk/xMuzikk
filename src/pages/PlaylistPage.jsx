@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 
-import { playlistService, authService } from '../dataManager/AppwriteService.js';
+import { playlistService } from '../dataManager/AppwriteService.js';
 import { getMusicDetails } from '../dataManager/index.js';
+import { UserContext } from '../contexts/UserContext.js';
 
 import PlaylistMetaData from '../components/PlaylistMetaData.jsx';
 import PlaylistFeed from '../components/PlaylistFeed.jsx';
@@ -13,7 +14,8 @@ const FETCH_AMOUNT = 10;
 
 function PlaylistPage() {
     const { documentId } = useParams();
-    const [user, setUser] = useState(undefined);
+    
+    const { user } = useContext(UserContext);
     
     const [playlist, setPlaylist] = useState({});
     const [playlistItems, setPlaylistItems] = useState([]);
@@ -48,22 +50,6 @@ function PlaylistPage() {
             window.scrollTo(0, scrollY);
         }
     }, [fetchNextItems]);
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const { response } = await authService.getAccountDetails();
-
-            if (!response) {
-                setIsLoading(false);
-                setUser(null);
-            }
-            else {
-                setUser(response);
-            }
-        }
-
-        fetchUser();
-    }, [documentId]);
 
     useEffect(() => {
         if (!user)

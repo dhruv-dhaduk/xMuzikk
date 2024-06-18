@@ -1,8 +1,9 @@
 import { useCallback, useEffect } from "react";
 import { useState, useContext } from "react";
 import { ToastContext } from '../../contexts/ToastContext.js';
+import { UserContext } from '../../contexts/UserContext.js';
 
-import { authService, playlistService } from '../../dataManager/AppwriteService.js';
+import { playlistService } from '../../dataManager/AppwriteService.js';
 
 import Spinner from '../ui/Spinner.jsx';
 import AuthLinks from '../AuthLinks.jsx';
@@ -14,9 +15,9 @@ import AsyncSubmitBtn from '../AsyncSubmitBtn.jsx';
 
 const FETCH_AMOUNT = 10;
 
-function SavedPlaylists({ context, children }) {
+function SavedPlaylists({ children, limit }) {  
 
-    const [user, setUser] = useState(context?.user ? context.user : undefined);
+    const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
     const [savedPlaylistDocumentIDs, setSavedPlaylistDocumentIDs] = useState(undefined);
     const [savedPlaylists, setSavedPlaylists] = useState([]);
@@ -37,7 +38,7 @@ function SavedPlaylists({ context, children }) {
         setHasMoreItems(true);
 
         playlistService
-            .getSavedPlaylists(user.$id, context?.limit ? context.limit : undefined)
+            .getSavedPlaylists(user.$id, limit ? limit : undefined)
             .then((response) => {
                 setSavedPlaylistDocumentIDs(response);
 
@@ -49,7 +50,7 @@ function SavedPlaylists({ context, children }) {
             .finally(() => {                
                 setIsLoading(false);
             });
-    }, [user, context, setSavedPlaylistDocumentIDs, setIsLoading, setSavedPlaylists, setHasMoreItems]);
+    }, [user, limit, setSavedPlaylistDocumentIDs, setIsLoading, setSavedPlaylists, setHasMoreItems]);
 
     const fetchNextItems = useCallback(async (resetIndex = false) => {
 
@@ -65,8 +66,8 @@ function SavedPlaylists({ context, children }) {
         }
 
         let itemsToFetch = [];
-        if (context?.limit) {
-            itemsToFetch = savedPlaylistDocumentIDs.slice(0, context.limit);
+        if (limit) {
+            itemsToFetch = savedPlaylistDocumentIDs.slice(0, limit);
         }
         else {
             if (resetIndex) {
@@ -102,26 +103,7 @@ function SavedPlaylists({ context, children }) {
         }
     }, [fetchNextItems]);
 
-    useEffect(() => {
-        if (user) {
-            return;
-        }
-
-        const fetchUser = async () => {
-            const { response } = await authService.getAccountDetails();
-
-            if (!response) {
-                setUser(null);
-            }
-            else {
-                setUser(response);
-            }
-        }
-
-        fetchUser();
-    }, [context]);
-
-    useEffect(fetchSavedPlaylistDocumentIDs, [user, context]);
+    useEffect(fetchSavedPlaylistDocumentIDs, [user, limit]);
 
     useEffect(() => {
         if (!savedPlaylistDocumentIDs?.length) {
@@ -129,7 +111,7 @@ function SavedPlaylists({ context, children }) {
         }
 
         fetchNextItems(true);
-    }, [savedPlaylistDocumentIDs, context]);
+    }, [savedPlaylistDocumentIDs, limit]);
 
     useEffect(() => {
         if (!savedPlaylists?.length || !hasMoreItems) {
@@ -141,7 +123,7 @@ function SavedPlaylists({ context, children }) {
         return () => {
             window.removeEventListener('scrollend', handleScrollToEnd);
         }
-    }, [savedPlaylists, hasMoreItems, context]);
+    }, [savedPlaylists, hasMoreItems, limit]);
 
     if (isLoading) {
         return (
@@ -181,7 +163,7 @@ function SavedPlaylists({ context, children }) {
                 {
                     savedPlaylistDocumentIDs?.length > 0 && (
                         !savedPlaylists?.length ? (
-                            <LoadingFeed count={context?.limit || 12} />
+                            <LoadingFeed count={limit || 12} />
                         ) : (
                             <div>
                                 <div className='grid grid-cols-1 tablet:grid-cols-feed gap-2 tablet:gap-6 p-2 tablet:p-3'>
