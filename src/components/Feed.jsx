@@ -49,7 +49,10 @@ function Feed({ musicList }) {
                     Add To Queue
                 </button>
 
-                <AddToPlaylist music={popoverMusicDetails} />
+                <AddToPlaylist
+                    music={popoverMusicDetails}
+                    callback={() => setPopoverShowing(false)}
+                />
 
                 <button
                     onClick={() => setPopoverShowing(false)}
