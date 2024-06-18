@@ -519,6 +519,61 @@ class PlaylistService {
         }
 
     }
+
+    async addToPlaylist(playlistDocumentId, musicId) {
+        if (!playlistDocumentId)
+            throw new Error('No playlistDocumentId provided');
+
+        if (!musicId)
+            throw new Error('No musicId provided');
+
+        const playlist = await db.getDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
+            playlistDocumentId,
+            [
+                Query.select(['$id', 'itemCount', 'items', 'thumbnail'])
+            ]
+        );
+
+        if (!playlist?.$id)
+            throw new Error('Playlist not found');
+        
+        const response1 = await db.listDocuments(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_ALLMUSIC_COLLECTION_ID,
+            [
+                Query.select( playlist.items.length === 0 ? ['id', 'thumbnail'] : ['id']),
+                Query.limit(1),
+                Query.equal('id', musicId),
+
+            ]
+        );
+
+        if (!response1?.documents?.length || response1.documents[0].id !== musicId)
+            throw new Error('Music item not found');
+
+
+        if (playlist.items.includes(musicId))
+            throw new Error('Music item is already in the playlist');
+
+        const updatedPlaylistItems = [...playlist.items, musicId];
+
+        const updatedPlaylist = {
+            items: updatedPlaylistItems,
+            itemCount: updatedPlaylistItems.length,
+            thumbnail: playlist.items.length === 0 ? response1.documents[0].thumbnail : playlist.thumbnail
+        }
+
+        const response2 = await db.updateDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
+            playlistDocumentId,
+            updatedPlaylist
+        );
+
+        return response2;
+    }
 }
 
 const playlistService = new PlaylistService();
