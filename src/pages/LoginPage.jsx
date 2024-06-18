@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../dataManager/AppwriteService.js";
 
 import { ToastContext } from "../contexts/ToastContext.js";
+import { UserContext } from '../contexts/UserContext.js';
 import Spinner from "../components/ui/Spinner.jsx";
 
 function LoginPage() {
@@ -15,6 +16,7 @@ function LoginPage() {
     const navigate = useNavigate();
 
     const { showToast } = useContext(ToastContext);
+    const { reloadUser } = useContext(UserContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -42,6 +44,7 @@ function LoginPage() {
                 else {
                     console.log(response);
                     showToast.success('Logged in successfully');
+                    reloadUser();
                     navigate('/about');
                 }
             })

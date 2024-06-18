@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 
-import { authService } from '../dataManager/AppwriteService.js';
+import { UserContext } from '../contexts/UserContext.js';
 
 import Spinner from '../components/ui/Spinner.jsx';
 import AuthLinks from '../components/AuthLinks.jsx';
@@ -11,24 +11,18 @@ import OwnedPlaylists from '../components/playlist/OwnedPlaylists.jsx';
 
 function PlaylistsPage() {
 
-    const [user, setUser] = useState(undefined);
+    const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const fetchUser = async () => {
-            const { response } = await authService.getAccountDetails();
-
-            if (!response) {
-                setUser(null);
-            }
-            else {
-                setUser(response);
-            }
+        if (user === undefined) {
+            setIsLoading(true);
+        }
+        else {
             setIsLoading(false);
         }
 
-        fetchUser();
-    }, []);
+    }, [user]);
 
     if (isLoading) {
         return (
@@ -46,7 +40,7 @@ function PlaylistsPage() {
         <div>
             <CreatePlaylist user={user} />
 
-            <OwnedPlaylists context={{ user, limit: 3 }} >
+            <OwnedPlaylists limit={3} >
                 <div className='flex justify-end p-3'>
                     <Link
                         to='/playlists/me'
@@ -57,7 +51,7 @@ function PlaylistsPage() {
                 </div>
             </OwnedPlaylists>
 
-            <SavedPlaylists context={{ user, limit: 3 }} >
+            <SavedPlaylists limit={3} >
                 <div className='flex justify-end p-3'>
                     <Link
                         to='/playlists/saved'

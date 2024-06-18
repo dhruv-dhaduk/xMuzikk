@@ -3,8 +3,9 @@ import Popover from '../ui/Popover.jsx';
 import { useCallback, useEffect } from "react";
 import { useState, useContext } from "react";
 import { ToastContext } from '../../contexts/ToastContext.js';
+import { UserContext } from '../../contexts/UserContext.js';
 
-import { authService, playlistService } from '../../dataManager/AppwriteService.js';
+import { playlistService } from '../../dataManager/AppwriteService.js';
 
 import Spinner from '../ui/Spinner.jsx';
 import AuthLinks from '../AuthLinks.jsx';
@@ -14,9 +15,9 @@ import AsyncSubmitBtn from '../AsyncSubmitBtn.jsx';
 
 const FETCH_AMOUNT = 10;
 
-function OwnedPlaylists({ context, children }) {
+function OwnedPlaylists({ children, limit }) {
 
-    const [user, setUser] = useState(context?.user ? context.user : undefined);
+    const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
     const [ownedPlaylistDocumentIDs, setOwnedPlaylistDocumentIDs] = useState(undefined);
     const [ownedPlaylists, setOwnedPlaylists] = useState([]);
@@ -37,7 +38,7 @@ function OwnedPlaylists({ context, children }) {
         setHasMoreItems(true);
 
         playlistService
-            .getOwnedPlaylists(user.$id, context?.limit ? context.limit : undefined)
+            .getOwnedPlaylists(user.$id, limit ? limit : undefined)
             .then((response) => {
                 setOwnedPlaylistDocumentIDs(response);
             })
@@ -49,7 +50,7 @@ function OwnedPlaylists({ context, children }) {
                 setIsLoading(false);
             });
 
-    }, [user, context, setOwnedPlaylistDocumentIDs, setIsLoading, setOwnedPlaylists, setHasMoreItems]);
+    }, [user, limit, setOwnedPlaylistDocumentIDs, setIsLoading, setOwnedPlaylists, setHasMoreItems]);
 
     const fetchNextItems = useCallback(async (resetIndex = false) => {
 
@@ -65,8 +66,8 @@ function OwnedPlaylists({ context, children }) {
         }
 
         let itemsToFetch = [];
-        if (context?.limit) {
-            itemsToFetch = ownedPlaylistDocumentIDs.slice(0, context.limit);
+        if (limit) {
+            itemsToFetch = ownedPlaylistDocumentIDs.slice(0, limit);
         }
         else {
             if (resetIndex) {
@@ -102,26 +103,7 @@ function OwnedPlaylists({ context, children }) {
         }
     }, [fetchNextItems]);
 
-    useEffect(() => {
-        if (user) {
-            return;
-        }
-
-        const fetchUser = async () => {
-            const { response } = await authService.getAccountDetails();
-
-            if (!response) {
-                setUser(null);
-            }
-            else {
-                setUser(response);
-            }
-        }
-
-        fetchUser();
-    }, [context]);
-
-    useEffect(fetchOwnedPlaylistDocumentId, [user, context]);
+    useEffect(fetchOwnedPlaylistDocumentId, [user, limit]);
 
     useEffect(() => {
         if (!ownedPlaylistDocumentIDs?.length) {
@@ -129,7 +111,7 @@ function OwnedPlaylists({ context, children }) {
         }
 
         fetchNextItems(true);
-    }, [ownedPlaylistDocumentIDs, context]);
+    }, [ownedPlaylistDocumentIDs, limit]);
 
     useEffect(() => {
         if (!ownedPlaylists?.length || !hasMoreItems) {
@@ -141,7 +123,7 @@ function OwnedPlaylists({ context, children }) {
         return () => {
             window.removeEventListener('scrollend', handleScrollToEnd);
         }
-    }, [ownedPlaylists, hasMoreItems, context]);
+    }, [ownedPlaylists, hasMoreItems, limit]);
 
     if (isLoading) {
         return (
@@ -181,7 +163,7 @@ function OwnedPlaylists({ context, children }) {
                 {
                     ownedPlaylistDocumentIDs?.length > 0 && (
                         !ownedPlaylists?.length ? (
-                            <LoadingFeed count={context?.limit || 12} />
+                            <LoadingFeed count={limit || 12} />
                         ) : (
                             <div>
                                 <div className='grid grid-cols-1 tablet:grid-cols-feed gap-2 tablet:gap-6 p-2 tablet:p-3'>

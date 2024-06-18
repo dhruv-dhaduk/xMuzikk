@@ -1,39 +1,26 @@
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { authService, searchService } from '../dataManager/AppwriteService.js';
+import { searchService } from '../dataManager/AppwriteService.js';
 
 import Spinner from '../components/ui/Spinner.jsx';
 import AuthLinks from '../components/AuthLinks.jsx';
 import SearchKeywords from '../components/SearchKeywords.jsx';
 
 import { ToastContext } from '../contexts/ToastContext.js';
+import { UserContext } from '../contexts/UserContext.js';
 
 import { convertIdFromYtLink, convertIdFromYtPlaylistLink } from '../utils/converters.js';
 
 function SearchPage() {
-    const [user, setUser] = useState(undefined);
+
+    const { user } = useContext(UserContext);
     const [searchInput, setSearchInput] = useState('');
     const [searchLimit, setSearchLimit] = useState(undefined);
     const [isLoading, setIsLoading] = useState(false);
 
     const { showToast } = useContext(ToastContext);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const { response } = await authService.getAccountDetails();
-
-            if (!response) {
-                setUser(null);
-            }
-            else {
-                setUser(response);
-            }
-        }
-
-        fetchUser();
-    }, []);
 
     useEffect(() => {
         if (!user)

@@ -26,6 +26,9 @@ function useUser() {
 
     useEffect(fetchUser, []);
 
+    window.user = user;
+    window.reloadUser = fetchUser;
+
     return [user, fetchUser];
 }
 
