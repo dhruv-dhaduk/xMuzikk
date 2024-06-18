@@ -52,6 +52,11 @@ function PlaylistPage() {
             return;
         }
 
+        if (playlist?.items?.length === playlistItems.length) {
+            setHasMoreItems(false);
+            return;
+        }
+
         let itemsToFetch;
 
         if (reset) {
