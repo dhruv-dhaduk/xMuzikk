@@ -18,6 +18,8 @@ import { useUser } from './hooks/useUser.js';
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 
+import { DragDropContext } from '@hello-pangea/dnd';
+
 function App() {
     
     const [isPlayerShowing, showPlayer, hidePlayer] = usePopUpPage();
@@ -31,6 +33,7 @@ function App() {
         playManager,
         looping,
         nextLoopingOption,
+        moveQueueItem,
         refreshPlayer
     } = useYT(playerElementID);
 
@@ -44,34 +47,42 @@ function App() {
         error: (content, options) => toast.error(content, { draggable: true, ...options })
     }
 
+    const handleOnDragEnd = (result) => {
+        if (result.source.droppableId === 'queue' && result.destination.droppableId === 'queue') {
+            moveQueueItem(result.source.index, result.destination.index);
+        }
+    }
+
     return (
         <>  
             <UserContext.Provider value={{ user, reloadUser }}>
                 
                 <ToastContext.Provider value={{ showToast }}>
                     <PlayerContext.Provider value={{isPlayerShowing, showPlayer, isYtApiLoaded, playerState, playerRef, playingMusic, queue, playManager, looping, nextLoopingOption, refreshPlayer}}>
-
-                        <Header className='z-header w-full h-header-m tablet:h-header fixed inset-x-0 top-0'/>
                         
-                        <main className='mt-main-t-m tablet:mt-main-t mb-main-b-m tablet:mb-main-b tablet:ml-main-l'>
-                            <Outlet />
-                        </main>
+                        <DragDropContext onDragEnd={handleOnDragEnd}>
+                            <Header className='z-header w-full h-header-m tablet:h-header fixed inset-x-0 top-0'/>
+                            
+                            <main className='mt-main-t-m tablet:mt-main-t mb-main-b-m tablet:mb-main-b tablet:ml-main-l'>
+                                <Outlet />
+                            </main>
 
-                        <Footer
-                            onClick={showPlayer}
-                            playPreviousMusic={playManager.playPreviousMusic}
-                            playNextMusic={playManager.playNextMusic}
-                            className='z-footer w-full h-footer-m tablet:h-footer fixed inset-x-0 bottom-footer-b-m tablet:bottom-0' 
-                            />
+                            <Footer
+                                onClick={showPlayer}
+                                playPreviousMusic={playManager.playPreviousMusic}
+                                playNextMusic={playManager.playNextMusic}
+                                className='z-footer w-full h-footer-m tablet:h-footer fixed inset-x-0 bottom-footer-b-m tablet:bottom-0' 
+                                />
 
-                        <PlayerPage 
-                            isPlayerShowing={isPlayerShowing}
-                            playerElementID={playerElementID}
-                            hidePlayer={hidePlayer}
-                            className='z-playerpage'
-                            />
+                            <PlayerPage 
+                                isPlayerShowing={isPlayerShowing}
+                                playerElementID={playerElementID}
+                                hidePlayer={hidePlayer}
+                                className='z-playerpage'
+                                />
 
-                        <NavBar className='z-navbar w-full tablet:w-navbar h-navbar-m tablet:h-full fixed inset-x-0 tablet:top-14 bottom-0 tablet:left-0' />
+                            <NavBar className='z-navbar w-full tablet:w-navbar h-navbar-m tablet:h-full fixed inset-x-0 tablet:top-14 bottom-0 tablet:left-0' />
+                        </DragDropContext>
                         
                     </PlayerContext.Provider>
                 </ToastContext.Provider>

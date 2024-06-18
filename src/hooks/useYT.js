@@ -86,6 +86,14 @@ function useYT(playerElementID) {
             setLooping(loopingOptions.LOOP);
     }, [looping, setLooping]);
 
+    const moveQueueItem = useCallback((from, to) => {
+        const newQueue = Array.from(queue);
+        const [item] = newQueue.splice(from, 1);
+        newQueue.splice(to, 0, item);
+
+        setQueue(newQueue);
+    }, [queue, setQueue]);
+
     const refreshPlayer = useCallback(() => {
         setRefreshVar(!refreshVar);
     }, [setRefreshVar, refreshVar]);
@@ -179,7 +187,7 @@ function useYT(playerElementID) {
         loadPlaylist
     }
 
-    return {isYtApiLoaded, playerState, playerRef, playingMusic, playManager, queue, looping, nextLoopingOption, refreshPlayer};
+    return {isYtApiLoaded, playerState, playerRef, playingMusic, playManager, queue, looping, nextLoopingOption, moveQueueItem, refreshPlayer};
 }
 
 function useYtApiLoadedStatus() {

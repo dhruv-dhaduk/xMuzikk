@@ -6,6 +6,8 @@ import { getMusicDetails } from '../../dataManager/index.js';
 import closeIcon from '/icons/close.svg';
 import Icon from "./Icon.jsx";
 
+import { Droppable, Draggable } from '@hello-pangea/dnd';
+
 function Queue({ musicIDs, queueVisible, setQueueVisible, playingMusic, playFromQueueAt, removeFromQueue }) {
     const [musicDetails, setMusicDetails] = useState([]);
     const containerRef = useRef(null);
@@ -69,21 +71,36 @@ function Queue({ musicIDs, queueVisible, setQueueVisible, playingMusic, playFrom
                     className='w-10 p-1.5 rounded-full bg-white bg-opacity-25'
                 />
             </div>
-            <div
-                className='flex-1 w-full overflow-y-auto'
-            >
-                { 
-                    musicDetails.map((musicItem, i) => (
-                        <QueueItem
-                            key={musicItem.id}
-                            music={musicItem}
-                            isPlaying={playingMusic.id === musicItem.id}
-                            play={() => playFromQueueAt(i)}
-                            remove={() => removeFromQueue(musicItem.id)}
-                        />
-                    ))
-                }
-            </div>
+
+            <Droppable droppableId='queue'>
+                {(provided) => (
+                    <div
+                        className='flex-1 w-full overflow-y-auto'
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                    >
+                        { 
+                            musicDetails.map((musicItem, i) => (
+                                <Draggable key={musicItem.id} draggableId={musicItem.id} index={i}>
+                                    {(provided) => (
+                                        <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
+                                            <QueueItem
+                                                music={musicItem}
+                                                isPlaying={playingMusic.id === musicItem.id}
+                                                play={() => playFromQueueAt(i)}
+                                                remove={() => removeFromQueue(musicItem.id)}
+                                            />
+                                        </div>
+                                    )}
+                                </Draggable>
+                            ))
+                        }
+
+                        { provided.placeholder }
+                    </div>
+                )}        
+            </Droppable>
+
         </div>
     );
 }
