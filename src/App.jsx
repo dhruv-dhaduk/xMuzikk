@@ -33,6 +33,7 @@ function App() {
         playManager,
         looping,
         nextLoopingOption,
+        moveQueueItem,
         refreshPlayer
     } = useYT(playerElementID);
 
@@ -47,7 +48,9 @@ function App() {
     }
 
     const handleOnDragEnd = (result) => {
-        console.log(result);
+        if (result.source.droppableId === 'queue' && result.destination.droppableId === 'queue') {
+            moveQueueItem(result.source.index, result.destination.index);
+        }
     }
 
     return (
@@ -57,7 +60,7 @@ function App() {
                 <ToastContext.Provider value={{ showToast }}>
                     <PlayerContext.Provider value={{isPlayerShowing, showPlayer, isYtApiLoaded, playerState, playerRef, playingMusic, queue, playManager, looping, nextLoopingOption, refreshPlayer}}>
                         
-                        <DragDropContext>
+                        <DragDropContext onDragEnd={handleOnDragEnd}>
                             <Header className='z-header w-full h-header-m tablet:h-header fixed inset-x-0 top-0'/>
                             
                             <main className='mt-main-t-m tablet:mt-main-t mb-main-b-m tablet:mb-main-b tablet:ml-main-l'>
