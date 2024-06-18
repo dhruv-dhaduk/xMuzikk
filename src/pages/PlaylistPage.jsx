@@ -21,6 +21,7 @@ function PlaylistPage() {
     const [playlistItems, setPlaylistItems] = useState([]);
     const [hasMoreItems, setHasMoreItems] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
+    const [isOwned, setIsOwned] = useState(false);
 
     const fetchNextItems = useCallback(async () => {
         if (!hasMoreItems) {
@@ -87,6 +88,14 @@ function PlaylistPage() {
             window.removeEventListener('scrollend', handleScrollToEnd);
         }
     }, [playlistItems, hasMoreItems]);
+
+    useEffect(() => {
+        playlistService
+            .isPlaylistOwned(user?.$id, documentId)
+            .then((ans) => {
+                setIsOwned(ans);
+            })
+    }, [documentId, user]);
 
 
     if (isLoading) {
