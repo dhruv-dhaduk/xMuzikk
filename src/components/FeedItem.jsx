@@ -1,9 +1,9 @@
 import { convertDurationFormat, convertUploadTimeFormat } from '../utils/converters.js';
 
 import playIcon from '/icons/play.svg';
-import addToPlaylistIcon from '/icons/add_to_playlist.svg';
+import threeDotsIcon from '/icons/three_dots.svg';
 
-function FeedItem({ music, isPlaying, playMusic, showPlayer, handleAddTo }) {
+function FeedItem({ music, isPlaying, playMusic, showPlayer, showMoreOptions }) {
     return (
         <div 
             onClick={() => { 
@@ -48,9 +48,9 @@ function FeedItem({ music, isPlaying, playMusic, showPlayer, handleAddTo }) {
 
                 <div className='w-8 tablet:w-fit h-full tablet:h-8 flex flex-col tablet:flex-row justify-between tablet:justify-center items-center absolute inset-y-0 tablet:top-auto right-0 tablet:right-0 tablet:bottom-0'>
                     <Icon
-                        iconSrc={addToPlaylistIcon}
-                        className='p-1'
-                        onClick={handleAddTo}
+                        iconSrc={threeDotsIcon}
+                        className='p-2'
+                        onClick={showMoreOptions}
                     />
                     <Icon
                         iconSrc={playIcon}

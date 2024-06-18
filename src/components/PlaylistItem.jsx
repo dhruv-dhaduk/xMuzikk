@@ -2,9 +2,9 @@ import { convertDurationFormat, convertUploadTimeFormat } from '../utils/convert
 import isMobileDevice from '../utils/isMobileDevice.js';
 
 import playIcon from '/icons/play.svg';
-import addToPlaylistIcon from '/icons/add_to_playlist.svg';
+import threeDotsIcon from '/icons/three_dots.svg';
 
-function PlaylistItem({ item, index, isPlaying, playMusic, showPlayer, handleAddTo }) {
+function PlaylistItem({ item, index, isPlaying, playMusic, showPlayer, showMoreOptions }) {
 
     return (
         <div
@@ -55,9 +55,9 @@ function PlaylistItem({ item, index, isPlaying, playMusic, showPlayer, handleAdd
 
             <div className='flex-none w-8 flex flex-col justify-between items-center bg-slate-'>
                 <Icon
-                    iconSrc={addToPlaylistIcon}
-                    className='p-1'
-                    onClick={handleAddTo}
+                    iconSrc={threeDotsIcon}
+                    className='p-2'
+                    onClick={showMoreOptions}
                 />
                 <Icon
                     iconSrc={playIcon}

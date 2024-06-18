@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 
 function PlaylistFeed({ playlistItems }) {
     const playerContext = useContext(PlayerContext);
-    const [showAddToPopover, setShowAddToPopover] = useState(false);
+    const [popoverShowing, setPopoverShowing] = useState(false);
     const [popoverMusicDetails, setPopoverMusicDetails] = useState({});
 
     if (!playlistItems?.length) {
@@ -27,15 +27,15 @@ function PlaylistFeed({ playlistItems }) {
                             isPlaying={item.id === playerContext?.playingMusic?.id}
                             playMusic={() => playerContext.playManager.playMusic(item)}
                             showPlayer={playerContext.showPlayer}
-                            handleAddTo={() => { setPopoverMusicDetails(item); setShowAddToPopover(true); } }
+                            showMoreOptions={() => { setPopoverMusicDetails(item); setPopoverShowing(true); } }
                         />
                     ))  
                 }
             </div>
                         
             <Popover
-                popoverShowing={showAddToPopover}
-                setPopoverShowing={setShowAddToPopover}
+                popoverShowing={popoverShowing}
+                setPopoverShowing={setPopoverShowing}
                 className='backdrop:bg-black backdrop:opacity-80 w-72 max-w-[90%] max-h-[90%] p-4 bg-black text-white border border-white border-opacity-30 rounded-2xl'
             >
                 <p className='line-clamp-2'>
@@ -43,14 +43,14 @@ function PlaylistFeed({ playlistItems }) {
                 </p>
                 
                 <button
-                    onClick={() => { playerContext.playManager.addToQueue(popoverMusicDetails.id); setShowAddToPopover(false); }}
+                    onClick={() => { playerContext.playManager.addToQueue(popoverMusicDetails.id); setPopoverShowing(false); }}
                     className='w-full h-9 mt-4 bg-[#101010] text-white text-[14px] font-semibold rounded-full border border-white border-opacity-20 active:scale-90 duration-200'
                 >
                     Add To Queue
                 </button>
 
                 <button
-                    onClick={() => setShowAddToPopover(false)}
+                    onClick={() => setPopoverShowing(false)}
                     className='w-full h-9 mt-4 bg-white text-black text-[17px] font-bold rounded-full active:bg-opacity-80'
                 >
                     Cancel
