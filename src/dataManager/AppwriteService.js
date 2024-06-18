@@ -411,6 +411,33 @@ class PlaylistService {
         return true;
     }
 
+    async isPlaylistOwned(userId, playlistDocumentId) {
+        if (!userId || !playlistDocumentId) {
+            return false;
+        }
+
+        try {
+            const response = await db.listDocuments(
+                import.meta.env.VITE_APPWRITE_DB_ID,
+                import.meta.env.VITE_APPWRITE_USERS_PLAYLISTS_COLLECTION_ID,
+                [
+                    Query.select(['$id']),
+                    Query.limit(1),
+                    Query.equal('userId', userId),
+                    Query.equal('playlistDocumentId', playlistDocumentId)
+                ]
+            );
+
+            if (!response?.documents?.length) {
+                return false;
+            }
+        } catch (err) {
+            return false;
+        }
+
+        return true;
+    }
+
     async createNewPlaylist(userId, title) {
         if (!userId)
             throw new Error('No userId provided');
