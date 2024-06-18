@@ -3,10 +3,14 @@ import Popover from "./ui/Popover.jsx";
 import { PlayerContext } from '../contexts/PlayerContext.js';
 import { useContext, useEffect, useState } from "react";
 
+import AsyncSubmitBtn from './AsyncSubmitBtn.jsx';
+
 function Feed({ musicList }) {
     const playerContext = useContext(PlayerContext);
     const [popoverShowing, setPopoverShowing] = useState(false);
     const [popoverMusicDetails, setPopoverMusicDetails] = useState({});
+
+    const [userPlaylists, setUserPlaylists] = useState([]);
 
     useEffect(() => {
         if (popoverShowing) {
@@ -46,6 +50,33 @@ function Feed({ musicList }) {
                 >
                     Add To Queue
                 </button>
+
+                {
+                    userPlaylists.length > 0 && (
+                        <div className='w-full mt-4 p-2 rounded-lg bg-[#101010] border border-white border-opacity-20'>
+                            <p className='mb-2 font-semibold'>
+                                Add to playlist
+                            </p>
+
+                            <div className='w-full max-h-48 px-2 overflow-y-auto'>
+                                {
+                                    userPlaylists.map((playlist, i) => (
+                                        <AsyncSubmitBtn
+                                            key={i}
+                                            className='w-full h-7 my-2 flex justify-center items-center rounded-md bg-[#1e1e1e] border border-white border-opacity-10 active:scale-90 duration-200'
+                                            loadingClassName='w-full h-7 my-2 flex justify-center items-center rounded-md bg-[#1e1e1e] border border-white border-opacity-10'
+                                            spinnerSize={20}
+                                        >
+                                            <span className='text-xs line-clamp-1 break-all'>
+                                                { playlist.title }
+                                            </span>
+                                        </AsyncSubmitBtn>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                    )
+                }
 
                 <button
                     onClick={() => setPopoverShowing(false)}
