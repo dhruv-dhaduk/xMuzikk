@@ -682,7 +682,8 @@ class PlaylistService {
         const updatedItems = [...new Set([...musicIDs, ...playlist.items])];
 
         const updatedPlaylist = {
-            items: updatedItems
+            items: updatedItems,
+            itemCount: updatedItems.length,
         };
 
         if (updatedPlaylist.items.length === 0) {
