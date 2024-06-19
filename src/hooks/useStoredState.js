@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 function useStoredState(initialValue, key) {
     let storedItemStr = localStorage.getItem(key);
@@ -20,11 +20,17 @@ function useStoredState(initialValue, key) {
 function useStoredStateEncoded(initialValue, key, encoder, fetcher) {
 
     const [value, setValue] = useState(initialValue);
+    const timeoutIdRef = useRef(null);
 
     const setValueAndStore = useCallback((newValue) => {
         const encodedValue = encoder(newValue);
-        localStorage.setItem(key, JSON.stringify(encodedValue));
         setValue(newValue);
+
+        clearTimeout(timeoutIdRef.current);
+        timeoutIdRef.current = setTimeout(() => {
+            localStorage.setItem(key, JSON.stringify(encodedValue));
+        }, 1000);
+
     }, [setValue]);
 
     useEffect(() => {
@@ -39,7 +45,9 @@ function useStoredStateEncoded(initialValue, key, encoder, fetcher) {
         }
 
         fetcher(storedItem)
-            .then((result) => { setValue(result)});
+            .then((result) => {
+                setValueAndStore(result)
+            });
     }, []);
 
     return [value, setValueAndStore];
