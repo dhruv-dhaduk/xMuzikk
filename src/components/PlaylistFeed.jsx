@@ -8,6 +8,8 @@ import { playlistService } from '../dataManager/AppwriteService.js';
 import AddToPlaylist from './AddToPlaylist.jsx';
 import AsyncSubmitBtn from './AsyncSubmitBtn.jsx';
 
+import { Droppable, Draggable } from '@hello-pangea/dnd';
+
 function PlaylistFeed({ playlist, playlistItems, isOwned, reloader }) {
     const playerContext = useContext(PlayerContext);
     const [popoverShowing, setPopoverShowing] = useState(false);
@@ -97,6 +99,41 @@ function PlaylistFeed({ playlist, playlistItems, isOwned, reloader }) {
     )
 }
 
+function PlaylistFeedRearrange({ playlistItems }) {
+    return (
+        <Droppable droppableId='playlist'>
+            {(provided) => (
+                <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                >
+                    {
+                        playlistItems.map((item, i) => (
+                            <Draggable key={item.id} draggableId={item.id} index={i}>
+                                {(provided) => (
+                                    <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
+                                        <PlaylistItem
+                                            item={item}
+                                            isRearrangable={true}
+                                            index={i + 1}
+                                            isPlaying={false}
+                                            playMusic={() => {}}
+                                            showPlayer={() => {}}
+                                            showMoreOptions={() => {}}                
+                                        />
+                                    </div>
+                                )}
+                            </Draggable>
+                        ))
+                    }
+
+                    { provided.placeholder }
+                </div>
+            )}
+        </Droppable>
+    );
+}
+
 function LoadingFeed({ count = 10 }) {
     return (
         <div>
@@ -123,3 +160,4 @@ function LoadingFeedItem() {
 }
 
 export default PlaylistFeed;
+export { PlaylistFeedRearrange };

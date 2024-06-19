@@ -3,21 +3,32 @@ import isMobileDevice from '../utils/isMobileDevice.js';
 
 import playIcon from '/icons/play.svg';
 import threeDotsIcon from '/icons/three_dots.svg';
+import dragIcon from '/icons/hamburger.svg';
 
-function PlaylistItem({ item, index, isPlaying, playMusic, showPlayer, showMoreOptions }) {
+function PlaylistItem({ item, index, isRearrangable, isPlaying, playMusic, showPlayer, showMoreOptions }) {
 
     return (
         <div
             onClick={() => {
-                if (!isPlaying)
-                    playMusic();
-                showPlayer();
+                if (isRearrangable) {
+                    if (!isPlaying)
+                        playMusic();
+                    showPlayer();
+                }
             }}
             className={`flex gap-2 p-3 bg-transparent from-primary-light-35 to-primary-dark-35 rounded-xl cursor-pointer select-none ${isPlaying ? 'bg-gradient-to-r' : ''} ${!isMobileDevice && !isPlaying ? 'hover:bg-white hover:bg-opacity-15' : ''}`}
         >   
 
             <p className='flex-none flex justify-center items-center w-[3ch] text-stone-300 font-semibold'>
-                { index }
+                {
+                    isRearrangable ? (
+                        <Icon
+                            iconSrc={dragIcon}
+                            className='p-0.5'
+                        />
+                    ) : index
+                }
+                {/* { index } */}
             </p>
 
             <div className='flex-none w-[6.5rem] aspect-square'>
@@ -53,18 +64,23 @@ function PlaylistItem({ item, index, isPlaying, playMusic, showPlayer, showMoreO
                 </SmallP>
             </div>
 
-            <div className='flex-none w-8 flex flex-col justify-between items-center bg-slate-'>
-                <Icon
-                    iconSrc={threeDotsIcon}
-                    className='p-2'
-                    onClick={showMoreOptions}
-                />
-                <Icon
-                    iconSrc={playIcon}
-                    className='p-2'
-                    onClick={!isPlaying ? playMusic : null}
-                />
-            </div>
+            {
+                !isRearrangable && (
+                    <div className='flex-none w-8 flex flex-col justify-between items-center bg-slate-'>
+                        <Icon
+                            iconSrc={threeDotsIcon}
+                            className='p-2'
+                            onClick={showMoreOptions}
+                        />
+                        <Icon
+                            iconSrc={playIcon}
+                            className='p-2'
+                            onClick={!isPlaying ? playMusic : null}
+                        />
+                    </div>
+                )
+            }
+
 
         </div>
     )

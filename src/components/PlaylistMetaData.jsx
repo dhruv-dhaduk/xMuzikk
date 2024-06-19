@@ -13,7 +13,7 @@ import { ToastContext } from '../contexts/ToastContext.js';
 
 import { playlistService } from '../dataManager/AppwriteService.js';
 
-function PlaylistMetaData({ playlist, user, isOwned }) {
+function PlaylistMetaData({ playlist, user, isOwned, isRearranging, setIsRearranging }) {
     const { playManager } = useContext(PlayerContext);
     const { showToast } = useContext(ToastContext);
     const [playlistSavedStatus, setPlaylistSavedStatus] = useState(undefined);
@@ -186,6 +186,7 @@ function PlaylistMetaData({ playlist, user, isOwned }) {
                     <div className='flex justify-between items-center gap-2 py-2 flex-wrap'>
                         <button
                             className='flex-1 h-9 font-semibold rounded-lg bg-white text-black active:bg-opacity-80'
+                            onClick={() => setIsRearranging(!isRearranging)}
                         >
                             Rearrange items
                         </button>

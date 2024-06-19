@@ -6,7 +6,7 @@ import { getMusicDetails } from '../dataManager/index.js';
 import { UserContext } from '../contexts/UserContext.js';
 
 import PlaylistMetaData from '../components/PlaylistMetaData.jsx';
-import PlaylistFeed from '../components/PlaylistFeed.jsx';
+import PlaylistFeed, { PlaylistFeedRearrange } from '../components/PlaylistFeed.jsx';
 import Spinner from '../components/ui/Spinner.jsx';
 import AuthLinks from '../components/AuthLinks.jsx';
 
@@ -22,6 +22,7 @@ function PlaylistPage() {
     const [hasMoreItems, setHasMoreItems] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [isOwned, setIsOwned] = useState(false);
+    const [isRearranging, setIsRearranging] = useState(true);
 
     const fetchCurrentPlaylist = useCallback(async (reload = false) => {
         if (!user)
@@ -121,12 +122,14 @@ function PlaylistPage() {
             return;
         }
 
-        window.addEventListener('scrollend', handleScrollToEnd);
+        if (!isRearranging) {
+            window.addEventListener('scrollend', handleScrollToEnd);
+        }
 
         return () => {
             window.removeEventListener('scrollend', handleScrollToEnd);
         }
-    }, [playlistItems, hasMoreItems]);
+    }, [playlistItems, hasMoreItems, isRearranging]);
 
     useEffect(() => {
         playlistService
@@ -168,7 +171,13 @@ function PlaylistPage() {
     return (
         <div className='laptop:flex laptop:justify-center laptop:items-start laptop:px-6'>
             <div className='flex-1 laptop:max-w-[25rem] laptop:sticky top-header-height p-4 tablet:p-6'>
-                <PlaylistMetaData playlist={playlist} user={user} isOwned={isOwned} />
+                <PlaylistMetaData
+                    playlist={playlist}
+                    user={user}
+                    isOwned={isOwned}
+                    isRearranging={isRearranging}
+                    setIsRearranging={setIsRearranging}
+                />
             </div>
 
             <div className='flex-1 laptop:max-w-[60rem] tablet:py-6'>
@@ -179,12 +188,20 @@ function PlaylistPage() {
                         </p>
                     ) : (
                         <>
-                            <PlaylistFeed
-                                playlist={playlist}
-                                playlistItems={playlistItems}
-                                isOwned={isOwned}
-                                reloader={fetchCurrentPlaylist}
-                            />
+                            {
+                                isRearranging ? (
+                                    <PlaylistFeedRearrange 
+                                        playlistItems={playlistItems}
+                                    />
+                                ) : (
+                                    <PlaylistFeed
+                                        playlist={playlist}
+                                        playlistItems={playlistItems}
+                                        isOwned={isOwned}
+                                        reloader={fetchCurrentPlaylist}
+                                    />
+                                )
+                            }
             
                             {
                                 hasMoreItems && (
