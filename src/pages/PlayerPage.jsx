@@ -126,7 +126,7 @@ function PlayerPage({ playerElementID, isPlayerShowing, hidePlayer, className })
                         />
 
                         <Queue 
-                            musicIDs={queue}
+                            queue={queue}
                             queueVisible={queueVisible}    
                             setQueueVisible={setQueueVisible}
                             playingMusic={playingMusic}

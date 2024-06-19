@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
 import { YTstates, localStorageKeys, loopingOptions } from "../constants.js";
-import { useStoredState } from './useStoredState.js';
+import { useStoredState, useStoredStateEncoded } from './useStoredState.js';
 
 import { getMusicDetails } from '../dataManager/index.js';
 
@@ -10,38 +10,36 @@ function useYT(playerElementID) {
     const [playerState, setPlayerState] = useState(YTstates.NULL);
     const [playingMusic, setPlayingMusic] = useStoredState({}, localStorageKeys.playingMusic);
     const [looping, setLooping] = useStoredState(loopingOptions.LOOP, localStorageKeys.looping);
-    const [queue, setQueue] = useStoredState([], localStorageKeys.queue);
+    const [queue, setQueue] = useStoredStateEncoded([], localStorageKeys.queue, (list) => list.map(item => item.id), getMusicDetails);
     const playerRef = useRef({});
 
     const [refreshVar, setRefreshVar] = useState(false);
 
     const playMusic = useCallback((item) => {
         setPlayingMusic(item);
-        setQueue([item.id]);
+        setQueue([item]);
     }, [setPlayingMusic, setQueue]);
 
     const loadPlaylist = useCallback(async (playlistItems) => {
         if (!playlistItems?.length)
             return;
 
-        const firstItem = (await getMusicDetails([playlistItems[0]], true))[0];
+        const playlistItemsDetails = await getMusicDetails(playlistItems);
         
-        setPlayingMusic(firstItem);
-        setQueue(playlistItems);
+        setPlayingMusic(playlistItemsDetails[0]);
+        setQueue(playlistItemsDetails);
     }, [setPlayingMusic, setQueue]);
 
     const playFromQueueAt = useCallback(async (index) => {
-        const id = queue[index];
-        if (!id) return;
-
-        const item = (await getMusicDetails([id], true))[0];
+        const item = queue[index];
+        if (!item) return;
 
         setPlayingMusic(item);
 
     }, [queue, setPlayingMusic]);
 
     const playPreviousMusic = useCallback(() => {
-        const currentQueueIndex = queue.indexOf(playingMusic.id);
+        const currentQueueIndex = queue.findIndex(item => item.id === playingMusic.id);
         if (currentQueueIndex > 0) {
             playFromQueueAt(currentQueueIndex - 1);
         }
@@ -49,7 +47,7 @@ function useYT(playerElementID) {
 
     const playNextMusic = useCallback(() => {
         if (!queue.length) return;
-        const currentQueueIndex = queue.indexOf(playingMusic.id);
+        const currentQueueIndex = queue.findIndex(item => item.id === playingMusic.id);
 
         if (currentQueueIndex < queue.length - 1) {
             playFromQueueAt(currentQueueIndex + 1);
@@ -61,19 +59,21 @@ function useYT(playerElementID) {
         }
     }, [queue, playingMusic, playFromQueueAt, looping]);
 
-    const addToQueue = useCallback((id) => {
-        if (queue.indexOf(id) === -1)
-            setQueue([...queue, id]);
+    const addToQueue = useCallback(async (id) => {
+        const index = queue.findIndex(item => item.id === id);
+        if (index === -1) {
+            const item = (await getMusicDetails([id], false))[0];
+            setQueue([...queue, item]);
+        }
         else {
-            setQueue([...queue.filter(item => item !== id), id]);
+            setQueue([...queue.filter(item => item.id !== id), queue[index]]);
         }
     }, [queue, setQueue]);
 
-    const removeFromQueue = useCallback(async (id) =>    {
-        const itemIndex = queue.indexOf(id);
-        if (itemIndex === -1 || id === playingMusic.id) return;
+    const removeFromQueue = useCallback(async (id) => {
+        if (id === playingMusic.id) return;
 
-        setQueue(queue.filter(item => item !== id));
+        setQueue(queue.filter(item => item.id !== id));
 
     }, [queue, setQueue, playingMusic]);
 
@@ -167,8 +167,8 @@ function useYT(playerElementID) {
             }
         }
 
-        if (!queue.length || queue.indexOf(playingMusic.id) === -1)
-            setQueue([playingMusic.id, ...queue]);
+        if (!queue.length || queue.findIndex(item => item.id === playingMusic.id) === -1)
+            setQueue([playingMusic, ...queue]);
         
         return () => {
             if (playerRef?.current?.destroy) 
