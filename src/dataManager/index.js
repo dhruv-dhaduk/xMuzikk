@@ -56,14 +56,23 @@ class Recommendation {
     }
 };
 
-async function getMusicDetails(ids, saveData = false) {
+async function getMusicDetails(ids, saveData = false, cached = []) {
+    
+    const cachedWarehouse = new Map();
+    
+    cached.forEach(item => {
+        cachedWarehouse.set(item.id, item);
+    });
+    
+    const idsToFetch = ids.filter(id => !cachedWarehouse.has(id));
+
     let dataFromIDB = {};
     try {
-        dataFromIDB = await idb.get(ids);
+        dataFromIDB = await idb.get(idsToFetch);
     } catch (err) {
         console.log(`Error : ${err}`);
         dataFromIDB.success = new Map();
-        dataFromIDB.fail = ids;
+        dataFromIDB.fail = idsToFetch;
     }
 
     let dataFromAppwrite = new Map();
@@ -84,6 +93,10 @@ async function getMusicDetails(ids, saveData = false) {
     }
 
     return ids.map((id) => {
+        const cachedData = cachedWarehouse.get(id);
+        if (cachedData)
+            return cachedData;
+        
         const idbData = dataFromIDB.success.get(id);
         if (idbData)
             return idbData;
@@ -94,6 +107,6 @@ async function getMusicDetails(ids, saveData = false) {
         
         return {id, notFound: true};
     });
-} 
+}
 
 export { Recommendation, getMusicDetails };

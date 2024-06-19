@@ -1,47 +1,12 @@
 import { useEffect, useRef } from "react";
-import { useState } from "react";
-
-import { getMusicDetails } from '../../dataManager/index.js';
 
 import closeIcon from '/icons/close.svg';
 import Icon from "./Icon.jsx";
 
 import { Droppable, Draggable } from '@hello-pangea/dnd';
 
-function Queue({ musicIDs, queueVisible, setQueueVisible, playingMusic, playFromQueueAt, removeFromQueue }) {
-    const [musicDetails, setMusicDetails] = useState([]);
+function Queue({ queue, queueVisible, setQueueVisible, playingMusic, playFromQueueAt, removeFromQueue }) {
     const containerRef = useRef(null);
-
-    useEffect(() => {
-        const updateMusicDetails = async () => {
-            
-            const existingMusic = musicDetails.map(music => music.id);
-            const newMusicIDs = musicIDs.filter(id => !existingMusic.includes(id));
-
-            const response = await getMusicDetails(newMusicIDs);
-
-            const warehouse = new Map();
-
-            musicDetails.forEach(music => {
-                warehouse.set(music.id, music);
-            });
-            response.forEach(music => {
-                warehouse.set(music.id, music);
-            });
-
-            setMusicDetails(
-                musicIDs.map(id => {
-                    const music = warehouse.get(id);
-                    if (music) 
-                        return music;
-                    else
-                        return {id, notFound: true};
-                })
-            );
-        }
-
-        updateMusicDetails();
-    }, [musicIDs]);
 
     useEffect(() => {
         containerRef.current.classList.remove('animate-blink-once-1s');
@@ -80,7 +45,7 @@ function Queue({ musicIDs, queueVisible, setQueueVisible, playingMusic, playFrom
                         {...provided.droppableProps}
                     >
                         { 
-                            musicDetails.map((musicItem, i) => (
+                            queue.map((musicItem, i) => (
                                 <Draggable key={musicItem.id} draggableId={musicItem.id} index={i}>
                                     {(provided) => (
                                         <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
