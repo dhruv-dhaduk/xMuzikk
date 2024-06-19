@@ -5,6 +5,7 @@ import saveFilledIcon from '/icons/save_filled.svg';
 import defaultThumbnail from '/images/music_icon_neon_blue.jpeg';
 
 import Spinner from './ui/Spinner.jsx';
+import AsyncSubmitBtn from './AsyncSubmitBtn.jsx';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { PlayerContext } from '../contexts/PlayerContext.js';
@@ -12,7 +13,7 @@ import { ToastContext } from '../contexts/ToastContext.js';
 
 import { playlistService } from '../dataManager/AppwriteService.js';
 
-function PlaylistMetaData({ playlist, user }) {
+function PlaylistMetaData({ playlist, user, isOwned }) {
     const { playManager } = useContext(PlayerContext);
     const { showToast } = useContext(ToastContext);
     const [playlistSavedStatus, setPlaylistSavedStatus] = useState(undefined);
@@ -177,6 +178,26 @@ function PlaylistMetaData({ playlist, user }) {
                     <p className='text-xs py-2'>
                         This playlist is copied from youtube. Some songs might be missing or they won't play if they are private or unlisted.
                     </p>
+                )
+            }
+
+            {
+                isOwned && (
+                    <div className='flex justify-between items-center gap-2 py-2 flex-wrap'>
+                        <button
+                            className='flex-1 h-9 font-semibold rounded-lg bg-white text-black active:bg-opacity-80'
+                        >
+                            Rearrange items
+                        </button>
+
+                        <AsyncSubmitBtn
+                            className='flex-1 h-9 font-semibold rounded-lg bg-red-700 text-white active:bg-opacity-80'
+                            loadingClassName='flex-1 h-9 flex justify-center items-center bg-red-900 rounded-lg'
+                            spinnerSize={30}
+                        >
+                            Delete playlist
+                        </AsyncSubmitBtn>
+                    </div>
                 )
             }
 

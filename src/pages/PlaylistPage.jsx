@@ -167,8 +167,8 @@ function PlaylistPage() {
     
     return (
         <div className='laptop:flex laptop:justify-center laptop:items-start laptop:px-6'>
-            <div className='flex-1 laptop:max-w-[28rem] laptop:sticky top-header-height p-4 tablet:p-6'>
-                <PlaylistMetaData playlist={playlist} user={user} />
+            <div className='flex-1 laptop:max-w-[25rem] laptop:sticky top-header-height p-4 tablet:p-6'>
+                <PlaylistMetaData playlist={playlist} user={user} isOwned={isOwned} />
             </div>
 
             <div className='flex-1 laptop:max-w-[60rem] tablet:py-6'>
