@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, useRef } from "react";
 
 import Header from "./components/Header";
 import NavBar from "./components/NavBar";
@@ -10,6 +10,7 @@ import { Outlet } from "react-router-dom";
 import { PlayerContext } from "./contexts/PlayerContext.js";
 import { ToastContext } from "./contexts/ToastContext.js";
 import { UserContext } from './contexts/UserContext.js'; 
+import { DragDropCallbackContext } from './contexts/DragDropCallbackContext.js';
 
 import { useYT } from "./hooks/useYT.js";
 import { usePopUpPage } from "./hooks/usePopUpPage.js";
@@ -39,6 +40,8 @@ function App() {
 
     const [user, reloadUser] = useUser();
 
+    const dragDropCallbacks = useRef(new Map());
+
     const showToast = {
         default: (content, options) => toast(content, { draggable: true, ...options }),
         info: (content, options) => toast.info(content, { draggable: true, ...options }),
@@ -51,6 +54,18 @@ function App() {
         if (result.source.droppableId === 'queue' && result.destination.droppableId === 'queue') {
             moveQueueItem(result.source.index, result.destination.index);
         }
+
+        if (result.source.droppableId === result.destination.droppableId) {
+            const callback = dragDropCallbacks.current.get(result.destination.droppableId);
+
+            if (callback) {
+                callback(result);
+            }
+        }
+    }
+
+    const setDragDropCallback = (droppableId, callback) => {
+        dragDropCallbacks.current.set(droppableId, callback);
     }
 
     return (
@@ -61,27 +76,31 @@ function App() {
                     <PlayerContext.Provider value={{isPlayerShowing, showPlayer, isYtApiLoaded, playerState, playerRef, playingMusic, queue, playManager, looping, nextLoopingOption, refreshPlayer}}>
                         
                         <DragDropContext onDragEnd={handleOnDragEnd}>
-                            <Header className='z-header w-full h-header-m tablet:h-header fixed inset-x-0 top-0'/>
+                            <DragDropCallbackContext.Provider value={{ setDragDropCallback }}>
                             
-                            <main className='mt-main-t-m tablet:mt-main-t mb-main-b-m tablet:mb-main-b tablet:ml-main-l'>
-                                <Outlet />
-                            </main>
+                                <Header className='z-header w-full h-header-m tablet:h-header fixed inset-x-0 top-0'/>
+                                
+                                <main className='mt-main-t-m tablet:mt-main-t mb-main-b-m tablet:mb-main-b tablet:ml-main-l'>
+                                    <Outlet />
+                                </main>
 
-                            <Footer
-                                onClick={showPlayer}
-                                playPreviousMusic={playManager.playPreviousMusic}
-                                playNextMusic={playManager.playNextMusic}
-                                className='z-footer w-full h-footer-m tablet:h-footer fixed inset-x-0 bottom-footer-b-m tablet:bottom-0' 
-                                />
+                                <Footer
+                                    onClick={showPlayer}
+                                    playPreviousMusic={playManager.playPreviousMusic}
+                                    playNextMusic={playManager.playNextMusic}
+                                    className='z-footer w-full h-footer-m tablet:h-footer fixed inset-x-0 bottom-footer-b-m tablet:bottom-0' 
+                                    />
 
-                            <PlayerPage 
-                                isPlayerShowing={isPlayerShowing}
-                                playerElementID={playerElementID}
-                                hidePlayer={hidePlayer}
-                                className='z-playerpage'
-                                />
+                                <PlayerPage 
+                                    isPlayerShowing={isPlayerShowing}
+                                    playerElementID={playerElementID}
+                                    hidePlayer={hidePlayer}
+                                    className='z-playerpage'
+                                    />
 
-                            <NavBar className='z-navbar w-full tablet:w-navbar h-navbar-m tablet:h-full fixed inset-x-0 tablet:top-14 bottom-0 tablet:left-0' />
+                                <NavBar className='z-navbar w-full tablet:w-navbar h-navbar-m tablet:h-full fixed inset-x-0 tablet:top-14 bottom-0 tablet:left-0' />
+                                
+                            </DragDropCallbackContext.Provider>
                         </DragDropContext>
                         
                     </PlayerContext.Provider>

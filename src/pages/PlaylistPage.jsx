@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { playlistService } from '../dataManager/AppwriteService.js';
 import { getMusicDetails } from '../dataManager/index.js';
 import { UserContext } from '../contexts/UserContext.js';
+import { DragDropCallbackContext } from '../contexts/DragDropCallbackContext.js';
 
 import PlaylistMetaData from '../components/PlaylistMetaData.jsx';
 import PlaylistFeed, { PlaylistFeedRearrange } from '../components/PlaylistFeed.jsx';
@@ -16,13 +17,28 @@ function PlaylistPage() {
     const { documentId } = useParams();
     
     const { user } = useContext(UserContext);
+    const { setDragDropCallback } = useContext(DragDropCallbackContext);
     
     const [playlist, setPlaylist] = useState({});
     const [playlistItems, setPlaylistItems] = useState([]);
     const [hasMoreItems, setHasMoreItems] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [isOwned, setIsOwned] = useState(false);
-    const [isRearranging, setIsRearranging] = useState(true);
+    const [isRearranging, setIsRearranging] = useState(false);
+    const [rearrangableItems, setRearrangableItems] = useState([]);
+
+    const handleOnDragEnd = useCallback((result) => {
+        
+        const from = result.source.index;
+        const to = result.destination.index;
+
+        const newItems = Array.from(rearrangableItems);
+        const [item] = newItems.splice(from, 1);
+        newItems.splice(to, 0, item);
+
+        setRearrangableItems(newItems);
+
+    }, [rearrangableItems, setRearrangableItems]);
 
     const fetchCurrentPlaylist = useCallback(async (reload = false) => {
         if (!user)
@@ -139,6 +155,19 @@ function PlaylistPage() {
             })
     }, [documentId, user]);
 
+    useEffect(() => {
+        if (isRearranging) {
+            setRearrangableItems(playlistItems);
+        }
+        else {
+            setRearrangableItems([]);
+        }
+    }, [isRearranging]);
+
+    useEffect(() => {
+        setDragDropCallback('playlist', handleOnDragEnd);
+    }, [handleOnDragEnd]);
+
 
     if (isLoading) {
         return (
@@ -191,7 +220,7 @@ function PlaylistPage() {
                             {
                                 isRearranging ? (
                                     <PlaylistFeedRearrange 
-                                        playlistItems={playlistItems}
+                                        playlistItems={rearrangableItems}
                                     />
                                 ) : (
                                     <PlaylistFeed
