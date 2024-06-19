@@ -7,6 +7,8 @@ import shareIcon from '/icons/share.svg';
 import closeIcon from '/icons/close.svg';
 import refreshIcon from '/icons/refresh.svg';
 
+import isMobileDevice from '../../utils/isMobileDevice.js';
+
 function OtherButtonsLg({ id, title, hidePlayer, refreshPlayer }) {
 
     const shareMusic = () => {
@@ -86,7 +88,16 @@ function OtherButtonsSm({ id, title, hidePlayer, showVideoToggle, setShowVideoTo
     }
 
     return (
-        <div className='tablet:hidden flex justify-start items-center gap-1 mt-auto'>
+        <div className='relative tablet:hidden flex justify-start items-center gap-1 mt-auto'>
+
+            {
+                isMobileDevice && (
+                    <p className='absolute -top-8 left-0 w-full text-center text-[10px] text-white line-clamp-2'>
+                        Please Click on Refresh Button below if song doesn't play.
+                    </p>
+                )
+            }
+
             <div className='flex flex-col justify-center items-center'>
                 <Toggle className='h-7'
                     isActive={showVideoToggle}
