@@ -8,6 +8,8 @@ import Spinner from './ui/Spinner.jsx';
 import AsyncSubmitBtn from './AsyncSubmitBtn.jsx';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { PlayerContext } from '../contexts/PlayerContext.js';
 import { ToastContext } from '../contexts/ToastContext.js';
 
@@ -17,6 +19,8 @@ function PlaylistMetaData({ playlist, user, isOwned, isRearranging, setIsRearran
     const { playManager } = useContext(PlayerContext);
     const { showToast } = useContext(ToastContext);
     const [playlistSavedStatus, setPlaylistSavedStatus] = useState(undefined);
+
+    const navigate = useNavigate();
 
     const savePlaylist = useCallback(() => {
         if (!user)
@@ -61,6 +65,20 @@ function PlaylistMetaData({ playlist, user, isOwned, isRearranging, setIsRearran
             });
 
     }, [setPlaylistSavedStatus, playlist, user]);
+
+    const deleteThisPlaylist = useCallback(async () => {
+        const isConfirmed = window.confirm('Are you sure you want to delete this playlist ?');
+        if (!isConfirmed)
+            return;
+
+        try {
+            await playlistService.deletePlaylist(user.$id, playlist.$id);
+            showToast.success('Playlist deleted successfully');
+            navigate('/playlists/me');
+        } catch (err) {
+            showToast.error(err.message);
+        }
+    }, []);
 
     useEffect(() => {
         if (!user?.$id || !playlist?.$id)
@@ -219,6 +237,7 @@ function PlaylistMetaData({ playlist, user, isOwned, isRearranging, setIsRearran
                                     className='flex-1 h-9 font-semibold rounded-lg bg-red-700 text-white active:bg-opacity-80'
                                     loadingClassName='flex-1 h-9 flex justify-center items-center bg-red-900 rounded-lg'
                                     spinnerSize={30}
+                                    asyncClickHandler={deleteThisPlaylist}
                                 >
                                     Delete playlist
                                 </AsyncSubmitBtn>
