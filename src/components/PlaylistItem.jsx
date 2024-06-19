@@ -19,7 +19,7 @@ function PlaylistItem({ item, index, isRearrangable, isPlaying, playMusic, showP
             className={`flex gap-2 p-3 bg-transparent from-primary-light-35 to-primary-dark-35 rounded-xl cursor-pointer select-none ${isPlaying ? 'bg-gradient-to-r' : ''} ${!isMobileDevice && !isPlaying ? 'hover:bg-white hover:bg-opacity-15' : ''}`}
         >   
 
-            <p className='flex-none flex justify-center items-center w-[3ch] text-stone-300 font-semibold'>
+            <div className='flex-none flex justify-center items-center w-[3ch] text-stone-300 font-semibold'>
                 {
                     isRearrangable ? (
                         <Icon
@@ -28,8 +28,7 @@ function PlaylistItem({ item, index, isRearrangable, isPlaying, playMusic, showP
                         />
                     ) : index
                 }
-                {/* { index } */}
-            </p>
+            </div>
 
             <div className='flex-none w-[6.5rem] aspect-square'>
                 <img 
