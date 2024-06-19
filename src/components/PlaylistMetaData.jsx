@@ -13,7 +13,7 @@ import { ToastContext } from '../contexts/ToastContext.js';
 
 import { playlistService } from '../dataManager/AppwriteService.js';
 
-function PlaylistMetaData({ playlist, user, isOwned, isRearranging, setIsRearranging }) {
+function PlaylistMetaData({ playlist, user, isOwned, isRearranging, setIsRearranging, saveRearrangedItems }) {
     const { playManager } = useContext(PlayerContext);
     const { showToast } = useContext(ToastContext);
     const [playlistSavedStatus, setPlaylistSavedStatus] = useState(undefined);
@@ -197,6 +197,7 @@ function PlaylistMetaData({ playlist, user, isOwned, isRearranging, setIsRearran
                                     className='flex-1 h-9 font-semibold rounded-lg bg-green-600 text-white active:bg-opacity-80'
                                     loadingClassName='flex-1 h-9 flex justify-center items-center bg-green-800 rounded-lg'
                                     spinnerSize={30}
+                                    asyncClickHandler={saveRearrangedItems}
                                 >
                                     Save
                                 </AsyncSubmitBtn>

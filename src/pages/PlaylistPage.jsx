@@ -5,6 +5,7 @@ import { playlistService } from '../dataManager/AppwriteService.js';
 import { getMusicDetails } from '../dataManager/index.js';
 import { UserContext } from '../contexts/UserContext.js';
 import { DragDropCallbackContext } from '../contexts/DragDropCallbackContext.js';
+import { ToastContext } from '../contexts/ToastContext.js';
 
 import PlaylistMetaData from '../components/PlaylistMetaData.jsx';
 import PlaylistFeed, { PlaylistFeedRearrange } from '../components/PlaylistFeed.jsx';
@@ -18,6 +19,7 @@ function PlaylistPage() {
     
     const { user } = useContext(UserContext);
     const { setDragDropCallback } = useContext(DragDropCallbackContext);
+    const { showToast } = useContext(ToastContext);
     
     const [playlist, setPlaylist] = useState({});
     const [playlistItems, setPlaylistItems] = useState([]);
@@ -96,6 +98,29 @@ function PlaylistPage() {
         }
 
     }, [playlist, playlistItems, setPlaylistItems, hasMoreItems, setHasMoreItems]);
+
+    const saveRearrangedItems = useCallback(async () => {
+        const rearrangedIDs = rearrangableItems.map(item => item.id);
+
+        try {
+            const response = await playlistService.rearrangePlaylistItems(playlist.$id, rearrangedIDs);
+
+            const newPlaylistItems = await getMusicDetails(response.items.slice(0, rearrangedIDs.length), false, rearrangableItems);
+
+            setPlaylist(response);
+            setPlaylistItems(newPlaylistItems);
+            setHasMoreItems(true);
+
+            showToast.success('Playlist rearranged successfully');
+        } catch (err) {
+            console.error(err);
+            showToast.error(err.message);
+        }
+        finally {
+            setIsRearranging(false);
+        }
+
+    }, [rearrangableItems, playlist, setPlaylist, setPlaylistItems, setHasMoreItems, setIsRearranging]);
 
     const handleScrollToEnd = useCallback(async () => {
         const scrollRemaining = document.body.offsetHeight - window.scrollY - window.innerHeight;
@@ -206,6 +231,7 @@ function PlaylistPage() {
                     isOwned={isOwned}
                     isRearranging={isRearranging}
                     setIsRearranging={setIsRearranging}
+                    saveRearrangedItems={saveRearrangedItems}
                 />
             </div>
 
