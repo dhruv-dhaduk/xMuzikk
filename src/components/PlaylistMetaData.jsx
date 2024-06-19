@@ -183,22 +183,43 @@ function PlaylistMetaData({ playlist, user, isOwned, isRearranging, setIsRearran
 
             {
                 isOwned && (
-                    <div className='flex justify-between items-center gap-2 py-2 flex-wrap'>
-                        <button
-                            className='flex-1 h-9 font-semibold rounded-lg bg-white text-black active:bg-opacity-80'
-                            onClick={() => setIsRearranging(!isRearranging)}
-                        >
-                            Rearrange items
-                        </button>
+                    (
+                        isRearranging ? (
+                            <div className='flex justify-between items-center gap-2 py-2 flex-wrap'>
+                                <button
+                                    className='flex-1 h-9 font-semibold rounded-lg bg-white text-black active:bg-opacity-80'
+                                    onClick={() => setIsRearranging(false)}
+                                >
+                                    Cancel
+                                </button>
 
-                        <AsyncSubmitBtn
-                            className='flex-1 h-9 font-semibold rounded-lg bg-red-700 text-white active:bg-opacity-80'
-                            loadingClassName='flex-1 h-9 flex justify-center items-center bg-red-900 rounded-lg'
-                            spinnerSize={30}
-                        >
-                            Delete playlist
-                        </AsyncSubmitBtn>
-                    </div>
+                                <AsyncSubmitBtn
+                                    className='flex-1 h-9 font-semibold rounded-lg bg-green-600 text-white active:bg-opacity-80'
+                                    loadingClassName='flex-1 h-9 flex justify-center items-center bg-green-800 rounded-lg'
+                                    spinnerSize={30}
+                                >
+                                    Save
+                                </AsyncSubmitBtn>
+                            </div>
+                        ) : (
+                            <div className='flex justify-between items-center gap-2 py-2 flex-wrap'>
+                                <button
+                                    className='flex-1 h-9 font-semibold rounded-lg bg-white text-black active:bg-opacity-80'
+                                    onClick={() => setIsRearranging(true)}
+                                >
+                                    Rearrange items
+                                </button>
+
+                                <AsyncSubmitBtn
+                                    className='flex-1 h-9 font-semibold rounded-lg bg-red-700 text-white active:bg-opacity-80'
+                                    loadingClassName='flex-1 h-9 flex justify-center items-center bg-red-900 rounded-lg'
+                                    spinnerSize={30}
+                                >
+                                    Delete playlist
+                                </AsyncSubmitBtn>
+                            </div>
+                        )
+                    )
                 )
             }
 
