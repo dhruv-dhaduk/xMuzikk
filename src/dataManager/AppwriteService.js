@@ -666,6 +666,62 @@ class PlaylistService {
 
         return response;
     }
+
+    async rearrangePlaylistItems(playlistDocumentId, musicIDs = []) {
+        if (!playlistDocumentId)
+            throw new Error('No playlistDocumentId provided');
+
+        if (!musicIDs?.length)
+            return;
+
+        const playlist = await this.fetchPlaylist(playlistDocumentId);
+
+        if (!playlist?.$id)
+            throw new Error('Playlist not found');
+
+        const updatedItems = [...new Set([...musicIDs, ...playlist.items])];
+
+        const updatedPlaylist = {
+            items: updatedItems,
+            itemCount: updatedItems.length,
+        };
+
+        if (updatedPlaylist.items.length === 0) {
+            updatedPlaylist.thumbnail = null;
+        }
+        else {
+            if (playlist.items.length === 0 || playlist.items[0] !== updatedPlaylist.items[0]) {
+                try {
+                    const response = await db.listDocuments(
+                        import.meta.env.VITE_APPWRITE_DB_ID,
+                        import.meta.env.VITE_APPWRITE_ALLMUSIC_COLLECTION_ID,
+                        [
+                            Query.select(['id', 'thumbnail']),
+                            Query.limit(1),
+                            Query.equal('id', updatedPlaylist.items[0])
+                        ]
+                    );
+
+                    if (!response?.documents?.length || response.documents[0].id !== updatedPlaylist.items[0]) {}
+                    else {
+                        updatedPlaylist.thumbnail = response.documents[0].thumbnail;
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+
+        }
+
+        const response = await db.updateDocument(
+            import.meta.env.VITE_APPWRITE_DB_ID,
+            import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
+            playlistDocumentId,
+            updatedPlaylist
+        );
+
+        return response;
+    }
 }
 
 const playlistService = new PlaylistService();

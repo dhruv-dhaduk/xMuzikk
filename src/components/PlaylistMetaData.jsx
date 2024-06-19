@@ -5,17 +5,22 @@ import saveFilledIcon from '/icons/save_filled.svg';
 import defaultThumbnail from '/images/music_icon_neon_blue.jpeg';
 
 import Spinner from './ui/Spinner.jsx';
+import AsyncSubmitBtn from './AsyncSubmitBtn.jsx';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { PlayerContext } from '../contexts/PlayerContext.js';
 import { ToastContext } from '../contexts/ToastContext.js';
 
 import { playlistService } from '../dataManager/AppwriteService.js';
 
-function PlaylistMetaData({ playlist, user }) {
+function PlaylistMetaData({ playlist, user, isOwned, isRearranging, setIsRearranging, saveRearrangedItems }) {
     const { playManager } = useContext(PlayerContext);
     const { showToast } = useContext(ToastContext);
     const [playlistSavedStatus, setPlaylistSavedStatus] = useState(undefined);
+
+    const navigate = useNavigate();
 
     const savePlaylist = useCallback(() => {
         if (!user)
@@ -60,6 +65,20 @@ function PlaylistMetaData({ playlist, user }) {
             });
 
     }, [setPlaylistSavedStatus, playlist, user]);
+
+    const deleteThisPlaylist = useCallback(async () => {
+        const isConfirmed = window.confirm('Are you sure you want to delete this playlist ?');
+        if (!isConfirmed)
+            return;
+
+        try {
+            await playlistService.deletePlaylist(user.$id, playlist.$id);
+            showToast.success('Playlist deleted successfully');
+            navigate('/playlists/me');
+        } catch (err) {
+            showToast.error(err.message);
+        }
+    }, []);
 
     useEffect(() => {
         if (!user?.$id || !playlist?.$id)
@@ -177,6 +196,54 @@ function PlaylistMetaData({ playlist, user }) {
                     <p className='text-xs py-2'>
                         This playlist is copied from youtube. Some songs might be missing or they won't play if they are private or unlisted.
                     </p>
+                )
+            }
+
+            {
+                isOwned && (
+                    (
+                        isRearranging ? (
+                            <div className='flex justify-between items-center gap-2 py-2 flex-wrap'>
+                                <button
+                                    className='flex-1 h-9 font-semibold rounded-lg bg-white text-black active:bg-opacity-80'
+                                    onClick={() => setIsRearranging(false)}
+                                >
+                                    Cancel
+                                </button>
+
+                                <AsyncSubmitBtn
+                                    className='flex-1 h-9 font-semibold rounded-lg bg-green-600 text-white active:bg-opacity-80'
+                                    loadingClassName='flex-1 h-9 flex justify-center items-center bg-green-800 rounded-lg'
+                                    spinnerSize={30}
+                                    asyncClickHandler={saveRearrangedItems}
+                                >
+                                    Save
+                                </AsyncSubmitBtn>
+                            </div>
+                        ) : (
+                            <div className='flex justify-between items-center gap-2 py-2 flex-wrap'>
+                                {
+                                    playlist?.items?.length > 0 && (
+                                        <button
+                                            className='flex-1 h-9 font-semibold rounded-lg bg-white text-black active:bg-opacity-80'
+                                            onClick={() => setIsRearranging(true)}
+                                        >
+                                            Rearrange items
+                                        </button>
+                                    )
+                                }
+
+                                <AsyncSubmitBtn
+                                    className='flex-1 h-9 font-semibold rounded-lg bg-red-700 text-white active:bg-opacity-80'
+                                    loadingClassName='flex-1 h-9 flex justify-center items-center bg-red-900 rounded-lg'
+                                    spinnerSize={30}
+                                    asyncClickHandler={deleteThisPlaylist}
+                                >
+                                    Delete playlist
+                                </AsyncSubmitBtn>
+                            </div>
+                        )
+                    )
                 )
             }
 
