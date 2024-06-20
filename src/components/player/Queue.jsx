@@ -46,7 +46,7 @@ function Queue({ queue, queueVisible, setQueueVisible, playingMusic, playFromQue
                     >
                         { 
                             queue.map((musicItem, i) => (
-                                <Draggable key={musicItem.id} draggableId={musicItem.id} index={i}>
+                                <Draggable key={`queue_item_${musicItem.id}`} draggableId={`queue_item_${musicItem.id}`} index={i}>
                                     {(provided) => (
                                         <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
                                             <QueueItem

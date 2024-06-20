@@ -99,9 +99,9 @@ function PlaylistFeed({ playlist, playlistItems, isOwned, reloader }) {
     )
 }
 
-function PlaylistFeedRearrange({ playlistItems }) {
+function PlaylistFeedRearrange({ playlistId, playlistItems }) {
     return (
-        <Droppable droppableId='playlist'>
+        <Droppable droppableId={`playlist_${playlistId}`}>
             {(provided) => (
                 <div
                     ref={provided.innerRef}
@@ -109,17 +109,14 @@ function PlaylistFeedRearrange({ playlistItems }) {
                 >
                     {
                         playlistItems.map((item, i) => (
-                            <Draggable key={item.id} draggableId={item.id} index={i}>
+                            <Draggable key={`playlist_${playlistId}_item_${item.id}`} draggableId={`playlist_${playlistId}_item_${item.id}`} index={i}>
                                 {(provided) => (
                                     <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
                                         <PlaylistItem
                                             item={item}
                                             isRearrangable={true}
                                             index={i + 1}
-                                            isPlaying={false}
-                                            playMusic={() => {}}
-                                            showPlayer={() => {}}
-                                            showMoreOptions={() => {}}                
+                                            isPlaying={false}              
                                         />
                                     </div>
                                 )}

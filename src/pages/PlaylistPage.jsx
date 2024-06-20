@@ -190,7 +190,7 @@ function PlaylistPage() {
     }, [isRearranging]);
 
     useEffect(() => {
-        setDragDropCallback('playlist', handleOnDragEnd);
+        setDragDropCallback(`playlist_${documentId}`, handleOnDragEnd);
     }, [handleOnDragEnd]);
 
 
@@ -245,7 +245,8 @@ function PlaylistPage() {
                         <>
                             {
                                 isRearranging ? (
-                                    <PlaylistFeedRearrange 
+                                    <PlaylistFeedRearrange
+                                        playlistId={documentId}
                                         playlistItems={rearrangableItems}
                                     />
                                 ) : (
