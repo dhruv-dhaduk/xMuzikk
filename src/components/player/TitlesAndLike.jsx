@@ -20,7 +20,7 @@ function TitlesAndLike({ title, channelTitle, uploadTime }) {
                 </p>
             </div>
 
-            <Icon imgSrc={heartHollowIcon} className='flex-none w-10 tablet:w-12 p-0' />
+            <Icon imgSrc={heartHollowIcon} className='hidden flex-none w-10 tablet:w-12 p-0' />
         
         </div>
     );
