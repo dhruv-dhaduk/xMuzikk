@@ -10,7 +10,7 @@ function PlaylistItem({ item, index, isRearrangable, isPlaying, playMusic, showP
     return (
         <div
             onClick={() => {
-                if (isRearrangable) {
+                if (!isRearrangable) {
                     if (!isPlaying)
                         playMusic();
                     showPlayer();
