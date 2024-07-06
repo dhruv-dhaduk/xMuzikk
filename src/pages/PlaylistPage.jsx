@@ -194,6 +194,10 @@ function PlaylistPage() {
     }, [handleOnDragEnd]);
 
 
+    if (user === null) {
+        return <AuthLinks message='Please Login or Signup to view playlists' />;
+    }
+    
     if (isLoading) {
         return (
             <div className='flex justify-center p-4'>
@@ -202,9 +206,6 @@ function PlaylistPage() {
         );
     }
 
-    if (user === null) {
-        return <AuthLinks message='Please Login or Signup to view playlists' />;
-    }
 
     if (playlist.notFound) {
         return (
