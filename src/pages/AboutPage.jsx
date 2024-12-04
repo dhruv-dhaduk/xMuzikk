@@ -91,16 +91,16 @@ function AboutPage() {
                             Here are my contact details : 
                         </h2>
                         
-                        <li className='select-none indent-8'>
+                        <li className='select-none indent-8 text-[15px]/[25px]'>
                             Email : <a href='mailto:dhadukd44@gmail.com' target='_blank' className='underline select-all whitespace-nowrap'>dhadukd44@gmail.com</a>
                         </li>
-                        <li className='select-none indent-8'>
+                        <li className='select-none indent-8 text-[15px]/[25px]'>
                             GitHub : <a href='https://github.com/dhruv-dhaduk' target='_blank' className='underline select-all whitespace-nowrap'>@dhruv-dhaduk</a>
                         </li>
-                        <li className='select-none indent-8'>
+                        <li className='select-none indent-8 text-[15px]/[25px]'>
                             X (Formerly Twitter) : <a href='https://x.com/dhruvdhaduk0' target='_blank' className='underline select-all whitespace-nowrap'>@dhruvdhaduk0</a>
                         </li>
-                        <li className='select-none indent-8'>
+                        <li className='select-none indent-8 text-[15px]/[25px]'>
                             LinkedIn : <a href='https://www.linkedin.com/in/dhruvdhaduk' target='_blank' className='underline select-all whitespace-nowrap'>in/dhruvdhaduk</a>
                         </li>
                             
@@ -113,7 +113,7 @@ function AboutPage() {
 }
 
 function P({ children, className }) {
-    return <p className={`mx-1 my-4 text-base/5 select-none ${className}`}>{children}</p>;
+    return <p className={`mx-1 my-4 text-[15px]/[25px] font-[400] font-sans select-none ${className}`}>{children}</p>;
 }
 
 export default AboutPage;
