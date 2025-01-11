@@ -107,7 +107,10 @@ function App() {
                                 </main>
 
                                 <Footer
-                                    onClick={showPlayer}
+                                    onClick={() => {
+                                        if (!isPlayerShowing)
+                                            showPlayer();
+                                    }}
                                     playPreviousMusic={
                                         playManager.playPreviousMusic
                                     }
