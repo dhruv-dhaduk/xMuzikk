@@ -80,7 +80,7 @@ function PlayerPage({ isPlayerShowing, showPlayer, hidePlayer, popoverRef, playe
                         />
 
                         <ProgressBar
-                            videoId={id}
+                            videoID={id}
                             playerState={playerState}
                             duration={duration}
                             getCurrentTime={() => {
