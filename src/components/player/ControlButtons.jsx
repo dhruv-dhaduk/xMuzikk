@@ -8,7 +8,7 @@ import nextIcon from '/icons/next.svg';
 import queueIcon from '/icons/queue.svg';
 
 
-function ControlButtons() {
+function ControlButtons({ playerState, playpause, looping, nextLoopingOption, showQueue, playPreviousMusic, playNextMusic }) {
     return (
         <div className='flex justify-center items-center gap-3'>
             <PlayerBtn

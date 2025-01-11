@@ -4,7 +4,7 @@ import youtubeIcon from '/icons/youtube.svg';
 import refreshIcon from '/icons/refresh.svg';
 import heartIcon from '/icons/heart_hollow.svg';
 
-function SideButtons() {
+function SideButtons({ videoID, title, hidePlayer, refreshPlayer }) {
     return (
         <div className='w-12 min-h-full p-1 flex flex-col items-center justify-between'>
             <Btn

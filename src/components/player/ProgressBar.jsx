@@ -2,7 +2,7 @@ import Slider from "../ui/Slider.jsx";
 
 import { getDurationFromISO, convertDurationFormat } from '../../utils/converters.js';
 
-function ProgressBar({ duration }) {
+function ProgressBar({ videoId, playerState, duration, getCurrentTime, seekTo }) {
     return (
         <div className='my-4'>
             <Slider
