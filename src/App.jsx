@@ -22,7 +22,7 @@ import 'react-toastify/ReactToastify.css';
 import { DragDropContext } from '@hello-pangea/dnd';
 
 function App() {
-    const [isPlayerShowing, showPlayer, hidePlayer] = usePopUpPage();
+    const [isPlayerShowing, showPlayer, hidePlayer, popoverRef] = usePopUpPage();
     const playerElementID = useId();
     const {
         isYtApiLoaded,
@@ -117,10 +117,14 @@ function App() {
 
                                 <PlayerPage
                                     isPlayerShowing={isPlayerShowing}
-                                    playerElementID={playerElementID}
+                                    showPlayer={showPlayer}
                                     hidePlayer={hidePlayer}
-                                    className='z-playerpage'
+                                    popoverRef={popoverRef}
                                 />
+
+                                <div className='fixed top-16 left-36 w-60 h-60 z-[100000]' id={playerElementID}>
+
+                                </div>
 
                                 <NavBar className='z-navbar w-full tablet:w-navbar h-navbar-m tablet:h-full fixed inset-x-0 tablet:top-14 bottom-0 tablet:left-0' />
                             </DragDropCallbackContext.Provider>
