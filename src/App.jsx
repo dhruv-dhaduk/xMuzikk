@@ -22,7 +22,7 @@ import 'react-toastify/ReactToastify.css';
 import { DragDropContext } from '@hello-pangea/dnd';
 
 function App() {
-    const [isPlayerShowing, showPlayer, hidePlayer] = usePopUpPage();
+    const [isPlayerShowing, showPlayer, hidePlayer, popoverRef] = usePopUpPage();
     const playerElementID = useId();
     const {
         isYtApiLoaded,
@@ -107,7 +107,10 @@ function App() {
                                 </main>
 
                                 <Footer
-                                    onClick={showPlayer}
+                                    onClick={() => {
+                                        if (!isPlayerShowing)
+                                            showPlayer();
+                                    }}
                                     playPreviousMusic={
                                         playManager.playPreviousMusic
                                     }
@@ -117,12 +120,14 @@ function App() {
 
                                 <PlayerPage
                                     isPlayerShowing={isPlayerShowing}
-                                    playerElementID={playerElementID}
+                                    showPlayer={showPlayer}
                                     hidePlayer={hidePlayer}
-                                    className='z-playerpage'
+                                    popoverRef={popoverRef}
+                                    playerElementID={playerElementID}
                                 />
 
                                 <NavBar className='z-navbar w-full tablet:w-navbar h-navbar-m tablet:h-full fixed inset-x-0 tablet:top-14 bottom-0 tablet:left-0' />
+                                
                             </DragDropCallbackContext.Provider>
                         </DragDropContext>
                     </PlayerContext.Provider>
