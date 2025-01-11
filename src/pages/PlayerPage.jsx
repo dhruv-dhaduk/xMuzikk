@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { PlayerContext } from '../contexts/PlayerContext.js';
 import Screen from "../components/player/Screen.jsx";
 
@@ -10,7 +10,12 @@ import ControlButtons from "../components/player/ControlButtons.jsx";
 import { useStoredState } from '../hooks/useStoredState.js';
 import { localStorageKeys } from '../constants.js';
 
-function PlayerPage({ isPlayerShowing, showPlayer, hidePlayer, popoverRef, playerElementID }) {
+import closeIcon from '/icons/close.svg';
+import backIcon from '/icons/back.svg';
+
+import Queue from "../components/player/Queue.jsx";
+
+function PlayerPage({ isPlayerShowing, hidePlayer, popoverRef, playerElementID }) {
     const {
         isYtApiLoaded,
         playerState,
@@ -28,6 +33,11 @@ function PlayerPage({ isPlayerShowing, showPlayer, hidePlayer, popoverRef, playe
     const [showVideoToggle, setShowVideoToggle] = useStoredState(false, localStorageKeys.playVideoToggle);
 
     const [queueVisible, setQueueVisible] = useState(false);
+
+    useEffect(() => {
+        if (!isPlayerShowing)
+            setQueueVisible(false);
+    }, [isPlayerShowing]);
     
     return (
         <div
@@ -110,14 +120,42 @@ function PlayerPage({ isPlayerShowing, showPlayer, hidePlayer, popoverRef, playe
 
                 <div className='bg-black absolute w-full h-full overflow-hidden inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]'>
                     <div
-                        className='bg-blue-700 w-full h-full overflow-auto relative'
-                        onClick={() => setQueueVisible(false)}
+                        className='bg-black w-full h-full overflow-auto relative'
                     >
-                        <div className='sticky top-0 w-full h-14 bg-red-700 p-3'>
-                            Heading
+                        <div className='sticky top-0 w-full flex justify-between items-center h-14 px-2 border-b bg-black border-stone-600'>
+                            <button
+                                onClick={() => setQueueVisible(false)}
+                                className={`aspect-square flex justify-center items-center cursor-pointer active:scale-[0.8] duration-200 w-10 p-2.5 rounded-full bg-white bg-opacity-25`}
+                            >
+                                <img
+                                    src={backIcon}
+                                    draggable={false}
+                                    onContextMenu={(e) => e.preventDefault()}
+                                    className='w-full'
+                                />
+                            </button>
+                            
+                            <p className='text-xl font-bold'>In Queue</p>
+
+                            <button
+                                onClick={hidePlayer}
+                                className={`aspect-square flex justify-center items-center cursor-pointer active:scale-[0.8] duration-200 w-10 p-1.5 rounded-full bg-white bg-opacity-25`}
+                            >
+                                <img
+                                    src={closeIcon}
+                                    draggable={false}
+                                    onContextMenu={(e) => e.preventDefault()}
+                                    className='w-full'
+                                />
+                            </button>
                         </div>
-                        <div className='p-3'>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem rem quo ipsum repudiandae necessitatibus soluta optio ab sunt, cupiditate praesentium sed non odio ratione a dolor molestias dolorem provident quae eos tempora atque veniam quaerat alias? Suscipit labore tenetur cum commodi eius quo qui consequuntur dolores in sunt non laboriosam, soluta molestiae, ad possimus aspernatur eaque minus explicabo voluptates earum vero totam animi. Ipsam voluptates, tempore amet, cupiditate sed mollitia doloribus officia error temporibus quas quasi repudiandae eos ea. Non neque expedita at adipisci necessitatibus placeat pariatur quidem libero eius ea repellat odio similique, corrupti rerum quas hic cumque exercitationem.
+                        <div className=''>
+                            <Queue
+                                queue={queue}
+                                playingMusic={playingMusic}
+                                playFromQueueAt={playManager.playFromQueueAt}
+                                removeFromQueue={playManager.removeFromQueue}
+                            />
                         </div>
                     </div>
                 </div>
