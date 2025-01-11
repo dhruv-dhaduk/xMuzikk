@@ -14,7 +14,6 @@ import { searchService } from '../dataManager/AppwriteService.js';
 import { getMusicDetails } from '../dataManager/index.js';
 
 function SearchResults() {
-    
     const { documentId } = useParams();
     const { user } = useContext(UserContext);
     const [searchResults, setSearchResults] = useState(undefined);
@@ -49,68 +48,36 @@ function SearchResults() {
                 console.error(err);
                 setSearchResults({ error: err });
             });
-        
     }, [searchResults]);
-    
+
     return (
         <div>
-            {
-                user !== null
-                &&
-                searchResults?.query
-                &&
+            {user !== null && searchResults?.query && (
                 <p className='p-4 tablet:px-10 tablet:pt-4 tablet:pb-0 text-lg tablet:text-xl font-semibold'>
-                    Search Results for :
-                    &nbsp;
-                    <span>
-                        { searchResults.query }
-                    </span>
+                    Search Results for : &nbsp;
+                    <span>{searchResults.query}</span>
                 </p>
-            }
+            )}
 
-            { 
-                user === undefined
-                && 
-                (
-                    <div className='flex justify-center p-4'>
-                        <Spinner />
-                    </div>
-                )
-            }
+            {user === undefined && (
+                <div className='flex justify-center p-4'>
+                    <Spinner />
+                </div>
+            )}
 
-            {
-                user === null
-                && 
+            {user === null && (
                 <AuthLinks message='Please Login or Signup to enable this feature' />
-            }
+            )}
 
-            {
-                user
-                &&
-                !searchResults?.error
-                &&
-                searchResultsDetails.length === 0
-                &&
-                <Loading count={12} />
-            }
+            {user &&
+                !searchResults?.error &&
+                searchResultsDetails.length === 0 && <Loading count={12} />}
 
-            {
-                user
-                &&
-                searchResults?.error
-                &&
-                <NotFoundPage />
-            }
+            {user && searchResults?.error && <NotFoundPage />}
 
-            { 
-                user
-                &&
-                !searchResults?.error
-                && 
-                searchResultsDetails.length
-                &&
+            {user && !searchResults?.error && searchResultsDetails.length && (
                 <Feed musicList={searchResultsDetails} />
-            }
+            )}
         </div>
     );
 }

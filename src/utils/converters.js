@@ -7,7 +7,7 @@ function convertDurationFormat(duration) {
     let minutes;
     let seconds;
 
-    if (typeof(duration) === 'number') {
+    if (typeof duration === 'number') {
         if (isNaN(duration)) {
             return '00:00';
         }
@@ -18,15 +18,14 @@ function convertDurationFormat(duration) {
         duration -= 60 * minutes;
 
         seconds = parseInt(duration);
-    }
-    else {
+    } else {
         const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
         if (!match) {
             return '00:00';
         }
-        hours = (parseInt(match[1]) || 0);
-        minutes = (parseInt(match[2]) || 0);
-        seconds = (parseInt(match[3]) || 0);
+        hours = parseInt(match[1]) || 0;
+        minutes = parseInt(match[2]) || 0;
+        seconds = parseInt(match[3]) || 0;
     }
 
     if (hours == 0)
@@ -36,52 +35,42 @@ function convertDurationFormat(duration) {
 }
 
 function getDurationFromISO(duration) {
-    if (!duration)
-        return 0;
-    
+    if (!duration) return 0;
+
     const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
     if (!match) {
         return 0;
     }
-    const hours = (parseInt(match[1]) || 0);
-    const minutes = (parseInt(match[2]) || 0);
-    const seconds = (parseInt(match[3]) || 0);
+    const hours = parseInt(match[1]) || 0;
+    const minutes = parseInt(match[2]) || 0;
+    const seconds = parseInt(match[3]) || 0;
 
     return hours * 3600 + minutes * 60 + seconds;
 }
 
-function convertUploadTimeFormat(uploadTime)
-{   
-    if (uploadTime == undefined)
-        return "N/A";
+function convertUploadTimeFormat(uploadTime) {
+    if (uploadTime == undefined) return 'N/A';
 
     const d = new Date(uploadTime);
     const timeDiff = (Date.now() - d) / 1000;
-    
+
     if (timeDiff >= 31536000)
-        return time_relative_to(timeDiff, 31536000, "year");
+        return time_relative_to(timeDiff, 31536000, 'year');
     else if (timeDiff >= 2592000)
-        return time_relative_to(timeDiff, 2592000, "month");
+        return time_relative_to(timeDiff, 2592000, 'month');
     else if (timeDiff >= 604800)
-        return time_relative_to(timeDiff, 604800, "week");
-    else if (timeDiff >= 86400)
-        return time_relative_to(timeDiff, 86400, "day");
-    else if (timeDiff >= 3600)
-        return time_relative_to(timeDiff, 3600, "hour");
-    else if (timeDiff > 60)
-        return time_relative_to(timeDiff, 60, "minute");
-    else
-        return "just now";
+        return time_relative_to(timeDiff, 604800, 'week');
+    else if (timeDiff >= 86400) return time_relative_to(timeDiff, 86400, 'day');
+    else if (timeDiff >= 3600) return time_relative_to(timeDiff, 3600, 'hour');
+    else if (timeDiff > 60) return time_relative_to(timeDiff, 60, 'minute');
+    else return 'just now';
 }
 
-function time_relative_to(timediff, unitTime, label)
-{
+function time_relative_to(timediff, unitTime, label) {
     const x = parseInt(timediff / unitTime);
 
-    if (x > 1)
-        return x + " " + label + "s ago";
-    else
-        return x + " " + label + " ago";
+    if (x > 1) return x + ' ' + label + 's ago';
+    else return x + ' ' + label + ' ago';
 }
 
 function convertIdFromYtLink(link) {
@@ -90,19 +79,18 @@ function convertIdFromYtLink(link) {
 
         if (url.host === 'youtu.be') {
             return url.pathname.split('/')[1];
-        }
-        else if (url.host === 'www.youtube.com' || url.host === 'm.youtube.com') {
+        } else if (
+            url.host === 'www.youtube.com' ||
+            url.host === 'm.youtube.com'
+        ) {
             if (url.pathname === '/watch') {
                 return url.searchParams.get('v');
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        else {
+        } else {
             return null;
         }
-
     } catch (err) {
         return undefined;
     }
@@ -112,21 +100,28 @@ function convertIdFromYtPlaylistLink(link) {
     try {
         const url = new URL(link);
 
-        if (url.host === 'www.youtube.com' || url.host === 'm.youtube.com' || url.host === 'youtube.com') {
+        if (
+            url.host === 'www.youtube.com' ||
+            url.host === 'm.youtube.com' ||
+            url.host === 'youtube.com'
+        ) {
             if (url.pathname === '/playlist') {
                 return url.searchParams.get('list');
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        else {
+        } else {
             return null;
         }
-
     } catch (err) {
         return undefined;
     }
 }
 
-export { convertDurationFormat, convertUploadTimeFormat, getDurationFromISO, convertIdFromYtLink, convertIdFromYtPlaylistLink };
+export {
+    convertDurationFormat,
+    convertUploadTimeFormat,
+    getDurationFromISO,
+    convertIdFromYtLink,
+    convertIdFromYtPlaylistLink,
+};

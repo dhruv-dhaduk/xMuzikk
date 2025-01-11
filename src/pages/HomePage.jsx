@@ -13,7 +13,6 @@ const recmnd = new Recommendation();
 const FETCH_AMOUNT = 10;
 
 function HomePage() {
-
     const [musicList, setMusicList] = useState([]);
     const [isMoreMusic, setIsMoreMusic] = useState(true);
 
@@ -22,13 +21,13 @@ function HomePage() {
     const getMoreData = async () => {
         recmnd.resetFetchingIndex(musicList.length);
         const data = await recmnd.getNextMusicDetails(FETCH_AMOUNT);
-        if (!data.length)
-            setIsMoreMusic(false);
+        if (!data.length) setIsMoreMusic(false);
         setMusicList([...musicList, ...data]);
-    }
+    };
 
     const handleScrollToEnd = async () => {
-        const scrollRemaining = document.body.offsetHeight - window.scrollY - window.innerHeight;
+        const scrollRemaining =
+            document.body.offsetHeight - window.scrollY - window.innerHeight;
 
         if (scrollRemaining <= 0) {
             const scrollY = window.scrollY;
@@ -36,27 +35,23 @@ function HomePage() {
             await getMoreData();
             window.scrollTo(0, scrollY);
         }
-    }
+    };
 
     useEffect(() => {
-        if (musicList.length)
-            return;
+        if (musicList.length) return;
 
         if (!recmnd.data.length) {
-            recmnd.init()
-            .then(() => {
-                getMoreData()
+            recmnd.init().then(() => {
+                getMoreData();
             });
-        }
-        else {
+        } else {
             recmnd.resetFetchingIndex();
             getMoreData();
         }
     }, []);
 
     useEffect(() => {
-        if (!musicList.length)
-            return;
+        if (!musicList.length) return;
 
         window.addEventListener('scrollend', handleScrollToEnd);
 
@@ -67,22 +62,21 @@ function HomePage() {
 
     return (
         <div>
-            {
-                user === null && <AuthLinks message='Please login or signup to enable more features' />
-            }
+            {user === null && (
+                <AuthLinks message='Please login or signup to enable more features' />
+            )}
 
-            {
-                !musicList || !musicList.length ? <LoadingFeed count={12} /> : <Feed musicList={musicList} />
-            }
+            {!musicList || !musicList.length ? (
+                <LoadingFeed count={12} />
+            ) : (
+                <Feed musicList={musicList} />
+            )}
 
-            <div className="flex justify-center items-center border-t border-stone-700">
-                <div
-                    className="p-4 text-stone-300 text-lg font-bold"
-                >
-                    {isMoreMusic ? <Spinner /> : "No more music"}
-                </div> 
+            <div className='flex justify-center items-center border-t border-stone-700'>
+                <div className='p-4 text-stone-300 text-lg font-bold'>
+                    {isMoreMusic ? <Spinner /> : 'No more music'}
+                </div>
             </div>
-
         </div>
     );
 }

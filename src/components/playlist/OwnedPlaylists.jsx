@@ -1,7 +1,7 @@
 import PlaylistFeedItem from './PlaylistFeedItem.jsx';
 import Popover from '../ui/Popover.jsx';
-import { useCallback, useEffect } from "react";
-import { useState, useContext } from "react";
+import { useCallback, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { ToastContext } from '../../contexts/ToastContext.js';
 import { UserContext } from '../../contexts/UserContext.js';
 
@@ -16,18 +16,17 @@ import AsyncSubmitBtn from '../AsyncSubmitBtn.jsx';
 const FETCH_AMOUNT = 10;
 
 function OwnedPlaylists({ children, limit }) {
-
     const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
-    const [ownedPlaylistDocumentIDs, setOwnedPlaylistDocumentIDs] = useState(undefined);
+    const [ownedPlaylistDocumentIDs, setOwnedPlaylistDocumentIDs] =
+        useState(undefined);
     const [ownedPlaylists, setOwnedPlaylists] = useState([]);
     const [hasMoreItems, setHasMoreItems] = useState(true);
 
     const fetchOwnedPlaylistDocumentId = useCallback(() => {
         if (user === undefined) {
             return;
-        }
-        else if (user === null) {
+        } else if (user === null) {
             setIsLoading(false);
             return;
         }
@@ -46,54 +45,77 @@ function OwnedPlaylists({ children, limit }) {
                 console.error(err);
                 setOwnedPlaylistDocumentIDs(null);
             })
-            .finally(() => {                
+            .finally(() => {
                 setIsLoading(false);
             });
+    }, [
+        user,
+        limit,
+        setOwnedPlaylistDocumentIDs,
+        setIsLoading,
+        setOwnedPlaylists,
+        setHasMoreItems,
+    ]);
 
-    }, [user, limit, setOwnedPlaylistDocumentIDs, setIsLoading, setOwnedPlaylists, setHasMoreItems]);
+    const fetchNextItems = useCallback(
+        async (resetIndex = false) => {
+            if (!ownedPlaylistDocumentIDs?.length) return;
 
-    const fetchNextItems = useCallback(async (resetIndex = false) => {
+            if (!resetIndex && !hasMoreItems) return;
 
-        if (!ownedPlaylistDocumentIDs?.length)
-            return;
+            if (
+                !resetIndex &&
+                ownedPlaylistDocumentIDs?.length === ownedPlaylists?.length
+            ) {
+                setHasMoreItems(false);
+                return;
+            }
 
-        if (!resetIndex && !hasMoreItems)   
-            return;
+            let itemsToFetch = [];
+            if (limit) {
+                itemsToFetch = ownedPlaylistDocumentIDs.slice(0, limit);
+            } else {
+                if (resetIndex) {
+                    itemsToFetch = ownedPlaylistDocumentIDs.slice(
+                        0,
+                        FETCH_AMOUNT
+                    );
+                } else {
+                    itemsToFetch = ownedPlaylistDocumentIDs.slice(
+                        ownedPlaylists.length,
+                        ownedPlaylists.length + FETCH_AMOUNT
+                    );
+                }
+            }
 
-        if (!resetIndex && ownedPlaylistDocumentIDs?.length === ownedPlaylists?.length) {
-            setHasMoreItems(false);
-            return;
-        }
+            const fetchedItems =
+                await playlistService.fetchPlaylists(itemsToFetch);
 
-        let itemsToFetch = [];
-        if (limit) {
-            itemsToFetch = ownedPlaylistDocumentIDs.slice(0, limit);
-        }
-        else {
             if (resetIndex) {
-                itemsToFetch = ownedPlaylistDocumentIDs.slice(0, FETCH_AMOUNT);
+                setOwnedPlaylists(fetchedItems);
+                setHasMoreItems(
+                    fetchNextItems.length === ownedPlaylistDocumentIDs.length
+                );
+            } else {
+                setOwnedPlaylists([...ownedPlaylists, ...fetchedItems]);
+                setHasMoreItems(
+                    ownedPlaylists.length + fetchedItems.length ===
+                        ownedPlaylistDocumentIDs.length
+                );
             }
-            else {
-                itemsToFetch = ownedPlaylistDocumentIDs.slice(ownedPlaylists.length, ownedPlaylists.length + FETCH_AMOUNT);
-            }
-        }
-
-        const fetchedItems = await playlistService.fetchPlaylists(itemsToFetch);
-
-        if (resetIndex) {
-            setOwnedPlaylists(fetchedItems);
-            setHasMoreItems(fetchNextItems.length === ownedPlaylistDocumentIDs.length);
-        }
-        else {
-            setOwnedPlaylists([...ownedPlaylists, ...fetchedItems]);
-            setHasMoreItems((ownedPlaylists.length + fetchedItems.length) === ownedPlaylistDocumentIDs.length);
-        }
-
-    }, [ownedPlaylistDocumentIDs, ownedPlaylists, setOwnedPlaylists, hasMoreItems, setHasMoreItems]);
+        },
+        [
+            ownedPlaylistDocumentIDs,
+            ownedPlaylists,
+            setOwnedPlaylists,
+            hasMoreItems,
+            setHasMoreItems,
+        ]
+    );
 
     const handleScrollToEnd = useCallback(async () => {
-
-        const scrollRemaining = document.body.offsetHeight - window.scrollY - window.innerHeight;
+        const scrollRemaining =
+            document.body.offsetHeight - window.scrollY - window.innerHeight;
 
         if (scrollRemaining <= 0) {
             const scrollY = window.scrollY;
@@ -122,7 +144,7 @@ function OwnedPlaylists({ children, limit }) {
 
         return () => {
             window.removeEventListener('scrollend', handleScrollToEnd);
-        }
+        };
     }, [ownedPlaylists, hasMoreItems, limit]);
 
     if (isLoading) {
@@ -134,67 +156,64 @@ function OwnedPlaylists({ children, limit }) {
     }
 
     if (user === null) {
-        return <AuthLinks message='Please Login or Signup to see your playlists' />;
+        return (
+            <AuthLinks message='Please Login or Signup to see your playlists' />
+        );
     }
 
     return (
         <div className='p-3 tablet:p-6'>
-            <div className='rounded-xl bg-white bg-opacity-5 border border-white border-opacity-5'> 
+            <div className='rounded-xl bg-white bg-opacity-5 border border-white border-opacity-5'>
                 <p className='p-4 text-xl tablet:text-2xl text-center tablet:text-left font-bold select-none'>
                     Your Playlists
                 </p>
 
-                {
-                    ownedPlaylistDocumentIDs === null && (
-                        <div className='text-center p-8'>
-                            An Error occured while fetching your playlists.
-                        </div>
-                    )
-                }
+                {ownedPlaylistDocumentIDs === null && (
+                    <div className='text-center p-8'>
+                        An Error occured while fetching your playlists.
+                    </div>
+                )}
 
-                {
-                    ownedPlaylistDocumentIDs.length === 0 && (
-                        <div className='text-center p-8 text-sm'>
-                            You don't have any playlists.
-                        </div>
-                    )
-                }
+                {ownedPlaylistDocumentIDs.length === 0 && (
+                    <div className='text-center p-8 text-sm'>
+                        You don't have any playlists.
+                    </div>
+                )}
 
-                {
-                    ownedPlaylistDocumentIDs?.length > 0 && (
-                        !ownedPlaylists?.length ? (
-                            <LoadingFeed count={limit || 12} />
-                        ) : (
-                            <div>
-                                <div className='grid grid-cols-1 tablet:grid-cols-feed gap-2 tablet:gap-6 p-2 tablet:p-3'>
-                                    <OwnedPlaylistsFeed
-                                        user={user}
-                                        ownedPlaylists={ownedPlaylists}
-                                        fetchOwnedPlaylistDocumentId={fetchOwnedPlaylistDocumentId}
-                                    /> 
-                                </div>
-    
-                                {
-                                    hasMoreItems && (
-                                        <div className='flex justify-center p-4'>
-                                            <Spinner />
-                                        </div>
-                                    )
-                                }
-    
-                                { children }
+                {ownedPlaylistDocumentIDs?.length > 0 &&
+                    (!ownedPlaylists?.length ? (
+                        <LoadingFeed count={limit || 12} />
+                    ) : (
+                        <div>
+                            <div className='grid grid-cols-1 tablet:grid-cols-feed gap-2 tablet:gap-6 p-2 tablet:p-3'>
+                                <OwnedPlaylistsFeed
+                                    user={user}
+                                    ownedPlaylists={ownedPlaylists}
+                                    fetchOwnedPlaylistDocumentId={
+                                        fetchOwnedPlaylistDocumentId
+                                    }
+                                />
                             </div>
-                        )
-                    )
-                
-                }
-                
+
+                            {hasMoreItems && (
+                                <div className='flex justify-center p-4'>
+                                    <Spinner />
+                                </div>
+                            )}
+
+                            {children}
+                        </div>
+                    ))}
             </div>
         </div>
     );
 }
 
-function OwnedPlaylistsFeed({ user, ownedPlaylists, fetchOwnedPlaylistDocumentId }) {
+function OwnedPlaylistsFeed({
+    user,
+    ownedPlaylists,
+    fetchOwnedPlaylistDocumentId,
+}) {
     const [popoverShowing, setPopoverShowing] = useState(false);
     const [popoverPlaylistDetails, setPopoverPlaylistDetails] = useState({});
 
@@ -202,30 +221,29 @@ function OwnedPlaylistsFeed({ user, ownedPlaylists, fetchOwnedPlaylistDocumentId
 
     return (
         <>
-            {
-                ownedPlaylists?.map(item => (
-                    <PlaylistFeedItem
-                        key={item.$id}
-                        playlist={item}
-                        showMoreOptions={() => { setPopoverShowing(true); setPopoverPlaylistDetails(item); }}
-                    />
-                ))
-            }
+            {ownedPlaylists?.map((item) => (
+                <PlaylistFeedItem
+                    key={item.$id}
+                    playlist={item}
+                    showMoreOptions={() => {
+                        setPopoverShowing(true);
+                        setPopoverPlaylistDetails(item);
+                    }}
+                />
+            ))}
 
-            <Popover 
+            <Popover
                 popoverShowing={popoverShowing}
                 setPopoverShowing={setPopoverShowing}
                 className='backdrop:bg-black backdrop:opacity-80 w-72 max-w-[90%] max-h-[90%] p-4 bg-black text-white border border-white border-opacity-30 rounded-2xl'
             >
-                <p>
-                    { popoverPlaylistDetails.title }
-                </p>
+                <p>{popoverPlaylistDetails.title}</p>
 
                 <PopoverBtn
-                    onClick={() => { 
+                    onClick={() => {
                         navigator.share({
                             title: popoverPlaylistDetails.title,
-                            text: `${window.location.origin}/playlist/${popoverPlaylistDetails.$id}`
+                            text: `${window.location.origin}/playlist/${popoverPlaylistDetails.$id}`,
                         });
 
                         setPopoverShowing(false);
@@ -240,7 +258,10 @@ function OwnedPlaylistsFeed({ user, ownedPlaylists, fetchOwnedPlaylistDocumentId
                     spinnerSize={20}
                     asyncClickHandler={async () => {
                         try {
-                            await playlistService.deletePlaylist(user.$id, popoverPlaylistDetails.$id);
+                            await playlistService.deletePlaylist(
+                                user.$id,
+                                popoverPlaylistDetails.$id
+                            );
                             showToast.success('Playlist deleted successfully.');
                         } catch (err) {
                             console.error(err);
@@ -254,17 +275,16 @@ function OwnedPlaylistsFeed({ user, ownedPlaylists, fetchOwnedPlaylistDocumentId
                 >
                     Delete
                 </AsyncSubmitBtn>
-            
+
                 <button
                     onClick={() => setPopoverShowing(false)}
                     className='w-full h-9 mt-4 bg-white text-black text-[17px] font-bold rounded-full active:bg-opacity-80'
                 >
                     Cancel
                 </button>
-
             </Popover>
         </>
-    )
+    );
 }
 
 function PopoverBtn({ onClick, className, children }) {
@@ -273,9 +293,9 @@ function PopoverBtn({ onClick, className, children }) {
             onClick={onClick}
             className={`w-full h-9 mt-4 bg-[#101010] text-white text-[15px] font-semibold rounded-full border border-white border-opacity-20 active:scale-90 duration-200 ${className}`}
         >
-            { children }
+            {children}
         </button>
-    )
+    );
 }
 
 export default OwnedPlaylists;

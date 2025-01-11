@@ -1,9 +1,9 @@
 function Slider({ min, max, value, className, onChange, onClick, onTouchEnd }) {
     return (
-        <input 
-            type='range' 
-            min={min} 
-            max={max} 
+        <input
+            type='range'
+            min={min}
+            max={max}
             value={value}
             onChange={onChange}
             onClick={onClick}

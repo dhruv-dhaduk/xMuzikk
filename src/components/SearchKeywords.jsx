@@ -15,7 +15,9 @@ function SearchKeywords({ searchInput, setSearchInput }) {
     const timeoutID = useRef(-1);
 
     useEffect(() => {
-        const inputKeywords = searchInput.split(' ').filter((item) => item.length > 0);
+        const inputKeywords = searchInput
+            .split(' ')
+            .filter((item) => item.length > 0);
 
         if (JSON.stringify(queryInput) !== JSON.stringify(inputKeywords)) {
             setQueryInput(inputKeywords);
@@ -66,40 +68,36 @@ function SearchKeywords({ searchInput, setSearchInput }) {
         return null;
     }
 
-
-    return ( 
+    return (
         <div className='absolute top-0 w-full h-[28rem] overflow-y-scroll bg-black'>
             <div>
-                {
-                    keywords.map((item) => (
-                        <div
-                            key={item.$id}
-                            className='flex justify-between items-stretch h-9 bg-[#181818] border-b border-[#393939]'
+                {keywords.map((item) => (
+                    <div
+                        key={item.$id}
+                        className='flex justify-between items-stretch h-9 bg-[#181818] border-b border-[#393939]'
+                    >
+                        <Link
+                            to={`/searchresults/${item.$id}`}
+                            className='flex-1 line-clamp-1 flex justify-start items-center text-sm px-2 text-[#c4c4c4]'
                         >
-                            <Link
-                                to={`/searchresults/${item.$id}`}
-                                className='flex-1 line-clamp-1 flex justify-start items-center text-sm px-2 text-[#c4c4c4]'
-                            > 
-                                {item.query}
-                            </Link>
+                            {item.query}
+                        </Link>
 
-                            <div
-                                onClick={() => setSearchInput(item.query)}
-                                className='flex-none flex justify-center items-center aspect-square cursor-pointer bg-[#454545] active:bg-black'
-                            >
-                                <img
-                                    src={upLeftArrowIcon}
-                                    draggable={false}
-                                    onContextMenu={e => e.preventDefault()}
-                                    className='w-6 aspect-square'
-                                />
-                            </div>
+                        <div
+                            onClick={() => setSearchInput(item.query)}
+                            className='flex-none flex justify-center items-center aspect-square cursor-pointer bg-[#454545] active:bg-black'
+                        >
+                            <img
+                                src={upLeftArrowIcon}
+                                draggable={false}
+                                onContextMenu={(e) => e.preventDefault()}
+                                className='w-6 aspect-square'
+                            />
                         </div>
-                    ))        
-                }
+                    </div>
+                ))}
             </div>
         </div>
-        
     );
 }
 

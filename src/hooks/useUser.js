@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from 'react';
 
-import { authService } from "../dataManager/AppwriteService.js";
+import { authService } from '../dataManager/AppwriteService.js';
 
 function useUser() {
     const [user, setUser] = useState(undefined);
@@ -13,15 +13,14 @@ function useUser() {
             .then(({ response }) => {
                 if (!response) {
                     setUser(null);
-                }
-                else {
+                } else {
                     setUser(response);
                 }
             })
             .catch((err) => {
                 console.error(err);
                 setUser(null);
-            })
+            });
     }, [setUser]);
 
     useEffect(fetchUser, []);

@@ -18,41 +18,44 @@ function PlaylistFeed({ playlist, playlistItems, isOwned, reloader }) {
     const { showToast } = useContext(ToastContext);
 
     if (!playlistItems?.length) {
-        return (
-            <LoadingFeed />
-        )
+        return <LoadingFeed />;
     }
 
     return (
-
         <>
             <div>
-                {
-                    playlistItems.map((item, index) => (
-                        <PlaylistItem
-                            key={item.id}
-                            item={item}
-                            index={index + 1}
-                            isPlaying={item.id === playerContext?.playingMusic?.id}
-                            playMusic={() => playerContext.playManager.playMusic(item)}
-                            showPlayer={playerContext.showPlayer}
-                            showMoreOptions={() => { setPopoverMusicDetails(item); setPopoverShowing(true); } }
-                        />
-                    ))  
-                }
+                {playlistItems.map((item, index) => (
+                    <PlaylistItem
+                        key={item.id}
+                        item={item}
+                        index={index + 1}
+                        isPlaying={item.id === playerContext?.playingMusic?.id}
+                        playMusic={() =>
+                            playerContext.playManager.playMusic(item)
+                        }
+                        showPlayer={playerContext.showPlayer}
+                        showMoreOptions={() => {
+                            setPopoverMusicDetails(item);
+                            setPopoverShowing(true);
+                        }}
+                    />
+                ))}
             </div>
-                        
+
             <Popover
                 popoverShowing={popoverShowing}
                 setPopoverShowing={setPopoverShowing}
                 className='backdrop:bg-black backdrop:opacity-80 w-72 max-w-[90%] max-h-[90%] p-4 bg-black text-white border border-white border-opacity-30 rounded-2xl'
             >
-                <p className='line-clamp-2'>
-                    { popoverMusicDetails.title }
-                </p>
-                
+                <p className='line-clamp-2'>{popoverMusicDetails.title}</p>
+
                 <button
-                    onClick={() => { playerContext.playManager.addToQueue(popoverMusicDetails.id); setPopoverShowing(false); }}
+                    onClick={() => {
+                        playerContext.playManager.addToQueue(
+                            popoverMusicDetails.id
+                        );
+                        setPopoverShowing(false);
+                    }}
                     className='w-full h-9 mt-4 bg-[#101010] text-white text-[14px] font-semibold rounded-full border border-white border-opacity-20 active:scale-90 duration-200'
                 >
                     Add To Queue
@@ -63,30 +66,32 @@ function PlaylistFeed({ playlist, playlistItems, isOwned, reloader }) {
                     callback={() => setPopoverShowing(false)}
                 />
 
-                {
-                    isOwned && (
-                        <AsyncSubmitBtn
-                            className='w-full h-9 mt-4 bg-red-700 text-white text-[14px] font-semibold rounded-full active:scale-90 duration-200'
-                            loadingClassName='w-full h-9 mt-4 flex justify-center items-center bg-red-950  rounded-full'
-                            spinnerSize={20}
-                            asyncClickHandler={async () => {
-                                try {
-                                    await playlistService.removeFromPlaylist(playlist?.$id, popoverMusicDetails?.id);
-                                    showToast.success('Item removed from playlist successfully');
-                                } catch (err) {
-                                    console.error(err);
-                                    showToast.error(err.message);
-                                }
+                {isOwned && (
+                    <AsyncSubmitBtn
+                        className='w-full h-9 mt-4 bg-red-700 text-white text-[14px] font-semibold rounded-full active:scale-90 duration-200'
+                        loadingClassName='w-full h-9 mt-4 flex justify-center items-center bg-red-950  rounded-full'
+                        spinnerSize={20}
+                        asyncClickHandler={async () => {
+                            try {
+                                await playlistService.removeFromPlaylist(
+                                    playlist?.$id,
+                                    popoverMusicDetails?.id
+                                );
+                                showToast.success(
+                                    'Item removed from playlist successfully'
+                                );
+                            } catch (err) {
+                                console.error(err);
+                                showToast.error(err.message);
+                            }
 
-                                await reloader();
-                                setPopoverShowing(false);
-                            }}
-                        >
-                            Remove from playlist
-                        </AsyncSubmitBtn>
-                    )
-                }
-                
+                            await reloader();
+                            setPopoverShowing(false);
+                        }}
+                    >
+                        Remove from playlist
+                    </AsyncSubmitBtn>
+                )}
 
                 <button
                     onClick={() => setPopoverShowing(false)}
@@ -96,35 +101,38 @@ function PlaylistFeed({ playlist, playlistItems, isOwned, reloader }) {
                 </button>
             </Popover>
         </>
-    )
+    );
 }
 
 function PlaylistFeedRearrange({ playlistId, playlistItems }) {
     return (
         <Droppable droppableId={`playlist_${playlistId}`}>
             {(provided) => (
-                <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                >
-                    {
-                        playlistItems.map((item, i) => (
-                            <Draggable key={`playlist_${playlistId}_item_${item.id}`} draggableId={`playlist_${playlistId}_item_${item.id}`} index={i}>
-                                {(provided) => (
-                                    <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
-                                        <PlaylistItem
-                                            item={item}
-                                            isRearrangable={true}
-                                            index={i + 1}
-                                            isPlaying={false}              
-                                        />
-                                    </div>
-                                )}
-                            </Draggable>
-                        ))
-                    }
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                    {playlistItems.map((item, i) => (
+                        <Draggable
+                            key={`playlist_${playlistId}_item_${item.id}`}
+                            draggableId={`playlist_${playlistId}_item_${item.id}`}
+                            index={i}
+                        >
+                            {(provided) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    {...provided.dragHandleProps}
+                                    {...provided.draggableProps}
+                                >
+                                    <PlaylistItem
+                                        item={item}
+                                        isRearrangable={true}
+                                        index={i + 1}
+                                        isPlaying={false}
+                                    />
+                                </div>
+                            )}
+                        </Draggable>
+                    ))}
 
-                    { provided.placeholder }
+                    {provided.placeholder}
                 </div>
             )}
         </Droppable>
@@ -134,9 +142,11 @@ function PlaylistFeedRearrange({ playlistId, playlistItems }) {
 function LoadingFeed({ count = 10 }) {
     return (
         <div>
-            { 
-                Array(count).fill(0).map((_, i) => <LoadingFeedItem key={i} />)
-            }
+            {Array(count)
+                .fill(0)
+                .map((_, i) => (
+                    <LoadingFeedItem key={i} />
+                ))}
         </div>
     );
 }
@@ -144,8 +154,7 @@ function LoadingFeed({ count = 10 }) {
 function LoadingFeedItem() {
     return (
         <div className='flex gap-2 p-3'>
-            <div className='loading flex-none w-[6.5rem] aspect-square rounded-xl'>
-            </div>
+            <div className='loading flex-none w-[6.5rem] aspect-square rounded-xl'></div>
 
             <div className='flex-1 flex flex-col justify-start gap-3 pt-3'>
                 <div className='loading w-full h-4 rounded'></div>

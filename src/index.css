@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
+html,
+body {
     background-color: black;
     color: white;
     scroll-behavior: smooth;
@@ -31,13 +32,12 @@ html, body {
     @apply bg-gradient-to-r from-primary-light to-primary-dark;
 }
 
-
 .slider {
     background: transparent;
     cursor: pointer;
 
-    --color: linear-gradient(90deg, #00F0FF, #1400FF);
-    accent-color: #1400FF;
+    --color: linear-gradient(90deg, #00f0ff, #1400ff);
+    accent-color: #1400ff;
     --thumb-size: 1.15rem;
     --track-height: 0.25rem;
 }
@@ -57,14 +57,14 @@ html, body {
 }
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    background: #1400FF;
+    background: #1400ff;
     width: var(--thumb-size);
     height: var(--thumb-size);
     margin-top: calc((var(--track-height) / 2) - (var(--thumb-size) / 2));
     border-radius: 9999999px;
 }
 .slider::-moz-range-thumb {
-    background: #1400FF;
+    background: #1400ff;
     width: var(--thumb-size);
     height: var(--thumb-size);
     border: none;

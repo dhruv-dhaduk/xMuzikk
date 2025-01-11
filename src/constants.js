@@ -5,7 +5,7 @@ const YTstates = Object.freeze({
     PLAYING: 1,
     PAUSED: 2,
     BUFFERING: 3,
-    CUED: 5
+    CUED: 5,
 });
 
 const localStorageKeys = Object.freeze({
@@ -13,13 +13,13 @@ const localStorageKeys = Object.freeze({
     playingMusic: 'xMuzikk_playingMusic',
     currentTime: 'xMuzikk_playback_currentTime',
     looping: 'xMuzikk_looping',
-    queue: 'xMuzikk_queue'
+    queue: 'xMuzikk_queue',
 });
 
 const loopingOptions = Object.freeze({
     LOOP: 0,
     LOOP_ONCE: 1,
-    SHUFFLE: 2
+    SHUFFLE: 2,
 });
 
 export { YTstates, localStorageKeys, loopingOptions };

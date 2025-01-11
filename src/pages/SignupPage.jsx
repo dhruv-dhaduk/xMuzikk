@@ -1,5 +1,5 @@
-import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { authService } from '../dataManager/AppwriteService.js';
 
@@ -20,27 +20,27 @@ function SignupPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!name?.length) {
             showToast.warn('Please Enter Your Name');
             return;
         }
-        
+
         if (!email?.length) {
             showToast.warn('Please Enter Your Email');
             return;
         }
-        
+
         if (!password?.length) {
             showToast.warn('Please Enter the Password');
             return;
         }
-        
+
         if (password.length < 8) {
             showToast.warn('Password must be atleast 8 characters long.');
             return;
         }
-        
+
         if (!confirmPassword?.length) {
             showToast.warn('Please Confirm the Password');
             return;
@@ -51,18 +51,16 @@ function SignupPage() {
             return;
         }
 
-
         setSubmitDisabled(true);
 
         authService
             .createAccount(email, password, name)
-            .then(({response, error}) => {
+            .then(({ response, error }) => {
                 if (error) {
                     console.log(error);
                     showToast.error(`Error : ${error.message}`);
                     return;
-                }
-                else {
+                } else {
                     console.log(response);
                     showToast.success('Account created successfully.');
                     navigate('/login');
@@ -75,8 +73,8 @@ function SignupPage() {
             .finally(() => {
                 setSubmitDisabled(false);
             });
-    }
-    
+    };
+
     return (
         <div className='flex justify-center p-4'>
             <div className='bg-card border border-card w-full tablet:max-w-[30rem] rounded-3xl'>
@@ -88,13 +86,12 @@ function SignupPage() {
                     className='flex flex-col gap-4 px-4 pt-6'
                     onSubmit={handleSubmit}
                 >
-
                     <div>
                         <Label>Your Name</Label>
                         <input
                             type='text'
                             value={name}
-                            onChange={e => setName(e.target.value)}
+                            onChange={(e) => setName(e.target.value)}
                             placeholder='Enter Your Name'
                             className='input-text w-full'
                         />
@@ -105,7 +102,7 @@ function SignupPage() {
                         <input
                             type='email'
                             value={email}
-                            onChange={e => setEmail(e.target.value)}
+                            onChange={(e) => setEmail(e.target.value)}
                             placeholder='Enter Your Email'
                             className='input-text w-full'
                         />
@@ -116,7 +113,7 @@ function SignupPage() {
                         <input
                             type='password'
                             value={password}
-                            onChange={e => setPassword(e.target.value)}
+                            onChange={(e) => setPassword(e.target.value)}
                             placeholder='Enter a Password'
                             className='input-text w-full'
                         />
@@ -127,52 +124,54 @@ function SignupPage() {
                         <input
                             type='password'
                             value={confirmPassword}
-                            onChange={e => setConfirmPassword(e.target.value)}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
                             placeholder='Confirm your Password'
                             className='input-text w-full'
                         />
                         <p className='text-[12px]'>
-                            {
-                                (confirmPassword.length && confirmPassword === password) ? <span className='text-green-500'>(Password matches)</span> : ''
-                            }
-                            {
-                                (confirmPassword.length && confirmPassword !== password) ? <span className='text-red-500'>(Password doesn't match)</span> : ''
-                            }
+                            {confirmPassword.length &&
+                            confirmPassword === password ? (
+                                <span className='text-green-500'>
+                                    (Password matches)
+                                </span>
+                            ) : (
+                                ''
+                            )}
+                            {confirmPassword.length &&
+                            confirmPassword !== password ? (
+                                <span className='text-red-500'>
+                                    (Password doesn't match)
+                                </span>
+                            ) : (
+                                ''
+                            )}
                         </p>
                     </div>
 
                     <div className='mt-4'>
-                        {
-                            submitDisabled ? (
-                                <div className='w-full h-10 flex justify-center items-center'>
-                                    <Spinner size={35} />
-                                </div>
-                            ) : (
-                                <input
-                                    type='submit'
-                                    value='Create Account'
-                                    disabled={submitDisabled}
-                                    className='w-full h-10 bg-white text-black font-bold rounded-full cursor-pointer active:bg-opacity-80 disabled:bg-opacity-50'
-                                />
-                            )
-                        }
-
+                        {submitDisabled ? (
+                            <div className='w-full h-10 flex justify-center items-center'>
+                                <Spinner size={35} />
+                            </div>
+                        ) : (
+                            <input
+                                type='submit'
+                                value='Create Account'
+                                disabled={submitDisabled}
+                                className='w-full h-10 bg-white text-black font-bold rounded-full cursor-pointer active:bg-opacity-80 disabled:bg-opacity-50'
+                            />
+                        )}
                     </div>
-
                 </form>
-                
+
                 <hr className='m-4 mt-6 border-[#666666]' />
 
                 <p className='p-4 pt-0 text-center text-[15px] select-none'>
-                    Already have an account ? 
-                    <Link
-                        to='/login'
-                        className='px-1 font-bold underline'
-                    >
+                    Already have an account ?
+                    <Link to='/login' className='px-1 font-bold underline'>
                         Log in
                     </Link>
                 </p>
-
             </div>
         </div>
     );
@@ -180,9 +179,7 @@ function SignupPage() {
 
 function Label({ children }) {
     return (
-        <p className='text-sm mb-1 text-stone-200 select-none'>
-            { children }
-        </p>
+        <p className='text-sm mb-1 text-stone-200 select-none'>{children}</p>
     );
 }
 

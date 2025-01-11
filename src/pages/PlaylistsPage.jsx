@@ -1,5 +1,5 @@
-import { useEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
 
 import { UserContext } from '../contexts/UserContext.js';
 
@@ -10,18 +10,15 @@ import CreatePlaylist from '../components/CreatePlaylist.jsx';
 import OwnedPlaylists from '../components/playlist/OwnedPlaylists.jsx';
 
 function PlaylistsPage() {
-
     const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         if (user === undefined) {
             setIsLoading(true);
-        }
-        else {
+        } else {
             setIsLoading(false);
         }
-
     }, [user]);
 
     if (isLoading) {
@@ -40,7 +37,7 @@ function PlaylistsPage() {
         <div>
             <CreatePlaylist user={user} />
 
-            <OwnedPlaylists limit={3} >
+            <OwnedPlaylists limit={3}>
                 <div className='flex justify-end p-3'>
                     <Link
                         to='/playlists/me'
@@ -51,7 +48,7 @@ function PlaylistsPage() {
                 </div>
             </OwnedPlaylists>
 
-            <SavedPlaylists limit={3} >
+            <SavedPlaylists limit={3}>
                 <div className='flex justify-end p-3'>
                     <Link
                         to='/playlists/saved'

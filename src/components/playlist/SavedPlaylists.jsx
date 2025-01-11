@@ -1,5 +1,5 @@
-import { useCallback, useEffect } from "react";
-import { useState, useContext } from "react";
+import { useCallback, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { ToastContext } from '../../contexts/ToastContext.js';
 import { UserContext } from '../../contexts/UserContext.js';
 
@@ -15,19 +15,18 @@ import AsyncSubmitBtn from '../AsyncSubmitBtn.jsx';
 
 const FETCH_AMOUNT = 10;
 
-function SavedPlaylists({ children, limit }) {  
-
+function SavedPlaylists({ children, limit }) {
     const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
-    const [savedPlaylistDocumentIDs, setSavedPlaylistDocumentIDs] = useState(undefined);
+    const [savedPlaylistDocumentIDs, setSavedPlaylistDocumentIDs] =
+        useState(undefined);
     const [savedPlaylists, setSavedPlaylists] = useState([]);
     const [hasMoreItems, setHasMoreItems] = useState(true);
 
     const fetchSavedPlaylistDocumentIDs = useCallback(() => {
         if (user === undefined) {
             return;
-        }
-        else if (user === null) {
+        } else if (user === null) {
             setIsLoading(false);
             return;
         }
@@ -41,59 +40,82 @@ function SavedPlaylists({ children, limit }) {
             .getSavedPlaylists(user.$id, limit ? limit : undefined)
             .then((response) => {
                 setSavedPlaylistDocumentIDs(response);
-
             })
             .catch((err) => {
                 console.error(err);
                 setSavedPlaylistDocumentIDs(null);
             })
-            .finally(() => {                
+            .finally(() => {
                 setIsLoading(false);
             });
-    }, [user, limit, setSavedPlaylistDocumentIDs, setIsLoading, setSavedPlaylists, setHasMoreItems]);
+    }, [
+        user,
+        limit,
+        setSavedPlaylistDocumentIDs,
+        setIsLoading,
+        setSavedPlaylists,
+        setHasMoreItems,
+    ]);
 
-    const fetchNextItems = useCallback(async (resetIndex = false) => {
+    const fetchNextItems = useCallback(
+        async (resetIndex = false) => {
+            if (!savedPlaylistDocumentIDs?.length) return;
 
-        if (!savedPlaylistDocumentIDs?.length)
-            return;
+            if (!resetIndex && !hasMoreItems) return;
 
-        if (!resetIndex && !hasMoreItems)   
-            return;
+            if (
+                !resetIndex &&
+                savedPlaylistDocumentIDs?.length === savedPlaylists?.length
+            ) {
+                setHasMoreItems(false);
+                return;
+            }
 
-        if (!resetIndex && savedPlaylistDocumentIDs?.length === savedPlaylists?.length) {
-            setHasMoreItems(false);
-            return;
-        }
+            let itemsToFetch = [];
+            if (limit) {
+                itemsToFetch = savedPlaylistDocumentIDs.slice(0, limit);
+            } else {
+                if (resetIndex) {
+                    itemsToFetch = savedPlaylistDocumentIDs.slice(
+                        0,
+                        FETCH_AMOUNT
+                    );
+                } else {
+                    itemsToFetch = savedPlaylistDocumentIDs.slice(
+                        savedPlaylists.length,
+                        savedPlaylists.length + FETCH_AMOUNT
+                    );
+                }
+            }
 
-        let itemsToFetch = [];
-        if (limit) {
-            itemsToFetch = savedPlaylistDocumentIDs.slice(0, limit);
-        }
-        else {
+            const fetchedItems =
+                await playlistService.fetchPlaylists(itemsToFetch);
+
             if (resetIndex) {
-                itemsToFetch = savedPlaylistDocumentIDs.slice(0, FETCH_AMOUNT);
+                setSavedPlaylists(fetchedItems);
+                setHasMoreItems(
+                    fetchNextItems.length === savedPlaylistDocumentIDs.length
+                );
+            } else {
+                setSavedPlaylists([...savedPlaylists, ...fetchedItems]);
+                setHasMoreItems(
+                    savedPlaylists.length + fetchedItems.length ===
+                        savedPlaylistDocumentIDs.length
+                );
             }
-            else {
-                itemsToFetch = savedPlaylistDocumentIDs.slice(savedPlaylists.length, savedPlaylists.length + FETCH_AMOUNT);
-            }
-        }
-
-        const fetchedItems = await playlistService.fetchPlaylists(itemsToFetch);
-
-        if (resetIndex) {
-            setSavedPlaylists(fetchedItems);
-            setHasMoreItems(fetchNextItems.length === savedPlaylistDocumentIDs.length);
-        }
-        else {
-            setSavedPlaylists([...savedPlaylists, ...fetchedItems]);
-            setHasMoreItems((savedPlaylists.length + fetchedItems.length) === savedPlaylistDocumentIDs.length);
-        }
-
-    }, [savedPlaylistDocumentIDs, savedPlaylists, setSavedPlaylists, hasMoreItems, setHasMoreItems]);
+        },
+        [
+            savedPlaylistDocumentIDs,
+            savedPlaylists,
+            setSavedPlaylists,
+            hasMoreItems,
+            setHasMoreItems,
+        ]
+    );
 
     const handleScrollToEnd = useCallback(async () => {
-
-        const scrollRemaining = document.body.offsetHeight - window.scrollY - window.innerHeight;
+        const scrollRemaining =
+            document.body.offsetHeight - window.scrollY - window.innerHeight;
 
         if (scrollRemaining <= 0) {
             const scrollY = window.scrollY;
@@ -122,7 +144,7 @@ function SavedPlaylists({ children, limit }) {
 
         return () => {
             window.removeEventListener('scrollend', handleScrollToEnd);
-        }
+        };
     }, [savedPlaylists, hasMoreItems, limit]);
 
     if (isLoading) {
@@ -134,67 +156,64 @@ function SavedPlaylists({ children, limit }) {
     }
 
     if (user === null) {
-        return <AuthLinks message='Please Login or Signup to see your saved playlists' />;
+        return (
+            <AuthLinks message='Please Login or Signup to see your saved playlists' />
+        );
     }
 
     return (
         <div className='p-3 tablet:p-6'>
-            <div className='rounded-xl bg-white bg-opacity-5 border border-white border-opacity-5'> 
+            <div className='rounded-xl bg-white bg-opacity-5 border border-white border-opacity-5'>
                 <p className='p-4 text-xl tablet:text-2xl text-center tablet:text-left font-bold select-none'>
                     Your Saved Playlists
                 </p>
 
-                {
-                    savedPlaylistDocumentIDs === null && (
-                        <div className='text-center p-8'>
-                            An Error occured while fetching your saved playlists.
-                        </div>
-                    )
-                }
+                {savedPlaylistDocumentIDs === null && (
+                    <div className='text-center p-8'>
+                        An Error occured while fetching your saved playlists.
+                    </div>
+                )}
 
-                {
-                    savedPlaylistDocumentIDs.length === 0 && (
-                        <div className='text-center p-8 text-sm'>
-                            You have no saved playlists.
-                        </div>
-                    )
-                }
+                {savedPlaylistDocumentIDs.length === 0 && (
+                    <div className='text-center p-8 text-sm'>
+                        You have no saved playlists.
+                    </div>
+                )}
 
-                {
-                    savedPlaylistDocumentIDs?.length > 0 && (
-                        !savedPlaylists?.length ? (
-                            <LoadingFeed count={limit || 12} />
-                        ) : (
-                            <div>
-                                <div className='grid grid-cols-1 tablet:grid-cols-feed gap-2 tablet:gap-6 p-2 tablet:p-3'>
-                                    <SavedPlaylistsFeed
-                                        savedPlaylists={savedPlaylists}
-                                        user={user}
-                                        fetchSavedPlaylistDocumentIDs={fetchSavedPlaylistDocumentIDs}
-                                    />
-                                </div>
-    
-                                {
-                                    hasMoreItems && (
-                                        <div className='flex justify-center p-4'>
-                                            <Spinner />
-                                        </div>
-                                    )
-                                }
-    
-                                { children }
+                {savedPlaylistDocumentIDs?.length > 0 &&
+                    (!savedPlaylists?.length ? (
+                        <LoadingFeed count={limit || 12} />
+                    ) : (
+                        <div>
+                            <div className='grid grid-cols-1 tablet:grid-cols-feed gap-2 tablet:gap-6 p-2 tablet:p-3'>
+                                <SavedPlaylistsFeed
+                                    savedPlaylists={savedPlaylists}
+                                    user={user}
+                                    fetchSavedPlaylistDocumentIDs={
+                                        fetchSavedPlaylistDocumentIDs
+                                    }
+                                />
                             </div>
-                        )
-                    )
-                
-                }
-                
+
+                            {hasMoreItems && (
+                                <div className='flex justify-center p-4'>
+                                    <Spinner />
+                                </div>
+                            )}
+
+                            {children}
+                        </div>
+                    ))}
             </div>
         </div>
     );
 }
 
-function SavedPlaylistsFeed({ savedPlaylists, user, fetchSavedPlaylistDocumentIDs }) {
+function SavedPlaylistsFeed({
+    savedPlaylists,
+    user,
+    fetchSavedPlaylistDocumentIDs,
+}) {
     const [popoverShowing, setPopoverShowing] = useState(false);
     const [popoverPlaylistDetails, setPopoverPlaylistDetails] = useState({});
 
@@ -202,30 +221,29 @@ function SavedPlaylistsFeed({ savedPlaylists, user, fetchSavedPlaylistDocumentID
 
     return (
         <>
-            {
-                savedPlaylists?.map(item => (
-                    <PlaylistFeedItem
-                        key={item.$id}
-                        playlist={item}
-                        showMoreOptions={() => { setPopoverShowing(true); setPopoverPlaylistDetails(item); }}
-                    />
-                ))
-            }
+            {savedPlaylists?.map((item) => (
+                <PlaylistFeedItem
+                    key={item.$id}
+                    playlist={item}
+                    showMoreOptions={() => {
+                        setPopoverShowing(true);
+                        setPopoverPlaylistDetails(item);
+                    }}
+                />
+            ))}
 
-            <Popover 
+            <Popover
                 popoverShowing={popoverShowing}
                 setPopoverShowing={setPopoverShowing}
                 className='backdrop:bg-black backdrop:opacity-80 w-72 max-w-[90%] max-h-[90%] p-4 bg-black text-white border border-white border-opacity-30 rounded-2xl'
             >
-                <p>
-                    { popoverPlaylistDetails.title }
-                </p>
+                <p>{popoverPlaylistDetails.title}</p>
 
                 <PopoverBtn
-                    onClick={() => { 
+                    onClick={() => {
                         navigator.share({
                             title: popoverPlaylistDetails.title,
-                            text: `${window.location.origin}/playlist/${popoverPlaylistDetails.$id}`
+                            text: `${window.location.origin}/playlist/${popoverPlaylistDetails.$id}`,
                         });
 
                         setPopoverShowing(false);
@@ -234,18 +252,19 @@ function SavedPlaylistsFeed({ savedPlaylists, user, fetchSavedPlaylistDocumentID
                     Share
                 </PopoverBtn>
 
-                {
-                    popoverPlaylistDetails.ytId && (
-                        <PopoverBtn
-                            onClick={() => {
-                                window.open(`https://www.youtube.com/playlist?list=${popoverPlaylistDetails.ytId}`, '_blank');
-                                setPopoverShowing(false);
-                            }}
-                        >
-                            Open in YouTube
-                        </PopoverBtn>
-                    )
-                }
+                {popoverPlaylistDetails.ytId && (
+                    <PopoverBtn
+                        onClick={() => {
+                            window.open(
+                                `https://www.youtube.com/playlist?list=${popoverPlaylistDetails.ytId}`,
+                                '_blank'
+                            );
+                            setPopoverShowing(false);
+                        }}
+                    >
+                        Open in YouTube
+                    </PopoverBtn>
+                )}
 
                 <AsyncSubmitBtn
                     className='w-full h-9 mt-4 bg-red-700 text-white text-[15px] font-semibold rounded-full active:scale-90 duration-200'
@@ -253,8 +272,13 @@ function SavedPlaylistsFeed({ savedPlaylists, user, fetchSavedPlaylistDocumentID
                     spinnerSize={20}
                     asyncClickHandler={async () => {
                         try {
-                            await playlistService.removeSavedPlaylist(user.$id, popoverPlaylistDetails.$id);
-                            showToast.success('Playlist removed from saved playlists');
+                            await playlistService.removeSavedPlaylist(
+                                user.$id,
+                                popoverPlaylistDetails.$id
+                            );
+                            showToast.success(
+                                'Playlist removed from saved playlists'
+                            );
                         } catch (err) {
                             console.error(err);
                             showToast.error(err.message);
@@ -267,17 +291,16 @@ function SavedPlaylistsFeed({ savedPlaylists, user, fetchSavedPlaylistDocumentID
                 >
                     Unsave
                 </AsyncSubmitBtn>
-            
+
                 <button
                     onClick={() => setPopoverShowing(false)}
                     className='w-full h-9 mt-4 bg-white text-black text-[17px] font-bold rounded-full active:bg-opacity-80'
                 >
                     Cancel
                 </button>
-
             </Popover>
         </>
-    )
+    );
 }
 
 function PopoverBtn({ onClick, className, children }) {
@@ -286,9 +309,9 @@ function PopoverBtn({ onClick, className, children }) {
             onClick={onClick}
             className={`w-full h-9 mt-4 bg-[#101010] text-white text-[15px] font-semibold rounded-full border border-white border-opacity-20 active:scale-90 duration-200 ${className}`}
         >
-            { children }
+            {children}
         </button>
-    )
+    );
 }
 
 export default SavedPlaylists;

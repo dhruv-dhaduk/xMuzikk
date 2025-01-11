@@ -15,7 +15,7 @@ function CreatePlaylist({ user }) {
     const { showToast } = useContext(ToastContext);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {        
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         if (!user) {
@@ -46,7 +46,7 @@ function CreatePlaylist({ user }) {
                 setIsSubmitting(false);
                 setShowForm(false);
             });
-    }
+    };
 
     return (
         <div className='flex justify-center items-center py-6'>
@@ -63,13 +63,10 @@ function CreatePlaylist({ user }) {
                 className='backdrop:bg-black backdrop:opacity-80 w-96 max-w-[90%] max-h-[90%] p-4 bg-black text-white border border-white border-opacity-30 rounded-2xl'
             >
                 <p className='text-2xl text-center font-bold'>
-                    Create new playlist                    
+                    Create new playlist
                 </p>
 
-                <form
-                    onSubmit={handleSubmit}
-                    className='pt-6'
-                >
+                <form onSubmit={handleSubmit} className='pt-6'>
                     <div>
                         <p className='text-sm mb-1 text-stone-200 select-none'>
                             Playlist Name
@@ -77,7 +74,7 @@ function CreatePlaylist({ user }) {
                         <input
                             type='text'
                             value={playlistName}
-                            onChange={e => setPlaylistName(e.target.value)}
+                            onChange={(e) => setPlaylistName(e.target.value)}
                             placeholder='Enter Playlist Name'
                             className='input-text w-full'
                         />
@@ -85,27 +82,28 @@ function CreatePlaylist({ user }) {
 
                     <div className='flex justify-center items-center gap-2 mt-4'>
                         <button
-                            onClick={e => {e.preventDefault(); setPlaylistName(''); setShowForm(false); }}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setPlaylistName('');
+                                setShowForm(false);
+                            }}
                             className='flex-1 py-2 bg-[#101010] text-white font-bold rounded-full cursor-pointer border border-white border-opacity-20 active:scale-90 duration-200'
-                        > 
+                        >
                             Cancel
                         </button>
 
-                        {
-                            isSubmitting ? (
-                                <div className='flex-1 flex justify-center'>
-                                    <Spinner size={30} />
-                                </div>
-                            ) : (
-                                <input
-                                    type='submit'
-                                    value='Create'
-                                    className='flex-1 py-2 bg-white text-black font-bold rounded-full cursor-pointer active:bg-opacity-80 disabled:bg-opacity-50'
-                                />
-                            )
-                        }
+                        {isSubmitting ? (
+                            <div className='flex-1 flex justify-center'>
+                                <Spinner size={30} />
+                            </div>
+                        ) : (
+                            <input
+                                type='submit'
+                                value='Create'
+                                className='flex-1 py-2 bg-white text-black font-bold rounded-full cursor-pointer active:bg-opacity-80 disabled:bg-opacity-50'
+                            />
+                        )}
                     </div>
-
                 </form>
             </Popover>
         </div>

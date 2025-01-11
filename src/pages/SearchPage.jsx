@@ -10,10 +10,12 @@ import SearchKeywords from '../components/SearchKeywords.jsx';
 import { ToastContext } from '../contexts/ToastContext.js';
 import { UserContext } from '../contexts/UserContext.js';
 
-import { convertIdFromYtLink, convertIdFromYtPlaylistLink } from '../utils/converters.js';
+import {
+    convertIdFromYtLink,
+    convertIdFromYtPlaylistLink,
+} from '../utils/converters.js';
 
 function SearchPage() {
-
     const { user } = useContext(UserContext);
     const [searchInput, setSearchInput] = useState('');
     const [searchLimit, setSearchLimit] = useState(undefined);
@@ -23,25 +25,24 @@ function SearchPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!user)
-            return;
+        if (!user) return;
 
         const fetchSearchLimit = async () => {
             try {
-                const { limit, maxLimit } = await searchService.getSearchLimit(user.$id);
+                const { limit, maxLimit } = await searchService.getSearchLimit(
+                    user.$id
+                );
 
                 setSearchLimit({ limit, maxLimit });
             } catch (err) {
                 setSearchLimit(null);
             }
-        }
+        };
 
         fetchSearchLimit();
-
     }, [user]);
 
     const handleSearch = async () => {
-
         if (!user) {
             showToast.warn('Please login or signup.');
             return;
@@ -63,16 +64,17 @@ function SearchPage() {
             .catch((err) => {
                 console.error(err);
                 if (err.limitExceeded) {
-                    showToast.error('You have reached the search limit for today. Please try again tomorrow.');
-                }
-                else {
+                    showToast.error(
+                        'You have reached the search limit for today. Please try again tomorrow.'
+                    );
+                } else {
                     showToast.error(err.message);
                 }
             })
             .finally(() => {
                 setIsLoading(false);
             });
-    }
+    };
 
     const handleLinkSearch = async (id) => {
         setIsLoading(true);
@@ -90,7 +92,7 @@ function SearchPage() {
             .finally(() => {
                 setIsLoading(false);
             });
-    }
+    };
 
     const handlePlaylistLinkSearch = async (playlistId) => {
         setIsLoading(true);
@@ -108,18 +110,18 @@ function SearchPage() {
             .finally(() => {
                 setIsLoading(false);
             });
-    }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         const ytId = convertIdFromYtLink(searchInput);
-        
+
         if (ytId) {
             handleLinkSearch(ytId);
             return;
         }
-        
+
         const playlistId = convertIdFromYtPlaylistLink(searchInput);
 
         if (playlistId) {
@@ -129,11 +131,10 @@ function SearchPage() {
 
         if (playlistId === undefined) {
             handleSearch();
+        } else {
+            showToast.warn('Link is not valid.');
         }
-        else {
-            showToast.warn("Link is not valid.");
-        }
-    }
+    };
 
     if (user === undefined) {
         return (
@@ -168,15 +169,14 @@ function SearchPage() {
     return (
         <div className='flex justify-center p-4'>
             <div className='w-full max-w-[40rem]'>
-                
                 <form
-                    onSubmit={handleSubmit} 
+                    onSubmit={handleSubmit}
                     className='flex justify-between items-center gap-1'
                 >
                     <input
                         type='text'
                         value={searchInput}
-                        onChange={e => setSearchInput(e.target.value)}
+                        onChange={(e) => setSearchInput(e.target.value)}
                         placeholder='Enter Search Query or YouTube link'
                         className='search-box flex-1'
                     />
@@ -186,7 +186,6 @@ function SearchPage() {
                         value=''
                         className='search-submit flex-none'
                     />
-
                 </form>
 
                 <div className='relative mt-1'>
@@ -196,46 +195,45 @@ function SearchPage() {
                     />
 
                     <div>
-                        {
-                            user
-                            &&
-                            searchLimit === undefined
-                            &&
+                        {user && searchLimit === undefined && (
                             <div className='flex justify-center p-4'>
                                 <Spinner />
                             </div>
-                        }
+                        )}
 
-                        {
-                            user
-                            &&
-                            searchLimit
-                            &&
+                        {user && searchLimit && (
                             <div className='pt-10'>
                                 <p className='text-xl font-bold text-center'>
-                                    { searchLimit.limit } searches remaining for today
+                                    {searchLimit.limit} searches remaining for
+                                    today
                                 </p>
 
                                 <p className='text-lg font-semibold text-center'>
-                                    (Total searches per day : { searchLimit.maxLimit })
+                                    (Total searches per day :{' '}
+                                    {searchLimit.maxLimit})
                                 </p>
 
                                 <div className='mt-4'>
                                     <p className='text-xs text-center py-1'>
-                                        We limit the number of searches you can execute per day due to high infrastructure costs.
+                                        We limit the number of searches you can
+                                        execute per day due to high
+                                        infrastructure costs.
                                     </p>
                                     <p className='text-xs text-center py-1'>
-                                        This limit only applies to new searches you make, not on search results already cached on our database or to search directly from YouTube links.    
+                                        This limit only applies to new searches
+                                        you make, not on search results already
+                                        cached on our database or to search
+                                        directly from YouTube links.
                                     </p>
                                     <p className='text-xs text-center py-1'>
-                                        Search limit will reset every day at 12:00 AM IST.    
+                                        Search limit will reset every day at
+                                        12:00 AM IST.
                                     </p>
                                 </div>
                             </div>
-                        }
+                        )}
                     </div>
                 </div>
-            
             </div>
         </div>
     );

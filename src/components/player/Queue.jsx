@@ -1,11 +1,18 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 import closeIcon from '/icons/close.svg';
-import Icon from "./Icon.jsx";
+import Icon from './Icon.jsx';
 
 import { Droppable, Draggable } from '@hello-pangea/dnd';
 
-function Queue({ queue, queueVisible, setQueueVisible, playingMusic, playFromQueueAt, removeFromQueue }) {
+function Queue({
+    queue,
+    queueVisible,
+    setQueueVisible,
+    playingMusic,
+    playFromQueueAt,
+    removeFromQueue,
+}) {
     const containerRef = useRef(null);
 
     useEffect(() => {
@@ -15,7 +22,6 @@ function Queue({ queue, queueVisible, setQueueVisible, playingMusic, playFromQue
             void containerRef.offsetWidth;
             containerRef.current.classList.add('animate-blink-once-1s');
         }
-
     }, [queueVisible]);
 
     return (
@@ -23,12 +29,8 @@ function Queue({ queue, queueVisible, setQueueVisible, playingMusic, playFromQue
             className={`${queueVisible ? '' : 'hidden'} absolute flex flex-col justify-start w-full h-full overflow-hidden bg-black rounded-2xl`}
             ref={containerRef}
         >
-            <div
-                className='flex-none flex justify-between items-center h-14 pl-4 pr-2 border-b border-stone-600'
-            >
-                <p className='text-xl font-bold'>
-                    In Queue
-                </p>
+            <div className='flex-none flex justify-between items-center h-14 pl-4 pr-2 border-b border-stone-600'>
+                <p className='text-xl font-bold'>In Queue</p>
 
                 <Icon
                     onClick={() => setQueueVisible(false)}
@@ -44,28 +46,37 @@ function Queue({ queue, queueVisible, setQueueVisible, playingMusic, playFromQue
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                     >
-                        { 
-                            queue.map((musicItem, i) => (
-                                <Draggable key={`queue_item_${musicItem.id}`} draggableId={`queue_item_${musicItem.id}`} index={i}>
-                                    {(provided) => (
-                                        <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
-                                            <QueueItem
-                                                music={musicItem}
-                                                isPlaying={playingMusic.id === musicItem.id}
-                                                play={() => playFromQueueAt(i)}
-                                                remove={() => removeFromQueue(musicItem.id)}
-                                            />
-                                        </div>
-                                    )}
-                                </Draggable>
-                            ))
-                        }
+                        {queue.map((musicItem, i) => (
+                            <Draggable
+                                key={`queue_item_${musicItem.id}`}
+                                draggableId={`queue_item_${musicItem.id}`}
+                                index={i}
+                            >
+                                {(provided) => (
+                                    <div
+                                        ref={provided.innerRef}
+                                        {...provided.dragHandleProps}
+                                        {...provided.draggableProps}
+                                    >
+                                        <QueueItem
+                                            music={musicItem}
+                                            isPlaying={
+                                                playingMusic.id === musicItem.id
+                                            }
+                                            play={() => playFromQueueAt(i)}
+                                            remove={() =>
+                                                removeFromQueue(musicItem.id)
+                                            }
+                                        />
+                                    </div>
+                                )}
+                            </Draggable>
+                        ))}
 
-                        { provided.placeholder }
+                        {provided.placeholder}
                     </div>
-                )}        
+                )}
             </Droppable>
-
         </div>
     );
 }
@@ -80,20 +91,25 @@ function QueueItem({ music, isPlaying, play, remove }) {
                 <img
                     src={music.thumbnail}
                     draggable={false}
-                    onContextMenu={e => e.preventDefault()}
+                    onContextMenu={(e) => e.preventDefault()}
                     className='w-full h-full object-cover'
                 />
             </div>
 
             <div className='flex-1 flex flex-col justify-evenly'>
-                <p className='line-clamp-1'>{ music.title }</p>
-                <p className='line-clamp-1 text-xs text-stone-300'>{ music.channelTitle }</p>
+                <p className='line-clamp-1'>{music.title}</p>
+                <p className='line-clamp-1 text-xs text-stone-300'>
+                    {music.channelTitle}
+                </p>
             </div>
 
             <Icon
                 imgSrc={closeIcon}
                 className='w-9 p-1.5 bg-whit bg-opacity-25'
-                onClick={e => { e.stopPropagation(); remove(); }}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    remove();
+                }}
             />
         </div>
     );

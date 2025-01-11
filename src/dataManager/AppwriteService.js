@@ -1,4 +1,12 @@
-import { Client, Databases, Query, ID, Account, Permission, Role } from 'appwrite';
+import {
+    Client,
+    Databases,
+    Query,
+    ID,
+    Account,
+    Permission,
+    Role,
+} from 'appwrite';
 import { Functions } from 'appwrite';
 
 const client = new Client();
@@ -17,15 +25,14 @@ class AppwriteService {
             import.meta.env.VITE_APPWRITE_RECOMMENDATION_COLLECTION_ID,
             [
                 Query.select(['$id', 'label', 'language', 'ids']),
-                Query.limit(Number.MAX_SAFE_INTEGER)
+                Query.limit(Number.MAX_SAFE_INTEGER),
             ]
         );
 
         const data = {};
 
         for (const item of response.documents) {
-            if (!data[item.language])
-                data[item.language] = [];
+            if (!data[item.language]) data[item.language] = [];
 
             data[item.language].push({ label: item.label, ids: item.ids });
         }
@@ -38,9 +45,17 @@ class AppwriteService {
             import.meta.env.VITE_APPWRITE_DB_ID,
             import.meta.env.VITE_APPWRITE_ALLMUSIC_COLLECTION_ID,
             [
-                Query.select(['id', 'title', 'thumbnail', 'duration', 'uploadTime', 'channelTitle', 'channelLink']),
+                Query.select([
+                    'id',
+                    'title',
+                    'thumbnail',
+                    'duration',
+                    'uploadTime',
+                    'channelTitle',
+                    'channelLink',
+                ]),
                 Query.limit(ids.length),
-                Query.equal('id', ids)
+                Query.equal('id', ids),
             ]
         );
 
@@ -52,7 +67,7 @@ class AppwriteService {
 
         return dataMap;
     }
-};
+}
 
 const appwriteService = new AppwriteService();
 
@@ -69,8 +84,7 @@ class AuthService {
 
         try {
             response = await this.account.get();
-        }
-        catch(err) {
+        } catch (err) {
             error = err;
         }
 
@@ -88,8 +102,7 @@ class AuthService {
                 password,
                 name
             );
-        }
-        catch(err) {
+        } catch (err) {
             error = err;
         }
 
@@ -101,10 +114,7 @@ class AuthService {
         let error;
 
         try {
-            response = await this.account.createEmailSession(
-                email,
-                password
-            );
+            response = await this.account.createEmailSession(email, password);
         } catch (err) {
             error = err;
         }
@@ -136,7 +146,7 @@ class SearchService {
             [
                 Query.select(['$id', 'query']),
                 Query.limit(20),
-                Query.search('query', q)
+                Query.search('query', q),
             ]
         );
 
@@ -144,32 +154,30 @@ class SearchService {
     }
 
     async executeSearch(q) {
-        if (!q)
-            throw new Error('No query provided');
-    
+        if (!q) throw new Error('No query provided');
+
         const response = await fn.createExecution(
             import.meta.env.VITE_APPWRITE_SEARCH_FUNCTION_ID,
             '',
             false,
             `/?q=${encodeURIComponent(q)}`
         );
-    
+
         const responseBody = JSON.parse(response.responseBody);
         if (responseBody.error) {
             const err = new Error(responseBody.error);
             if (responseBody.limitExceeded) {
                 err.limitExceeded = true;
             }
-    
+
             throw err;
         }
-    
+
         return responseBody;
     }
 
     async uploadMusicDetails(ids) {
-        if (!ids)
-            throw new Error('No ids provided');
+        if (!ids) throw new Error('No ids provided');
 
         const response = await fn.createExecution(
             import.meta.env.VITE_APPWRITE_UPLOADMUSICDETAILS_FUNCTINO_ID,
@@ -187,8 +195,7 @@ class SearchService {
     }
 
     async uploadPlaylist(playlistId) {
-        if (!playlistId)
-            throw new Error('No playlistId provided');
+        if (!playlistId) throw new Error('No playlistId provided');
 
         const response = await fn.createExecution(
             import.meta.env.VITE_APPWRITE_UPLOADMUSICDETAILS_FUNCTINO_ID,
@@ -207,31 +214,26 @@ class SearchService {
     }
 
     async getSearchResults(documentId) {
-
-        if (!documentId)
-            documentId = undefined;
+        if (!documentId) documentId = undefined;
 
         const response = await db.getDocument(
             import.meta.env.VITE_APPWRITE_DB_ID,
             import.meta.env.VITE_APPWRITE_SEARCHRESULTS_COLLECTION_ID,
             documentId,
-            [
-                Query.select(['query', 'ids'])
-            ]
+            [Query.select(['query', 'ids'])]
         );
 
         return response;
     }
 
     async getSearchLimit(userId) {
-
         let response = await db.listDocuments(
             import.meta.env.VITE_APPWRITE_DB_ID,
             import.meta.env.VITE_APPWRITE_SEARCHLIMIT_COLLECTION_ID,
             [
                 Query.select(['limit']),
                 Query.limit(1),
-                Query.equal('userId', 'maxlimit')
+                Query.equal('userId', 'maxlimit'),
             ]
         );
 
@@ -247,7 +249,7 @@ class SearchService {
             [
                 Query.select(['limit']),
                 Query.limit(1),
-                Query.equal('userId', userId)
+                Query.equal('userId', userId),
             ]
         );
 
@@ -259,7 +261,6 @@ class SearchService {
 
         return { limit, maxLimit };
     }
-
 }
 
 const searchService = new SearchService();
@@ -271,7 +272,16 @@ class PlaylistService {
             import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
             documentId,
             [
-                Query.select(['$id', 'owner', 'ytId', 'title', 'channelTitle', 'thumbnail', 'itemCount', 'items'])
+                Query.select([
+                    '$id',
+                    'owner',
+                    'ytId',
+                    'title',
+                    'channelTitle',
+                    'thumbnail',
+                    'itemCount',
+                    'items',
+                ]),
             ]
         );
 
@@ -279,55 +289,63 @@ class PlaylistService {
     }
 
     async fetchPlaylists(documentIds, fields) {
-
         if (!documentIds?.length) {
             throw new Error('No documentIds provided to fetch playlists');
         }
-        
+
         const response = await db.listDocuments(
             import.meta.env.VITE_APPWRITE_DB_ID,
             import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
             [
-                Query.select(!fields?.length ? ['$id', 'owner', 'ytId', 'title', 'channelTitle', 'thumbnail', 'itemCount'] : fields),
+                Query.select(
+                    !fields?.length
+                        ? [
+                              '$id',
+                              'owner',
+                              'ytId',
+                              'title',
+                              'channelTitle',
+                              'thumbnail',
+                              'itemCount',
+                          ]
+                        : fields
+                ),
                 Query.limit(documentIds.length),
-                Query.equal('$id', documentIds)
+                Query.equal('$id', documentIds),
             ]
         );
 
         const playlistsMap = new Map();
 
-        response.documents.forEach(item => {
+        response.documents.forEach((item) => {
             playlistsMap.set(item.$id, item);
         });
 
-        return documentIds.map(id => {
+        return documentIds.map((id) => {
             const item = playlistsMap.get(id);
-            if (item) 
-                return item;
-            else
-                return { $id: id, notFound: true };
+            if (item) return item;
+            else return { $id: id, notFound: true };
         });
     }
 
     async savePlaylist(userId, playlistDocumentId) {
-        if (!userId)
-            throw new Error('No userId provided');
+        if (!userId) throw new Error('No userId provided');
 
         if (!playlistDocumentId)
             throw new Error('No playlistDocumentId provided');
-        
+
         const response = await db.createDocument(
             import.meta.env.VITE_APPWRITE_DB_ID,
             import.meta.env.VITE_APPWRITE_SAVED_PLAYLISTS_COLLECTION_ID,
             ID.unique(),
             {
                 userId,
-                playlistDocumentId
+                playlistDocumentId,
             },
             [
                 Permission.read(Role.user(userId)),
                 Permission.update(Role.user(userId)),
-                Permission.delete(Role.user(userId))
+                Permission.delete(Role.user(userId)),
             ]
         );
 
@@ -335,8 +353,7 @@ class PlaylistService {
     }
 
     async getSavedPlaylists(userId, limit = Number.MAX_SAFE_INTEGER) {
-        if (!userId)
-            throw new Error('No userId provided');
+        if (!userId) throw new Error('No userId provided');
 
         const response = await db.listDocuments(
             import.meta.env.VITE_APPWRITE_DB_ID,
@@ -345,18 +362,19 @@ class PlaylistService {
                 Query.select(['playlistDocumentId']),
                 Query.limit(limit),
                 Query.equal('userId', userId),
-                Query.orderDesc('$createdAt')
+                Query.orderDesc('$createdAt'),
             ]
         );
 
-        const playlistDocumentIds = response.documents.map(item => item.playlistDocumentId);
+        const playlistDocumentIds = response.documents.map(
+            (item) => item.playlistDocumentId
+        );
 
         return playlistDocumentIds;
     }
 
     async removeSavedPlaylist(userId, playlistDocumentId) {
-        if (!userId)
-            throw new Error('No userId provided');
+        if (!userId) throw new Error('No userId provided');
 
         if (!playlistDocumentId)
             throw new Error('No playlistDocumentId provided');
@@ -368,7 +386,7 @@ class PlaylistService {
                 Query.select(['$id']),
                 Query.limit(1),
                 Query.equal('userId', userId),
-                Query.equal('playlistDocumentId', playlistDocumentId)
+                Query.equal('playlistDocumentId', playlistDocumentId),
             ]
         );
 
@@ -386,8 +404,7 @@ class PlaylistService {
     }
 
     async isPlaylistSaved(userId, playlistDocumentId) {
-        if (!userId || !playlistDocumentId)
-            return false;
+        if (!userId || !playlistDocumentId) return false;
 
         try {
             const response = await db.listDocuments(
@@ -397,7 +414,7 @@ class PlaylistService {
                     Query.select(['$id']),
                     Query.limit(1),
                     Query.equal('userId', userId),
-                    Query.equal('playlistDocumentId', playlistDocumentId)
+                    Query.equal('playlistDocumentId', playlistDocumentId),
                 ]
             );
 
@@ -424,7 +441,7 @@ class PlaylistService {
                     Query.select(['$id']),
                     Query.limit(1),
                     Query.equal('userId', userId),
-                    Query.equal('playlistDocumentId', playlistDocumentId)
+                    Query.equal('playlistDocumentId', playlistDocumentId),
                 ]
             );
 
@@ -439,11 +456,9 @@ class PlaylistService {
     }
 
     async createNewPlaylist(userId, title) {
-        if (!userId)
-            throw new Error('No userId provided');
+        if (!userId) throw new Error('No userId provided');
 
-        if (!title)
-            throw new Error('No title provided');
+        if (!title) throw new Error('No title provided');
 
         const response = await db.createDocument(
             import.meta.env.VITE_APPWRITE_DB_ID,
@@ -468,12 +483,12 @@ class PlaylistService {
             ID.unique(),
             {
                 userId,
-                playlistDocumentId: response.$id
+                playlistDocumentId: response.$id,
             },
             [
                 Permission.read(Role.user(userId)),
                 Permission.update(Role.user(userId)),
-                Permission.delete(Role.user(userId))
+                Permission.delete(Role.user(userId)),
             ]
         );
 
@@ -481,8 +496,7 @@ class PlaylistService {
     }
 
     async getOwnedPlaylists(userId, limit = Number.MAX_SAFE_INTEGER) {
-        if (!userId)
-            throw new Error('No userId provided');
+        if (!userId) throw new Error('No userId provided');
 
         const response = await db.listDocuments(
             import.meta.env.VITE_APPWRITE_DB_ID,
@@ -491,18 +505,19 @@ class PlaylistService {
                 Query.select(['playlistDocumentId']),
                 Query.limit(limit),
                 Query.equal('userId', userId),
-                Query.orderDesc('$createdAt')
+                Query.orderDesc('$createdAt'),
             ]
         );
 
-        const playlistDocumentIds = response.documents.map(item => item.playlistDocumentId);
+        const playlistDocumentIds = response.documents.map(
+            (item) => item.playlistDocumentId
+        );
 
         return playlistDocumentIds;
     }
 
     async deletePlaylist(userId, playlistDocumentId) {
-        if (!userId)
-            throw new Error('No userId provided');
+        if (!userId) throw new Error('No userId provided');
 
         if (!playlistDocumentId)
             throw new Error('No playlistDocumentId provided');
@@ -514,7 +529,7 @@ class PlaylistService {
                 Query.select(['$id']),
                 Query.limit(1),
                 Query.equal('userId', userId),
-                Query.equal('playlistDocumentId', playlistDocumentId)
+                Query.equal('playlistDocumentId', playlistDocumentId),
             ]
         );
 
@@ -532,7 +547,7 @@ class PlaylistService {
                 throw err;
             }
         }
-        
+
         try {
             await db.deleteDocument(
                 import.meta.env.VITE_APPWRITE_DB_ID,
@@ -544,42 +559,40 @@ class PlaylistService {
                 throw err;
             }
         }
-
     }
 
     async addToPlaylist(playlistDocumentId, musicId) {
         if (!playlistDocumentId)
             throw new Error('No playlistDocumentId provided');
 
-        if (!musicId)
-            throw new Error('No musicId provided');
+        if (!musicId) throw new Error('No musicId provided');
 
         const playlist = await db.getDocument(
             import.meta.env.VITE_APPWRITE_DB_ID,
             import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
             playlistDocumentId,
-            [
-                Query.select(['$id', 'itemCount', 'items', 'thumbnail'])
-            ]
+            [Query.select(['$id', 'itemCount', 'items', 'thumbnail'])]
         );
 
-        if (!playlist?.$id)
-            throw new Error('Playlist not found');
-        
+        if (!playlist?.$id) throw new Error('Playlist not found');
+
         const response1 = await db.listDocuments(
             import.meta.env.VITE_APPWRITE_DB_ID,
             import.meta.env.VITE_APPWRITE_ALLMUSIC_COLLECTION_ID,
             [
-                Query.select( playlist.items.length === 0 ? ['id', 'thumbnail'] : ['id']),
+                Query.select(
+                    playlist.items.length === 0 ? ['id', 'thumbnail'] : ['id']
+                ),
                 Query.limit(1),
                 Query.equal('id', musicId),
-
             ]
         );
 
-        if (!response1?.documents?.length || response1.documents[0].id !== musicId)
+        if (
+            !response1?.documents?.length ||
+            response1.documents[0].id !== musicId
+        )
             throw new Error('Music item not found');
-
 
         if (playlist.items.includes(musicId))
             throw new Error('Music item is already in the playlist');
@@ -589,8 +602,11 @@ class PlaylistService {
         const updatedPlaylist = {
             items: updatedPlaylistItems,
             itemCount: updatedPlaylistItems.length,
-            thumbnail: playlist.items.length === 0 ? response1.documents[0].thumbnail : playlist.thumbnail
-        }
+            thumbnail:
+                playlist.items.length === 0
+                    ? response1.documents[0].thumbnail
+                    : playlist.thumbnail,
+        };
 
         const response2 = await db.updateDocument(
             import.meta.env.VITE_APPWRITE_DB_ID,
@@ -606,33 +622,32 @@ class PlaylistService {
         if (!playlistDocumentId)
             throw new Error('No playlistDocumentId provided');
 
-        if (!musicId)
-            throw new Error('No musicId provided');
+        if (!musicId) throw new Error('No musicId provided');
 
         const playlist = await db.getDocument(
             import.meta.env.VITE_APPWRITE_DB_ID,
             import.meta.env.VITE_APPWRITE_PLAYLISTS_COLLECTION_ID,
             playlistDocumentId,
-            [
-                Query.select(['$id', 'itemCount', 'items', 'thumbnail'])
-            ]
+            [Query.select(['$id', 'itemCount', 'items', 'thumbnail'])]
         );
 
-        if (!playlist?.$id)
-            throw new Error('Playlist not found');
+        if (!playlist?.$id) throw new Error('Playlist not found');
 
         if (!playlist.items.includes(musicId))
             throw new Error(`Music item doesn't exist in playlist`);
 
-        const updatedPlaylistItems = playlist.items.filter(item => item !== musicId);
+        const updatedPlaylistItems = playlist.items.filter(
+            (item) => item !== musicId
+        );
 
         let updatedThumbnail = playlist.thumbnail;
 
         if (updatedPlaylistItems.length === 0) {
             updatedThumbnail = null;
-        }
-        else if (updatedPlaylistItems.length > 0 && updatedPlaylistItems[0] !== playlist.items[0]) {
-
+        } else if (
+            updatedPlaylistItems.length > 0 &&
+            updatedPlaylistItems[0] !== playlist.items[0]
+        ) {
             try {
                 const response = await db.listDocuments(
                     import.meta.env.VITE_APPWRITE_DB_ID,
@@ -640,12 +655,15 @@ class PlaylistService {
                     [
                         Query.select(['id', 'thumbnail']),
                         Query.limit(1),
-                        Query.equal('id', updatedPlaylistItems[0])
+                        Query.equal('id', updatedPlaylistItems[0]),
                     ]
                 );
 
-                if (!response?.documents?.length || response.documents[0].id !== updatedPlaylistItems[0]) {}
-                else {
+                if (
+                    !response?.documents?.length ||
+                    response.documents[0].id !== updatedPlaylistItems[0]
+                ) {
+                } else {
                     updatedThumbnail = response.documents[0].thumbnail;
                 }
             } catch (err) {
@@ -660,7 +678,7 @@ class PlaylistService {
             {
                 items: updatedPlaylistItems,
                 itemCount: updatedPlaylistItems.length,
-                thumbnail: updatedThumbnail
+                thumbnail: updatedThumbnail,
             }
         );
 
@@ -671,13 +689,11 @@ class PlaylistService {
         if (!playlistDocumentId)
             throw new Error('No playlistDocumentId provided');
 
-        if (!musicIDs?.length)
-            return;
+        if (!musicIDs?.length) return;
 
         const playlist = await this.fetchPlaylist(playlistDocumentId);
 
-        if (!playlist?.$id)
-            throw new Error('Playlist not found');
+        if (!playlist?.$id) throw new Error('Playlist not found');
 
         const updatedItems = [...new Set([...musicIDs, ...playlist.items])];
 
@@ -688,9 +704,11 @@ class PlaylistService {
 
         if (updatedPlaylist.items.length === 0) {
             updatedPlaylist.thumbnail = null;
-        }
-        else {
-            if (playlist.items.length === 0 || playlist.items[0] !== updatedPlaylist.items[0]) {
+        } else {
+            if (
+                playlist.items.length === 0 ||
+                playlist.items[0] !== updatedPlaylist.items[0]
+            ) {
                 try {
                     const response = await db.listDocuments(
                         import.meta.env.VITE_APPWRITE_DB_ID,
@@ -698,19 +716,22 @@ class PlaylistService {
                         [
                             Query.select(['id', 'thumbnail']),
                             Query.limit(1),
-                            Query.equal('id', updatedPlaylist.items[0])
+                            Query.equal('id', updatedPlaylist.items[0]),
                         ]
                     );
 
-                    if (!response?.documents?.length || response.documents[0].id !== updatedPlaylist.items[0]) {}
-                    else {
-                        updatedPlaylist.thumbnail = response.documents[0].thumbnail;
+                    if (
+                        !response?.documents?.length ||
+                        response.documents[0].id !== updatedPlaylist.items[0]
+                    ) {
+                    } else {
+                        updatedPlaylist.thumbnail =
+                            response.documents[0].thumbnail;
                     }
                 } catch (err) {
                     console.error(err);
                 }
             }
-
         }
 
         const response = await db.updateDocument(
@@ -734,5 +755,5 @@ export {
     SearchService,
     searchService,
     PlaylistService,
-    playlistService
+    playlistService,
 };

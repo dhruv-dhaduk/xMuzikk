@@ -1,5 +1,4 @@
-function shuffle(array) 
-{
+function shuffle(array) {
     const newArray = [...array];
 
     shuffleInPlace(newArray);

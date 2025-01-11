@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import Spinner from "../components/ui/Spinner.jsx";
-import NotFoundPage from "./NotFoundPage.jsx";
+import Spinner from '../components/ui/Spinner.jsx';
+import NotFoundPage from './NotFoundPage.jsx';
 import Feed from '../components/Feed.jsx';
 
 import { getMusicDetails } from '../dataManager/index.js';
@@ -27,24 +27,21 @@ function MusicItemPage() {
             .finally(() => {
                 setIsLoading(false);
             });
-
     }, [id]);
-    
+
     if (isLoading) {
         return (
             <div className='flex justify-center p-4'>
                 <Spinner />
             </div>
-        )
+        );
     }
 
     if (!musicItem) {
         return <NotFoundPage />;
     }
 
-    return (
-        <Feed musicList={[musicItem]} />
-    );
+    return <Feed musicList={[musicItem]} />;
 }
 
 export default MusicItemPage;

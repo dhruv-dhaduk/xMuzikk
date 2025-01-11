@@ -6,16 +6,18 @@ class IDBservice {
 
         request.onerror = () => {
             console.log(`Error while connecting IndexedDB : ${request.error}`);
-        }
+        };
 
         request.onupgradeneeded = (event) => {
             this.#db = event.target.result;
 
             if (version === 1) {
-                const musicStore = this.#db.createObjectStore('music', { keyPath: 'id' })
+                const musicStore = this.#db.createObjectStore('music', {
+                    keyPath: 'id',
+                });
                 musicStore.createIndex('id', 'id', { unique: true });
             }
-        }
+        };
 
         request.onsuccess = (event) => {
             this.#db = event.target.result;
@@ -23,29 +25,28 @@ class IDBservice {
             this.#db.onversionchange = () => {
                 this.#db?.close();
                 alert('IndexedDB is outdated, please refresh the page.');
-            }
-        }
+            };
+        };
     }
 
     get(ids) {
         return new Promise((resolve, reject) => {
-            if (!this.#db)
-                reject('IndexedDB is not connected.');
+            if (!this.#db) reject('IndexedDB is not connected.');
 
             const transaction = this.#db.transaction('music', 'readonly');
 
             const result = {
                 success: new Map(),
-                fail: []
+                fail: [],
             };
 
             transaction.oncomplete = () => {
                 resolve(result);
-            }
+            };
 
             transaction.onerror = () => {
                 reject('Transaction failed');
-            }
+            };
 
             const musicStore = transaction.objectStore('music');
 
@@ -57,40 +58,41 @@ class IDBservice {
                     event.stopPropagation();
 
                     if (addItemRequest.result)
-                        result.success.set(addItemRequest.result.id, addItemRequest.result);
-                    else
-                        result.fail.push(id);
-                }
+                        result.success.set(
+                            addItemRequest.result.id,
+                            addItemRequest.result
+                        );
+                    else result.fail.push(id);
+                };
 
                 addItemRequest.onerror = (error) => {
                     event.preventDefault();
                     event.stopPropagation();
 
                     result.fail.push(id);
-                }
+                };
             }
         });
     }
 
     add(list) {
         return new Promise((resolve, reject) => {
-            if (!this.#db)
-                reject('IndexedDB is not connected.');
+            if (!this.#db) reject('IndexedDB is not connected.');
 
             const transaction = this.#db.transaction('music', 'readwrite');
 
             const result = {
                 success: [],
-                fail: []
+                fail: [],
             };
 
             transaction.oncomplete = () => {
                 resolve(result);
-            }
+            };
 
             transaction.onerror = () => {
                 reject('Transaction failed');
-            }
+            };
 
             const musicStore = transaction.objectStore('music');
 
@@ -100,20 +102,20 @@ class IDBservice {
                 addItemRequest.onsuccess = (event) => {
                     event.preventDefault();
                     event.stopPropagation();
-                    
+
                     result.success.push(item);
-                }
+                };
 
                 addItemRequest.onerror = (event) => {
                     event.preventDefault();
                     event.stopPropagation();
 
                     result.fail.push(item);
-                }
+                };
             }
         });
     }
-};
+}
 
 const idb = new IDBservice(1);
 export { idb };
