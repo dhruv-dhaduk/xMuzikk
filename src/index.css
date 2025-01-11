@@ -136,3 +136,7 @@ body {
 .search-submit:active {
     @apply bg-[#5c5c5c];
 }
+
+.thumbnail-shadow {
+    box-shadow:  rgba(255, 255, 255, 0.75) 0 0 1rem;
+}

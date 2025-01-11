@@ -123,13 +123,11 @@ function App() {
                                     showPlayer={showPlayer}
                                     hidePlayer={hidePlayer}
                                     popoverRef={popoverRef}
+                                    playerElementID={playerElementID}
                                 />
 
-                                <div className='fixed top-16 left-36 w-60 h-60 z-[100000]' id={playerElementID}>
-
-                                </div>
-
                                 <NavBar className='z-navbar w-full tablet:w-navbar h-navbar-m tablet:h-full fixed inset-x-0 tablet:top-14 bottom-0 tablet:left-0' />
+                                
                             </DragDropCallbackContext.Provider>
                         </DragDropContext>
                     </PlayerContext.Provider>

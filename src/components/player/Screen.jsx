@@ -1,9 +1,9 @@
-function Screen({ thumbnail }) {
+function Screen({ thumbnail, playerElementID }) {
     return (
         <div
-            className='w-full h-full flex justify-center relative overflow-hidden bg-slate-700 rounded-2xl'
+            className='w-full h-full flex justify-center relative overflow-hidden bg-slate-700 rounded-2xl thumbnail-shadow'
         >
-            <div className='w-full h-full absolute inset-0'>
+            <div className='w-full h-full absolute inset-0 opacity-0'>
                 <img
                     src={thumbnail}
                     draggable={false}
@@ -15,8 +15,9 @@ function Screen({ thumbnail }) {
             <div className='h-full aspect-video'>
                 <div
                     className='w-full h-full pointer-events-none'
+                    id={playerElementID}
                 >
-                    {!false
+                    {!true
                         ? (
                             <div className="w-full h-full flex justify-center items-center">
                                 <p className='w-44 font-bold'>YouTube iframe api is not loaded yet. Please refresh the page if it takes more time.</p>

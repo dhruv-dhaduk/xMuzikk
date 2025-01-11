@@ -2,13 +2,12 @@ import { useContext } from "react";
 import { PlayerContext } from '../contexts/PlayerContext.js';
 import Screen from "../components/player/Screen.jsx";
 
-import closeIcon from '/icons/close.svg';
-import shareIcon from '/icons/share.svg';
-import youtubeIcon from '/icons/youtube.svg';
-import refreshIcon from '/icons/refresh.svg';
-import heartIcon from '/icons/heart_hollow.svg';
+import SideButtons from "../components/player/SideButtons.jsx";
+import Title from "../components/player/Title.jsx";
+import ProgressBar from "../components/player/ProgressBar.jsx";
+import ControlButtons from "../components/player/ControlButtons.jsx";
 
-function PlayerPage({ isPlayerShowing, showPlayer, hidePlayer, popoverRef }) {
+function PlayerPage({ isPlayerShowing, showPlayer, hidePlayer, popoverRef, playerElementID }) {
     const {
         isYtApiLoaded,
         playerState,
@@ -27,7 +26,7 @@ function PlayerPage({ isPlayerShowing, showPlayer, hidePlayer, popoverRef }) {
         <div
             popover='auto'
             ref={popoverRef}
-            className='backdrop:bg-black backdrop:opacity-80 w-96 max-w-[94%] max-h-[90%] p-3 bg-black text-white border border-white border-opacity-25 rounded-xl' 
+            className='backdrop:bg-black backdrop:opacity-90 w-96 max-w-[94%] max-h-[90%] p-3 bg-black text-white border border-white border-opacity-25 rounded-xl' 
         >
             <div className='-z-10 w-full h-full absolute inset-0'>
                 <img
@@ -42,54 +41,30 @@ function PlayerPage({ isPlayerShowing, showPlayer, hidePlayer, popoverRef }) {
                 <div className='flex-1 aspect-square'>
                     <Screen
                         thumbnail={thumbnail}
+                        playerElementID={playerElementID}
                     />
                 </div>
 
-                <div className='w-12 min-h-full p-1 flex flex-col items-center justify-between'>
-                    <Btn
-                        iconSrc={closeIcon}
-                        className='bg-white rounded-full bg-opacity-25 p-[6px]'
-                        onClick={hidePlayer}
-                    />
-                    <Btn
-                        iconSrc={shareIcon}
-                        className='p-[7px]'
-                    />
-                    <Btn
-                        iconSrc={youtubeIcon}
-                        className='p-[7px]'
-                    />
-                    <Btn
-                        iconSrc={refreshIcon}
-                        className='p-[7px]'
-                    />
-                    <Btn
-                        iconSrc={heartIcon}
-                        className='p-[6px]'
-                    />
-                </div>
+                <SideButtons />
+                
             </div>
 
-            <div className='h-44'>
+            <div className='mt-3 mb-4'>
+                
+                <Title
+                    title={title}
+                    channelTitle={channelTitle}
+                    uploadTime={uploadTime}
+                />
+
+                <ProgressBar
+                    duration={duration}
+                />
+
+                <ControlButtons />
 
             </div>
         </div>
-    )
-}
-
-function Btn({ iconSrc, className, onClick }) {
-    return (
-        <button
-            className={`w-full aspect-square ${className}`}
-            onClick={onClick}
-        >
-            <img
-                src={iconSrc}
-                onContextMenu={(e) => e.preventDefault()}
-                draggable={false}
-                className='w-full h-full'
-            />
-        </button>
     )
 }
 

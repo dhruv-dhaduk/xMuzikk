@@ -6,6 +6,11 @@ function usePopUpPage() {
     const [isPageShowing, setIsPageShowing] = useState(
         window.history.state.popUpPage ? true : false
     );
+
+    if (isPageShowing)
+        document.body.classList.add('disable-scroll');
+    else
+        document.body.classList.remove('disable-scroll');
     
     const showPage = useCallback(() => {
         setIsPageShowing(true);
