@@ -6,40 +6,45 @@ import playIcon from '/icons/play.svg';
 import pauseIcon from '/icons/pause.svg';
 import nextIcon from '/icons/next.svg';
 import queueIcon from '/icons/queue.svg';
+import { YTstates, loopingOptions } from '../../constants.js';
 
 
 function ControlButtons({ playerState, playpause, looping, nextLoopingOption, showQueue, playPreviousMusic, playNextMusic }) {
+    let loopingIcon = loopIcon;
+    if (looping === loopingOptions.LOOP_ONCE)
+        loopingIcon = loopOnceIcon;
+    else if (looping === loopingOptions.SHUFFLE)
+        loopingIcon = shuffleIcon;
+    
     return (
         <div className='flex justify-center items-center gap-3'>
             <PlayerBtn
-                // onClick={nextLoopingOption}
-                imgSrc={loopIcon}
+                onClick={nextLoopingOption}
+                imgSrc={loopingIcon}
                 className='w-16 p-3.5'
             />
             <PlayerBtn
-                // onClick={playPreviousMusic}
+                onClick={playPreviousMusic}
                 imgSrc={previousIcon}
                 className='w-16 p-3.5'
             />
             <PlayerBtn
-                // onClick={playpause}
-                // imgSrc={
-                //     playerState === YTstates.BUFFERING ||
-                //     playerState === YTstates.PLAYING
-                //         ? pauseIcon
-                //         : playIcon
-                // }
-                imgSrc={pauseIcon}
-                // className={`w-20 p-5 bg-white bg-opacity-25 rounded-full ${playerState === YTstates.BUFFERING ? 'animate-blink' : ''}`}
-                className={`w-20 p-5 bg-white bg-opacity-25 rounded-full`}
+                onClick={playpause}
+                imgSrc={
+                    playerState === YTstates.BUFFERING ||
+                    playerState === YTstates.PLAYING
+                        ? pauseIcon
+                        : playIcon
+                }
+                className={`w-20 p-5 bg-white bg-opacity-25 rounded-full ${playerState === YTstates.BUFFERING ? 'animate-blink' : ''}`}
             />
             <PlayerBtn
-                // onClick={playNextMusic}
+                onClick={playNextMusic}
                 imgSrc={nextIcon}
                 className='w-16 p-3.5'
             />
             <PlayerBtn
-                // onClick={showQueue}
+                onClick={showQueue}
                 imgSrc={queueIcon}
                 className='w-16 p-3.5'
             />
