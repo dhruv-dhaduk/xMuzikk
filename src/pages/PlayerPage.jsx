@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { PlayerContext } from '../contexts/PlayerContext.js';
 import Screen from "../components/player/Screen.jsx";
 
@@ -21,49 +21,79 @@ function PlayerPage({ isPlayerShowing, showPlayer, hidePlayer, popoverRef, playe
     } = useContext(PlayerContext) || {};
 
     const { id, title, thumbnail, duration, uploadTime, channelTitle } = playingMusic || {};
+
+    const [isFlipped, setIsFlipped] = useState(false);
+
+    const handleFlip = () => {
+        setIsFlipped(!isFlipped);
+    };
     
     return (
         <div
             popover='auto'
             ref={popoverRef}
-            className='backdrop:bg-black backdrop:opacity-90 w-96 max-w-[94%] max-h-[90%] p-3 bg-black text-white border border-white border-opacity-25 rounded-xl' 
+            className='backdrop:bg-black backdrop:opacity-90 w-96 max-w-[94%] max-h-[90%] p-0 bg-black text-white border border-white border-opacity-25 rounded-xl' 
         >
-            <div className='-z-10 w-full h-full absolute inset-0'>
-                <img
-                    src={thumbnail}
-                    draggable={false}
-                    onContextMenu={(e) => e.preventDefault()}
-                    className='w-full h-full object-cover blur-xl opacity-50 tablet:blur-sm tablet:opacity-65'
-                />
-            </div>
+            {/* <div onClick={handleFlip} className={`w-fit h-fit bg-green-400 relative transition-all duration-500 [transform-style:preserve-3d] ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
+                <div className='w-32 h-32 bg-red-600 [backface-visibility:hidden]'></div>
+                <div className='absolute w-full h-full inset-0 bg-blue-600 [backface-visibility:hidden] [transform:rotateY(180deg)]'></div>
+            </div> */}
 
-            <div className='flex gap-3 h-fit'>
-                <div className='flex-1 aspect-square'>
-                    <Screen
-                        thumbnail={thumbnail}
-                        playerElementID={playerElementID}
-                    />
+            <div
+                onClick={handleFlip}
+                className={`relative w-full h-full transition-all duration-500 [transform-style:preserve-3d] ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}
+            >
+                <div className='p-3 [backface-visibility:hidden]'>
+                    <div className='-z-10 w-full h-full absolute inset-0'>
+                        <img
+                            src={thumbnail}
+                            draggable={false}
+                            onContextMenu={(e) => e.preventDefault()}
+                            className='w-full h-full object-cover blur-xl opacity-50'
+                        />
+                    </div>
+
+                    <div className='flex gap-3 h-fit'>
+                        <div className='flex-1 aspect-square'>
+                            <Screen
+                                thumbnail={thumbnail}
+                                playerElementID={playerElementID}
+                            />
+                        </div>
+
+                        <SideButtons />
+                        
+                    </div>
+
+                    <div className='mt-3 mb-4'>
+                        
+                        <Title
+                            title={title}
+                            channelTitle={channelTitle}
+                            uploadTime={uploadTime}
+                        />
+
+                        <ProgressBar
+                            duration={duration}
+                        />
+
+                        <ControlButtons />
+
+                    </div>
                 </div>
 
-                <SideButtons />
-                
+                <div className='bg-black absolute w-full h-full overflow-hidden inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]'>
+                    <div className='bg-blue-700 w-full h-full overflow-auto relative'>
+                        <div className='sticky top-0 w-full h-14 bg-red-700 p-3'>
+                            Heading
+                        </div>
+                        <div className='p-3'>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem rem quo ipsum repudiandae necessitatibus soluta optio ab sunt, cupiditate praesentium sed non odio ratione a dolor molestias dolorem provident quae eos tempora atque veniam quaerat alias? Suscipit labore tenetur cum commodi eius quo qui consequuntur dolores in sunt non laboriosam, soluta molestiae, ad possimus aspernatur eaque minus explicabo voluptates earum vero totam animi. Ipsam voluptates, tempore amet, cupiditate sed mollitia doloribus officia error temporibus quas quasi repudiandae eos ea. Non neque expedita at adipisci necessitatibus placeat pariatur quidem libero eius ea repellat odio similique, corrupti rerum quas hic cumque exercitationem.
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div className='mt-3 mb-4'>
-                
-                <Title
-                    title={title}
-                    channelTitle={channelTitle}
-                    uploadTime={uploadTime}
-                />
-
-                <ProgressBar
-                    duration={duration}
-                />
-
-                <ControlButtons />
-
-            </div>
         </div>
     )
 }

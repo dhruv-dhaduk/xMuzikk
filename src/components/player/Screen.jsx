@@ -3,7 +3,7 @@ function Screen({ thumbnail, playerElementID }) {
         <div
             className='w-full h-full flex justify-center relative overflow-hidden bg-slate-700 rounded-2xl thumbnail-shadow'
         >
-            <div className='w-full h-full absolute inset-0 opacity-0'>
+            <div className='w-full h-full absolute inset-0'>
                 <img
                     src={thumbnail}
                     draggable={false}
