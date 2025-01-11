@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { PlayerContext } from '../contexts/PlayerContext.js';
 import Screen from "../components/player/Screen.jsx";
 
@@ -34,9 +34,17 @@ function PlayerPage({ isPlayerShowing, hidePlayer, popoverRef, playerElementID }
 
     const [queueVisible, setQueueVisible] = useState(false);
 
+
+
     useEffect(() => {
-        if (!isPlayerShowing)
+        popoverRef.current.classList.remove('animate-blink-once-1s');
+        if (isPlayerShowing) {
+            void popoverRef.current.offsetWidth;
+            popoverRef.current.classList.add('animate-blink-once-1s');
+        }
+        else {
             setQueueVisible(false);
+        }
     }, [isPlayerShowing]);
     
     return (
