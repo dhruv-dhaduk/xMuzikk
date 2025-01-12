@@ -5,6 +5,7 @@ import { UserContext } from '../contexts/UserContext.js';
 
 import AuthLinks from '../components/AuthLinks.jsx';
 import Spinner from '../components/ui/Spinner.jsx';
+import ClearCache from '../components/ClearCache.jsx';
 
 function AboutPage() {
     const { user } = useContext(UserContext);
@@ -44,6 +45,12 @@ function AboutPage() {
                     <Spinner />
                 </div>
             )}
+
+            <div className='flex justify-center mt-5'>
+                <div className='w-full max-w-[50rem]'>
+                    <ClearCache />
+                </div>
+            </div>
 
             <div className='flex justify-center mt-10 p-4'>
                 <div className='w-full max-w-[50rem]'>

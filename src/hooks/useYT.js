@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 import { YTstates, localStorageKeys, loopingOptions } from '../constants.js';
-import { useStoredState, useStoredStateEncoded } from './useStoredState.js';
+import { useStoredState } from './useStoredState.js';
 
 import { getMusicDetails } from '../dataManager/index.js';
 
@@ -16,12 +16,7 @@ function useYT(playerElementID) {
         loopingOptions.LOOP,
         localStorageKeys.looping
     );
-    const [queue, setQueue] = useStoredStateEncoded(
-        [],
-        localStorageKeys.queue,
-        (list) => list.map((item) => item.id),
-        getMusicDetails
-    );
+    const [queue, setQueue] = useStoredState([], localStorageKeys.queue);
     const playerRef = useRef({});
 
     const [refreshVar, setRefreshVar] = useState(false);
