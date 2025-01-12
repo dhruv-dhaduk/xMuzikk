@@ -2,7 +2,6 @@ import closeIcon from '/icons/close.svg';
 import shareIcon from '/icons/share.svg';
 import youtubeIcon from '/icons/youtube.svg';
 import refreshIcon from '/icons/refresh.svg';
-import heartIcon from '/icons/heart_hollow.svg';
 
 function SideButtons({ videoID, title, hidePlayer, refreshPlayer }) {
     const shareMusic = () => {
@@ -26,18 +25,19 @@ function SideButtons({ videoID, title, hidePlayer, refreshPlayer }) {
                 iconSrc={closeIcon}
                 className='bg-white rounded-full bg-opacity-25 p-[6px]'
             />
-            <Btn onClick={shareMusic} iconSrc={shareIcon} className='p-[7px]' />
-            <Btn
-                onClick={openInYouTube}
-                iconSrc={youtubeIcon}
-                className='p-[7px]'
-            />
-            <Btn
-                onClick={refreshPlayer}
-                iconSrc={refreshIcon}
-                className='p-[7px]'
-            />
-            <Btn iconSrc={heartIcon} className='p-[6px]' />
+            <div className='flex flex-col items-center gap-3'>
+                <Btn onClick={shareMusic} iconSrc={shareIcon} className='p-[7px]' />
+                <Btn
+                    onClick={openInYouTube}
+                    iconSrc={youtubeIcon}
+                    className='p-[7px]'
+                />
+                <Btn
+                    onClick={refreshPlayer}
+                    iconSrc={refreshIcon}
+                    className='p-[7px]'
+                />
+            </div>
         </div>
     );
 }
