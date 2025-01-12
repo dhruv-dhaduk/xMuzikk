@@ -1,7 +1,14 @@
-import { useEffect, useRef, useState } from "react";
-import { YTstates } from "../../constants.js";
+import { useEffect, useRef, useState } from 'react';
+import { YTstates } from '../../constants.js';
 
-function Screen({ thumbnail, isYtApiLoaded, playerElementID, playerState, showVideoToggle, setShowVideoToggle }) {
+function Screen({
+    thumbnail,
+    isYtApiLoaded,
+    playerElementID,
+    playerState,
+    showVideoToggle,
+    setShowVideoToggle,
+}) {
     const [showVideo, setShowVideo] = useState(true);
     const thumbnailContainerRef = useRef(null);
     const thumbnailImgRef = useRef(null);
@@ -9,12 +16,14 @@ function Screen({ thumbnail, isYtApiLoaded, playerElementID, playerState, showVi
     useEffect(() => {
         if (!showVideoToggle) {
             setShowVideo(false);
-        }
-        else {
-            if (playerState === YTstates.BUFFERING || playerState === YTstates.PLAYING || playerState === YTstates.NULL) {
+        } else {
+            if (
+                playerState === YTstates.BUFFERING ||
+                playerState === YTstates.PLAYING ||
+                playerState === YTstates.NULL
+            ) {
                 setShowVideo(true);
-            }
-            else {
+            } else {
                 setShowVideo(false);
             }
         }
@@ -25,12 +34,10 @@ function Screen({ thumbnail, isYtApiLoaded, playerElementID, playerState, showVi
         void thumbnailContainerRef.current.offsetWidth;
         thumbnailContainerRef.current.classList.add('animate-blink-once');
 
-        if (showVideo)
-            thumbnailImgRef.current.style.opacity = 0;
-        else
-            thumbnailImgRef.current.style.opacity = 1;
+        if (showVideo) thumbnailImgRef.current.style.opacity = 0;
+        else thumbnailImgRef.current.style.opacity = 1;
     }, [showVideo]);
-    
+
     return (
         <div
             className='w-full h-full flex justify-center relative overflow-hidden bg-slate-700 rounded-2xl thumbnail-shadow'
@@ -52,17 +59,20 @@ function Screen({ thumbnail, isYtApiLoaded, playerElementID, playerState, showVi
                     className='w-full h-full pointer-events-none'
                     id={playerElementID}
                 >
-                    {!isYtApiLoaded
-                        ? (
-                            <div className="w-full h-full flex justify-center items-center">
-                                <p className='w-44 font-bold'>YouTube iframe api is not loaded yet. Please refresh the page if it takes more time.</p>
-                            </div>
-                        )
-                        : ''}
+                    {!isYtApiLoaded ? (
+                        <div className='w-full h-full flex justify-center items-center'>
+                            <p className='w-44 font-bold'>
+                                YouTube iframe api is not loaded yet. Please
+                                refresh the page if it takes more time.
+                            </p>
+                        </div>
+                    ) : (
+                        ''
+                    )}
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default Screen;

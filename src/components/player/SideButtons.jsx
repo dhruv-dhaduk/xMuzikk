@@ -16,10 +16,9 @@ function SideButtons({ videoID, title, hidePlayer, refreshPlayer }) {
 
     const openInYouTube = () => {
         const isAgreed = window.confirm('Play this song in YouTube ?');
-        if (isAgreed)
-            window.open(`https://youtu.be/${videoID}`, '_blank');
-    }
-    
+        if (isAgreed) window.open(`https://youtu.be/${videoID}`, '_blank');
+    };
+
     return (
         <div className='w-12 min-h-full p-1 flex flex-col items-center justify-between'>
             <Btn
@@ -27,11 +26,7 @@ function SideButtons({ videoID, title, hidePlayer, refreshPlayer }) {
                 iconSrc={closeIcon}
                 className='bg-white rounded-full bg-opacity-25 p-[6px]'
             />
-            <Btn
-                onClick={shareMusic}
-                iconSrc={shareIcon}
-                className='p-[7px]'
-            />
+            <Btn onClick={shareMusic} iconSrc={shareIcon} className='p-[7px]' />
             <Btn
                 onClick={openInYouTube}
                 iconSrc={youtubeIcon}
@@ -42,10 +37,7 @@ function SideButtons({ videoID, title, hidePlayer, refreshPlayer }) {
                 iconSrc={refreshIcon}
                 className='p-[7px]'
             />
-            <Btn
-                iconSrc={heartIcon}
-                className='p-[6px]'
-            />
+            <Btn iconSrc={heartIcon} className='p-[6px]' />
         </div>
     );
 }
@@ -63,7 +55,7 @@ function Btn({ iconSrc, className, onClick }) {
                 className='w-full h-full'
             />
         </button>
-    )
+    );
 }
 
 export default SideButtons;

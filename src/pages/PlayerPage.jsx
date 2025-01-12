@@ -1,11 +1,11 @@
-import { useState, useContext, useEffect, useRef } from "react";
+import { useState, useContext, useEffect, useRef } from 'react';
 import { PlayerContext } from '../contexts/PlayerContext.js';
-import Screen from "../components/player/Screen.jsx";
+import Screen from '../components/player/Screen.jsx';
 
-import SideButtons from "../components/player/SideButtons.jsx";
-import Title from "../components/player/Title.jsx";
-import ProgressBar from "../components/player/ProgressBar.jsx";
-import ControlButtons from "../components/player/ControlButtons.jsx";
+import SideButtons from '../components/player/SideButtons.jsx';
+import Title from '../components/player/Title.jsx';
+import ProgressBar from '../components/player/ProgressBar.jsx';
+import ControlButtons from '../components/player/ControlButtons.jsx';
 
 import { useStoredState } from '../hooks/useStoredState.js';
 import { localStorageKeys } from '../constants.js';
@@ -13,9 +13,14 @@ import { localStorageKeys } from '../constants.js';
 import closeIcon from '/icons/close.svg';
 import backIcon from '/icons/back.svg';
 
-import Queue from "../components/player/Queue.jsx";
+import Queue from '../components/player/Queue.jsx';
 
-function PlayerPage({ isPlayerShowing, hidePlayer, popoverRef, playerElementID }) {
+function PlayerPage({
+    isPlayerShowing,
+    hidePlayer,
+    popoverRef,
+    playerElementID,
+}) {
     const {
         isYtApiLoaded,
         playerState,
@@ -28,37 +33,36 @@ function PlayerPage({ isPlayerShowing, hidePlayer, popoverRef, playerElementID }
         refreshPlayer,
     } = useContext(PlayerContext) || {};
 
-    const { id, title, thumbnail, duration, uploadTime, channelTitle } = playingMusic || {};
+    const { id, title, thumbnail, duration, uploadTime, channelTitle } =
+        playingMusic || {};
 
-    const [showVideoToggle, setShowVideoToggle] = useStoredState(false, localStorageKeys.playVideoToggle);
+    const [showVideoToggle, setShowVideoToggle] = useStoredState(
+        false,
+        localStorageKeys.playVideoToggle
+    );
 
     const [queueVisible, setQueueVisible] = useState(false);
-
-
 
     useEffect(() => {
         popoverRef.current.classList.remove('animate-blink-once-1s');
         if (isPlayerShowing) {
             void popoverRef.current.offsetWidth;
             popoverRef.current.classList.add('animate-blink-once-1s');
-        }
-        else {
+        } else {
             setQueueVisible(false);
         }
     }, [isPlayerShowing]);
-    
+
     return (
         <div
             popover='auto'
             ref={popoverRef}
-            className='backdrop:bg-black backdrop:opacity-90 w-96 max-w-[94%] max-h-[90%] p-0 bg-black text-white border border-white border-opacity-25 rounded-xl' 
+            className='backdrop:bg-black backdrop:opacity-90 w-96 max-w-[94%] max-h-[90%] p-0 bg-black text-white border border-white border-opacity-25 rounded-xl'
         >
-
             <div
                 className={`relative w-full h-full transition-all duration-500 [transform-style:preserve-3d] ${queueVisible ? '[transform:rotateY(180deg)]' : ''}`}
             >
                 <div className='p-3 [backface-visibility:hidden]'>
-
                     <div className='-z-10 w-full h-full absolute inset-0'>
                         <img
                             src={thumbnail}
@@ -86,11 +90,9 @@ function PlayerPage({ isPlayerShowing, hidePlayer, popoverRef, playerElementID }
                             hidePlayer={hidePlayer}
                             refreshPlayer={refreshPlayer}
                         />
-                        
                     </div>
 
                     <div className='mt-3 mb-4'>
-                        
                         <Title
                             title={title}
                             channelTitle={channelTitle}
@@ -104,12 +106,14 @@ function PlayerPage({ isPlayerShowing, hidePlayer, popoverRef, playerElementID }
                             getCurrentTime={() => {
                                 if (playerRef?.current?.getCurrentTime)
                                     return playerRef?.current?.getCurrentTime();
-                                else
-                                    return 0;
+                                else return 0;
                             }}
                             seekTo={(seconds, allowSeekAhead) => {
                                 if (playerRef?.current?.seekTo)
-                                    playerRef.current.seekTo(seconds, allowSeekAhead);
+                                    playerRef.current.seekTo(
+                                        seconds,
+                                        allowSeekAhead
+                                    );
                             }}
                         />
 
@@ -122,14 +126,11 @@ function PlayerPage({ isPlayerShowing, hidePlayer, popoverRef, playerElementID }
                             playPreviousMusic={playManager.playPreviousMusic}
                             playNextMusic={playManager.playNextMusic}
                         />
-
                     </div>
                 </div>
 
                 <div className='bg-black absolute w-full h-full overflow-hidden inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]'>
-                    <div
-                        className='bg-black w-full h-full overflow-auto relative'
-                    >
+                    <div className='bg-black w-full h-full overflow-auto relative'>
                         <div className='sticky top-0 w-full flex justify-between items-center h-14 px-2 border-b bg-black border-stone-600'>
                             <button
                                 onClick={() => setQueueVisible(false)}
@@ -142,7 +143,7 @@ function PlayerPage({ isPlayerShowing, hidePlayer, popoverRef, playerElementID }
                                     className='w-full'
                                 />
                             </button>
-                            
+
                             <p className='text-xl font-bold'>In Queue</p>
 
                             <button
@@ -168,9 +169,8 @@ function PlayerPage({ isPlayerShowing, hidePlayer, popoverRef, playerElementID }
                     </div>
                 </div>
             </div>
-
         </div>
-    )
+    );
 }
 
 export default PlayerPage;

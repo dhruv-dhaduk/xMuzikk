@@ -1,19 +1,35 @@
-import Slider from "../ui/Slider.jsx";
+import Slider from '../ui/Slider.jsx';
 
-import { getDurationFromISO, convertDurationFormat } from '../../utils/converters.js';
+import {
+    getDurationFromISO,
+    convertDurationFormat,
+} from '../../utils/converters.js';
 
 import { usePlayerProgressBar } from '../../hooks/usePlayerProgressBar.js';
-import { useEffect } from "react";
-import { localStorageKeys } from "../../constants.js";
+import { useEffect } from 'react';
+import { localStorageKeys } from '../../constants.js';
 
-function ProgressBar({ videoID, playerState, duration, getCurrentTime, seekTo }) {
-    const [value, handleChange, handleClick] = usePlayerProgressBar(playerState, getCurrentTime, seekTo);
+function ProgressBar({
+    videoID,
+    playerState,
+    duration,
+    getCurrentTime,
+    seekTo,
+}) {
+    const [value, handleChange, handleClick] = usePlayerProgressBar(
+        playerState,
+        getCurrentTime,
+        seekTo
+    );
 
     useEffect(() => {
         if (!value || videoID?.length !== 11) return;
-        localStorage.setItem(localStorageKeys.currentTime, `${videoID}${parseInt(value)}`)
+        localStorage.setItem(
+            localStorageKeys.currentTime,
+            `${videoID}${parseInt(value)}`
+        );
     }, [value]);
-    
+
     return (
         <div className='my-4'>
             <Slider
@@ -30,7 +46,7 @@ function ProgressBar({ videoID, playerState, duration, getCurrentTime, seekTo })
                 <span> {convertDurationFormat(duration)} </span>
             </p>
         </div>
-    )
+    );
 }
 
 export default ProgressBar;

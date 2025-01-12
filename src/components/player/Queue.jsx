@@ -4,13 +4,7 @@ import closeIcon from '/icons/close.svg';
 
 import { Droppable, Draggable } from '@hello-pangea/dnd';
 
-function Queue({
-    queue,
-    playingMusic,
-    playFromQueueAt,
-    removeFromQueue,
-}) {
-
+function Queue({ queue, playingMusic, playFromQueueAt, removeFromQueue }) {
     return (
         <Droppable droppableId='queue'>
             {(provided) => (
@@ -89,7 +83,6 @@ function QueueItem({ music, isPlaying, play, remove }) {
                     className='w-full'
                 />
             </div>
-            
         </div>
     );
 }

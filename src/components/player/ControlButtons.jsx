@@ -8,14 +8,19 @@ import nextIcon from '/icons/next.svg';
 import queueIcon from '/icons/queue.svg';
 import { YTstates, loopingOptions } from '../../constants.js';
 
-
-function ControlButtons({ playerState, playpause, looping, nextLoopingOption, showQueue, playPreviousMusic, playNextMusic }) {
+function ControlButtons({
+    playerState,
+    playpause,
+    looping,
+    nextLoopingOption,
+    showQueue,
+    playPreviousMusic,
+    playNextMusic,
+}) {
     let loopingIcon = loopIcon;
-    if (looping === loopingOptions.LOOP_ONCE)
-        loopingIcon = loopOnceIcon;
-    else if (looping === loopingOptions.SHUFFLE)
-        loopingIcon = shuffleIcon;
-    
+    if (looping === loopingOptions.LOOP_ONCE) loopingIcon = loopOnceIcon;
+    else if (looping === loopingOptions.SHUFFLE) loopingIcon = shuffleIcon;
+
     return (
         <div className='flex justify-center items-center gap-3'>
             <PlayerBtn
@@ -49,7 +54,7 @@ function ControlButtons({ playerState, playpause, looping, nextLoopingOption, sh
                 className='w-16 p-3.5'
             />
         </div>
-    )
+    );
 }
 
 function PlayerBtn({ imgSrc, className, onClick }) {
