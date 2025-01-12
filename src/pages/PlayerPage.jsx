@@ -57,7 +57,7 @@ function PlayerPage({
         <div
             popover='auto'
             ref={popoverRef}
-            className='backdrop:bg-black backdrop:opacity-90 w-96 max-w-[94%] max-h-[90%] p-0 bg-black text-white border border-white border-opacity-25 rounded-xl'
+            className='backdrop:bg-black backdrop:opacity-90 w-96 max-w-[94%] max-h-[90%] p-0 bg-black text-white border border-white border-opacity-25 rounded-xl select-none'
         >
             <div
                 className={`relative w-full h-full transition-all duration-500 [transform-style:preserve-3d] ${queueVisible ? '[transform:rotateY(180deg)]' : ''}`}
@@ -94,9 +94,11 @@ function PlayerPage({
 
                     <div className='mt-3 mb-4'>
                         <Title
+                            videoID={id}
                             title={title}
                             channelTitle={channelTitle}
                             uploadTime={uploadTime}
+                            hidePlayer={hidePlayer}
                         />
 
                         <ProgressBar
