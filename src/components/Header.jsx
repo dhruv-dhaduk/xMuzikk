@@ -1,5 +1,4 @@
 import logo from '/logos/xMuzikk.png';
-import codeIcon from '/icons/code.svg';
 import githubIcon from '/icons/github.svg';
 import isMobileDevice from '../utils/isMobileDevice.js';
 
