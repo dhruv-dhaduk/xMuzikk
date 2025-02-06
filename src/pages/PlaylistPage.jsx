@@ -163,9 +163,24 @@ function PlaylistPage() {
         }
     }, [fetchNextItems]);
 
-    useEffect(() => {
-        if (!user) return;
+    // useEffect(() => {
+    //     if (!user) return;
+    //
+    //     playlistService
+    //         .fetchPlaylist(documentId)
+    //         .then((response) => {
+    //             setPlaylist(response);
+    //         })
+    //         .catch((err) => {
+    //             setPlaylist({ notFound: true });
+    //             console.log(err);
+    //         })
+    //         .finally(() => {
+    //             setIsLoading(false);
+    //         });
+    // }, [user]);
 
+    useEffect(() => {
         playlistService
             .fetchPlaylist(documentId)
             .then((response) => {
@@ -178,7 +193,7 @@ function PlaylistPage() {
             .finally(() => {
                 setIsLoading(false);
             });
-    }, [user]);
+    }, []);
 
     useEffect(() => {
         if (!playlist || !playlist?.items?.length || playlist.notFound) {
@@ -223,9 +238,9 @@ function PlaylistPage() {
         setDragDropCallback(`playlist_${documentId}`, handleOnDragEnd);
     }, [handleOnDragEnd]);
 
-    if (user === null) {
-        return <AuthLinks message='Please Login or Signup to view playlists' />;
-    }
+    // if (user === null) {
+    //     return <AuthLinks message='Please Login or Signup to view playlists' />;
+    // }
 
     if (isLoading) {
         return (

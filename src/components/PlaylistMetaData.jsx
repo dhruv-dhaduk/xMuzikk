@@ -123,12 +123,13 @@ function PlaylistMetaData({
 
             <div className='flex justify-between items-center flex-wrap mt-2'>
                 <div className='flex justify-start items-center flex-wrap gap-1'>
-                    {(playlistSavedStatus === undefined ||
-                        playlistSavedStatus === null) && (
-                        <div className='flex justify-center items-center aspect-square w-14 rounded-full bg-white bg-opacity-15'>
-                            <Spinner size={30} />
-                        </div>
-                    )}
+                    {user &&
+                        (playlistSavedStatus === undefined ||
+                            playlistSavedStatus === null) && (
+                            <div className='flex justify-center items-center aspect-square w-14 rounded-full bg-white bg-opacity-15'>
+                                <Spinner size={30} />
+                            </div>
+                        )}
 
                     {playlistSavedStatus === true && (
                         <Icon
