@@ -1,3 +1,5 @@
+// Some code is commented out because some features are disabled.
+
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -5,7 +7,9 @@ import { searchService } from '../dataManager/AppwriteService.js';
 
 import Spinner from '../components/ui/Spinner.jsx';
 import AuthLinks from '../components/AuthLinks.jsx';
-import SearchKeywords from '../components/SearchKeywords.jsx';
+
+// Feature is Disabled.
+// import SearchKeywords from '../components/SearchKeywords.jsx';
 
 import { ToastContext } from '../contexts/ToastContext.js';
 import { UserContext } from '../contexts/UserContext.js';
@@ -18,63 +22,64 @@ import {
 function SearchPage() {
     const { user } = useContext(UserContext);
     const [searchInput, setSearchInput] = useState('');
-    const [searchLimit, setSearchLimit] = useState(undefined);
+    // const [searchLimit, setSearchLimit] = useState(undefined);
     const [isLoading, setIsLoading] = useState(false);
 
     const { showToast } = useContext(ToastContext);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!user) return;
+    // useEffect(() => {
+    //     if (!user) return;
+    //
+    //     const fetchSearchLimit = async () => {
+    //         try {
+    //             const { limit, maxLimit } = await searchService.getSearchLimit(
+    //                 user.$id
+    //             );
+    //
+    //             setSearchLimit({ limit, maxLimit });
+    //         } catch (err) {
+    //             setSearchLimit(null);
+    //         }
+    //     };
+    //
+    //     fetchSearchLimit();
+    // }, [user]);
 
-        const fetchSearchLimit = async () => {
-            try {
-                const { limit, maxLimit } = await searchService.getSearchLimit(
-                    user.$id
-                );
-
-                setSearchLimit({ limit, maxLimit });
-            } catch (err) {
-                setSearchLimit(null);
-            }
-        };
-
-        fetchSearchLimit();
-    }, [user]);
-
-    const handleSearch = async () => {
-        if (!user) {
-            showToast.warn('Please login or signup.');
-            return;
-        }
-
-        if (!searchInput || searchInput.trim().length === 0) {
-            showToast.warn('Please enter a search query.');
-            return;
-        }
-
-        setIsLoading(true);
-
-        searchService
-            .executeSearch(searchInput)
-            .then((response) => {
-                showToast.success(response.message);
-                navigate(`/searchresults/${response.searchResultsDocumentID}`);
-            })
-            .catch((err) => {
-                console.error(err);
-                if (err.limitExceeded) {
-                    showToast.error(
-                        'You have reached the search limit for today. Please try again tomorrow.'
-                    );
-                } else {
-                    showToast.error(err.message);
-                }
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
-    };
+    // Feature is Disabled.
+    // const handleSearch = async () => {
+    //     if (!user) {
+    //         showToast.warn('Please login or signup.');
+    //         return;
+    //     }
+    //
+    //     if (!searchInput || searchInput.trim().length === 0) {
+    //         showToast.warn('Please enter a search query.');
+    //         return;
+    //     }
+    //
+    //     setIsLoading(true);
+    //
+    //     searchService
+    //         .executeSearch(searchInput)
+    //         .then((response) => {
+    //             showToast.success(response.message);
+    //             navigate(`/searchresults/${response.searchResultsDocumentID}`);
+    //         })
+    //         .catch((err) => {
+    //             console.error(err);
+    //             if (err.limitExceeded) {
+    //                 showToast.error(
+    //                     'You have reached the search limit for today. Please try again tomorrow.'
+    //                 );
+    //             } else {
+    //                 showToast.error(err.message);
+    //             }
+    //         })
+    //         .finally(() => {
+    //             setIsLoading(false);
+    //         });
+    // };
 
     const handleLinkSearch = async (id) => {
         setIsLoading(true);
@@ -129,11 +134,14 @@ function SearchPage() {
             return;
         }
 
-        if (playlistId === undefined) {
-            handleSearch();
-        } else {
-            showToast.warn('Link is not valid.');
-        }
+        showToast.warn('Link is not valid.');
+
+        // Feature is disabled
+        // if (playlistId === undefined) {
+        //     handleSearch();
+        // } else {
+        //     showToast.warn('Link is not valid.');
+        // }
     };
 
     if (user === undefined) {
@@ -177,7 +185,7 @@ function SearchPage() {
                         type='text'
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
-                        placeholder='Enter Search Query or YouTube link'
+                        placeholder='Enter YouTube link'
                         className='search-box flex-1'
                     />
 
@@ -188,11 +196,18 @@ function SearchPage() {
                     />
                 </form>
 
+                <div className='pt-10'>
+                    <p className='text-xl font-bold text-center'>
+                        You can enter link of any video or playlist of YouTube.
+                    </p>
+                </div>
+
+                {/* Feature is disabled . */}
+                {/*
                 <div className='relative mt-1'>
-                    <SearchKeywords
+                     <SearchKeywords
                         searchInput={searchInput}
                         setSearchInput={setSearchInput}
-                    />
 
                     <div>
                         {user && searchLimit === undefined && (
@@ -203,8 +218,8 @@ function SearchPage() {
 
                         {user && searchLimit && (
                             <div className='pt-10'>
-                                <p className='text-xl font-bold text-center'>
-                                    {searchLimit.limit} searches remaining for
+                                <p classname='text-xl font-bold text-center'>
+                                    {searchlimit.limit} searches remaining for
                                     today
                                 </p>
 
@@ -234,6 +249,7 @@ function SearchPage() {
                         )}
                     </div>
                 </div>
+                />*/}
             </div>
         </div>
     );
